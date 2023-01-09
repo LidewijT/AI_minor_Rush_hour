@@ -1,4 +1,0 @@
-# letsgo
-# code ...
-
-print("Wiehoe")
