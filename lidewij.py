@@ -2,6 +2,7 @@
 In this file we will simulate the game of rush hour
 """
 # import functions
+import numpy as np
 import pandas as pd
 
 # read csv
