@@ -1,2 +1,4 @@
 # letsgo
 # code ...
+
+print("Wiehoe")
