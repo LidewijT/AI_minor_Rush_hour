@@ -1,4 +1,5 @@
 import tkinter as tk
+import matplotlib.colors as mlc
 
 # Create a 6x6 grid of colored squares
 def create_grid(root):
@@ -24,8 +25,8 @@ grid = create_grid(root)
 
 #Update one of the square
 update_square(grid[2][2], 'red')
-update_square(grid[2][5], 'red')
-update_square(grid[2][4], 'red')
+update_square(grid[2][3], 'red')
+update_square(grid[3][2], 'red')
 update_square(grid[2][1], 'red')
 
 
