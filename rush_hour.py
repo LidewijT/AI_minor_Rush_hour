@@ -8,15 +8,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.colors as mlc
 import tkinter as tk
+import random
 
 # initiate the classes
 class Vehicles():
-    def __init__(self, car, orientation, col, row, length):
+    def __init__(self, car, orientation, col, row, length, color):
         self.car = car
         self.orientation = orientation
         self.col = col
         self.row = row
         self.length = length
+        self.color = color
 
 class Board():
     def __init__(self):
@@ -44,13 +46,13 @@ class Board():
         Create a list of all vehicles on the board with its characteristics
         """
         for vehicle in self.gameboard_df.iterrows():
+            color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for j in range(6)])]
+
             self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
-                vehicle[1]['length']))
+                vehicle[1]['length'], color_veh))
 
-        # create colorlist for each vehicle
-        self.color_list = [float(hash(s) % 256) / 256 for s in self.vehicle_list]
-        
+
     def create_grid(self, grid_size):
         width_grid = 720
 
@@ -77,19 +79,14 @@ class Board():
         # create an empty grid
         self.create_grid(self.grid_size)
 
-        # update one of the square
-        # self.update_square(self.grid[3][2], 'red')
-        # self.update_square(self.grid[2][1], 'red')
-
         for vehicle in self.vehicle_list:
             # update position of vehicle
-
             if vehicle.orientation == 'H':
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row - 1][vehicle.col - 1 + tiles], 'pink')
+                    self.update_square(self.grid[vehicle.row - 1][vehicle.col - 1 + tiles], vehicle.color)
             else:
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row - 1 + tiles][vehicle.col - 1], 'pink')
+                    self.update_square(self.grid[vehicle.row - 1 + tiles][vehicle.col - 1], vehicle.color)
 
         self.root.mainloop()
 
