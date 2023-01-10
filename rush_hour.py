@@ -44,6 +44,7 @@ class Board():
         for vehicle in self.gameboard_df.iterrows():
             self.vehicle_list.append(Vehicles(vehicle[1]['car'], vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], vehicle[1]['length']))
 
+        print(self.vehicle_list)
 
 
 
