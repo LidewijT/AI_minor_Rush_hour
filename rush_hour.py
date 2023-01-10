@@ -6,8 +6,8 @@ import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-
+import matplotlib.colors as mlc
+import tkinter as tk
 
 # initiate the classes
 class Vehicles():
@@ -35,11 +35,24 @@ class Board():
         grid_size = int(name_split.split("x")[0])
         print(grid_size)
 
-        # create an empty grid
+        # Create the main window
+        root = tk.Tk()
+        self.canvas = tk.Canvas(root, width=600, height=600)
+        self.canvas.pack()
 
+        # create an empty grid
+        self.create_grid(root, grid_size)
+
+        #Update one of the square
+        self.update_square(self.grid[2][2], 'red')
+        self.update_square(self.grid[2][3], 'red')
+        self.update_square(self.grid[3][2], 'red')
+        self.update_square(self.grid[2][1], 'red')
+
+        root.mainloop()
 
         # add vehicles
-        self.add_vehicles()
+        # self.add_vehicles()
 
     def add_vehicles(self):
         """
@@ -50,7 +63,18 @@ class Board():
                 vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
                 vehicle[1]['length']))
 
+    def create_grid(self, root, grid_size):
+        # create grid
+        self.grid = []
+        for i in range(grid_size):
+            row = []
+            for j in range(grid_size):
+                square = self.canvas.create_rectangle(j*100, i*100, (j+1)*100, (i+1)*100, fill='dimgrey')
+                row.append(square)
+            self.grid.append(row)
 
+    def update_square(self, square, color):
+        self.canvas.itemconfig(square, fill=color)
 
 if __name__ == "__main__":
     # set-up parsing command line arguments

@@ -1,7 +1,7 @@
 import tkinter as tk
 import matplotlib.colors as mlc
 
-# Create a 6x6 grid of colored squares
+# create a 6x6 grid of grey squares
 def create_grid(root):
     grid = []
     for i in range(6):
