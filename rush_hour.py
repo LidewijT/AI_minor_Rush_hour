@@ -5,6 +5,7 @@ In this file we will simulate the game of rush hour
 import argparse
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 
@@ -34,6 +35,9 @@ class Board():
         grid_size = int(name_split.split("x")[0])
         print(grid_size)
 
+        # create an empty grid
+
+
         # add vehicles
         self.add_vehicles()
 
@@ -42,8 +46,9 @@ class Board():
         Create a list of all vehicles on the board with its characteristics
         """
         for vehicle in self.gameboard_df.iterrows():
-            self.vehicle_list.append(Vehicles(vehicle[1]['car'], vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], vehicle[1]['length']))
-
+            self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
+                vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
+                vehicle[1]['length']))
 
 
 
