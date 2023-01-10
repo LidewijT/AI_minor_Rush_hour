@@ -48,6 +48,9 @@ class Board():
                 vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
                 vehicle[1]['length']))
 
+        # create colorlist for each vehicle
+        self.color_list = [float(hash(s) % 256) / 256 for s in self.vehicle_list]
+        
     def create_grid(self, grid_size):
         width_grid = 720
 
