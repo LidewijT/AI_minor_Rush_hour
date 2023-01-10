@@ -28,31 +28,16 @@ class Board():
         """
         # read csv
         self.gameboard_df = pd.read_csv(input_file)
-        # print(gameboard_df)
 
         # get grid size
         name_split = input_file.split("Rushhour")[-1]
-        grid_size = int(name_split.split("x")[0])
-        print(grid_size)
+        self.grid_size = int(name_split.split("x")[0])
 
-        # Create the main window
-        root = tk.Tk()
-        self.canvas = tk.Canvas(root, width=600, height=600)
-        self.canvas.pack()
+        # add vehicles to list
+        self.add_vehicles()
 
-        # create an empty grid
-        self.create_grid(root, grid_size)
-
-        #Update one of the square
-        self.update_square(self.grid[2][2], 'red')
-        self.update_square(self.grid[2][3], 'red')
-        self.update_square(self.grid[3][2], 'red')
-        self.update_square(self.grid[2][1], 'red')
-
-        root.mainloop()
-
-        # add vehicles
-        # self.add_vehicles()
+        # move function
+        self.move()
 
     def add_vehicles(self):
         """
@@ -63,15 +48,47 @@ class Board():
                 vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
                 vehicle[1]['length']))
 
-    def create_grid(self, root, grid_size):
+    def create_grid(self, grid_size):
+        width_grid = 720
+
+        # create the main window
+        self.root = tk.Tk()
+        # set base for size of grid
+        self.canvas = tk.Canvas(self.root, width=width_grid, height=width_grid)
+        self.canvas.pack()
+
         # create grid
         self.grid = []
         for i in range(grid_size):
             row = []
             for j in range(grid_size):
-                square = self.canvas.create_rectangle(j*100, i*100, (j+1)*100, (i+1)*100, fill='dimgrey')
+                # calculate size of each square corresponding with grid size
+                square = self.canvas.create_rectangle(j * (width_grid / \
+                    grid_size), i * (width_grid / grid_size), (j + 1) * \
+                    (width_grid / grid_size),(i + 1) * (720 / grid_size), \
+                    fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
+
+    def move(self):
+        # create an empty grid
+        self.create_grid(self.grid_size)
+
+        # update one of the square
+        # self.update_square(self.grid[3][2], 'red')
+        # self.update_square(self.grid[2][1], 'red')
+
+        for vehicle in self.vehicle_list:
+            # update position of vehicle
+
+            if vehicle.orientation == 'H':
+                for tiles in range(vehicle.length):
+                    self.update_square(self.grid[vehicle.row - 1][vehicle.col - 1 + tiles], 'pink')
+            else:
+                for tiles in range(vehicle.length):
+                    self.update_square(self.grid[vehicle.row - 1 + tiles][vehicle.col - 1], 'pink')
+
+        self.root.mainloop()
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)

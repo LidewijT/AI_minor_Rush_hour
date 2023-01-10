@@ -25,9 +25,9 @@ grid = create_grid(root)
 
 #Update one of the square
 update_square(grid[2][2], 'red')
-update_square(grid[2][3], 'red')
-update_square(grid[3][2], 'red')
-update_square(grid[2][1], 'red')
+# update_square(grid[2][3], 'red')
+# update_square(grid[3][2], 'red')
+# update_square(grid[2][1], 'red')
 
 
 root.mainloop()
