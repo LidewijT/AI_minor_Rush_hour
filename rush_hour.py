@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 
 
-
 # initiate the classes
 class Vehicles():
     def __init__(self, car, orientation, col, row, length):
@@ -27,7 +26,6 @@ class Board():
         """
         # read csv
         self.gameboard_df = pd.read_csv(input_file)
-        # print(gameboard_df)
 
         # get grid size
         name_split = input_file.split("Rushhour")[-1]
