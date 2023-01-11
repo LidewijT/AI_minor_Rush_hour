@@ -32,7 +32,8 @@ class Vehicles():
 
 class Board():
     def __init__(self, input_file):
-        self.vehicle_list = []
+        # self.vehicle_list = []
+        self.vehicle_dict = {}
 
         self.make_board(input_file)
 
@@ -48,7 +49,8 @@ class Board():
         self.grid_size = int(name_split.split("x")[0])
 
         # set each square on the grid to 'not occupied' (= False)
-        self.occupation = np.zeros((self.grid_size, self.grid_size), dtype=bool)
+        # self.occupation = np.zeros((self.grid_size, self.grid_size))
+        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=str)
 
         # add vehicles to list
         self.add_vehicles()
@@ -69,7 +71,7 @@ class Board():
                 color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for s in range(6)])]
 
             # create Vehicle() and add to list
-            self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
+            self.vehicle_dict[vehicle[1]['car']] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
@@ -100,12 +102,12 @@ class Board():
         # create an empty grid
         self.create_grid(self.grid_size)
 
-        for vehicle in self.vehicle_list:
+        for vehicle_name, veh_obj in self.vehicle_dict.items():
             # update position of vehicle in grid
-            for row, col in vehicle.positions:
-                self.update_square(self.grid[row][col], vehicle.color)
+            for row, col in veh_obj.positions:
+                self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
-                self.occupation[row][col] = True
+                self.occupation[row][col] = veh_obj.car
 
         print(self.occupation)
 
@@ -114,7 +116,7 @@ class Board():
 
         # move cars
         # check for free squares (not occupied by vehicles)
-        free_row, free_col = np.where(self.occupation == False)
+        free_row, free_col = np.where(self.occupation == '')
 
         for i in range(len(free_row)):
             # get combination of row and col to determine free square
@@ -127,6 +129,14 @@ class Board():
             bottom_square = (r - 1, c)
             upper_square = (r + 1, c)
 
+            # left square
+            # try:
+            #     if len(self.occupation[r][c - 1]) == 1:
+            print(self.vehicle_dict)
+            # print(self.vehicle_list[0].car)
+
+            # except:
+            #     pass
             # for vehicle in self.vehicle_list:
 
 
