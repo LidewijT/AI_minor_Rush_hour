@@ -13,6 +13,7 @@ import random
 # initiate the classes
 class Vehicles():
     def __init__(self, car, orientation, col, row, length, color):
+        # get attributes
         self.car = car
         self.orientation = orientation
         self.col = col
@@ -43,11 +44,17 @@ class Board():
 
     def add_vehicles(self):
         """
-        Create a list of all vehicles on the board with its characteristics
+        Create a list of all vehicles of class Vehicle() with its attributes
         """
         for vehicle in self.gameboard_df.iterrows():
-            color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for j in range(6)])]
+            # make sure car X has always color red
+            if vehicle[1]['car'] == "X":
+                color_veh = "#FF0000"
+            else:
+                # create random hex value for vehicle color
+                color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for j in range(6)])]
 
+            # create Vehicle() and add to list
             self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
                 vehicle[1]['length'], color_veh))
@@ -95,7 +102,7 @@ class Board():
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
-    parser = argparse.ArgumentParser(description = 'to be determined')
+    parser = argparse.ArgumentParser(description = 'solves rush hour')
 
     # adding arguments
     parser.add_argument("input_file", help = "location input file (csv)")
@@ -104,5 +111,5 @@ if __name__ == "__main__":
     # read arguments from command line
     args = parser.parse_args()
 
-    # run board class with provided argument to creaded the board of the inputfile
+    # run board class with provided argument to create the board of the inputfile
     Board().make_board(args.input_file)
