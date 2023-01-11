@@ -121,43 +121,83 @@ class Board():
         # check for free squares (not occupied by vehicles)
         free_row, free_col = np.where(self.occupation == '')
 
-        test_amount_of_loops = 0
+        test = 0
         for i in range(len(free_row)):
             # get combination of row and col to determine free square
             r = free_row[i]
             c = free_col[i]
 
+
             # move vehicle to the left
             if c + 1 < 6 and len(self.occupation[r][c + 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
-                self.move_vehicle_horizontal(current_veh, r, c)
+                if current_veh.orientation == "H":
+                    self.move_vehicle(current_veh, r, c)
+                    # # use coordinates of empty square
+                    # current_veh.positions.insert(0, (r,c))
+                    # self.occupation[current_veh.positions[-1]] = ''
+                    # current_veh.positions = current_veh.positions[:-1]
+                    # print(current_veh.positions)
 
             # move vehicle to the right
             elif c - 1 > 0 and len(self.occupation[r][c - 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
-                self.move_vehicle_horizontal(current_veh, r, c)
+                if current_veh.orientation == "H":
+                    self.move_vehicle(current_veh, r, c)
+                    # # use coordinates of empty square
+                    # current_veh.positions.insert(0, (r,c)) # 0 to go back (left), -1 to go ahead(right)
+                    # self.occupation[current_veh.positions[-1]] = '' # -1 to go back (left), 0 to go ahead(right)
+                    # current_veh.positions = current_veh.positions[:-1] # [:-1] for left [1:] for right
+                    # print(current_veh.positions)
+
 
             # move vehicle up
-            if r + 1 < 6 and len(self.occupation[r + 1][c]) >= 1:
+            elif r + 1 < 6 and len(self.occupation[r + 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
-
-                self.move_vehicle_vertical(current_veh, r, c)
+                print("here up", r, c)
+                if current_veh.orientation == "V":
+                    # use coordinates of empty square
+                    current_veh.positions.insert(0, (r,c))
+                    self.occupation[current_veh.positions[-1]] = ''
+                    current_veh.positions = current_veh.positions[:-1]
+                    print(current_veh.positions)
+                    # current_veh.positions.insert(-1, (r,c)) # 0 to go back (left/up), -1 to go ahead(right/down)
+                    # self.occupation[current_veh.positions[-1]] = '' # -1 to go back (left/up), 0 to go ahead(right/down)
+                    # current_veh.positions = current_veh.positions[:-1] # [:-1] to go back (left/up) [1:] to go ahead(right/down)
+                    # print(current_veh.positions)
 
             # move vehicle down
-            if r - 1 > 0 and len(self.occupation[r - 1][c]) >= 1:
+            elif r - 1 > 0 and len(self.occupation[r - 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+                print("here down", r,c)
+                if current_veh.orientation == "V":
+                    current_veh.positions.insert(0, (r,c))
+                    self.occupation[current_veh.positions[-1]] = ''
+                    current_veh.positions = current_veh.positions[:-1]
+                    print(current_veh.positions)
+                    # # use coordinates of empty square
+                    # current_veh.positions.insert(-1, (r,c)) # 0 to go back (left), -1 to go ahead(right)
+                    # self.occupation[current_veh.positions[-1]] = '' # -1 to go back (left), 0 to go ahead(right)
+                    # current_veh.positions = current_veh.positions[1:] # [:-1] for left [1:] for right
+                    # print(current_veh.positions)
 
-                self.move_vehicle_vertical(current_veh, r, c)
+            # self.test_move_vehicle(r, c, column_variable=1)
+
+                    # # look at right square
+                    # self.move_vehicle(current_veh, (r,c), direction_r = 0, direction_c=-1)
+                    #
+                    # # look at left square
+                    # self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
 
 
             print("next")
 
             self.update_grid()
 
-            # test_amount_of_loops += 1
-            # if test_amount_of_loops >= 10:
+            test += 1
+            # if test >= 10:
             # 	break
 
     def update_square(self, square, color):
@@ -172,24 +212,16 @@ class Board():
                 current_veh.positions.insert(0, (r,c)) # 0 to go back (left), -1 to go ahead(right)
                 self.occupation[current_veh.positions[-1]] = '' # -1 to go back (left), 0 to go ahead(right)
                 current_veh.positions = current_veh.positions[:-1] # [:-1] for left [1:] for right
-                # print(current_veh.positions)
+                print(current_veh.positions)
 
 
-    def move_vehicle_horizontal(self, current_veh, r, c):
-        if current_veh.orientation == "H":
-            # move vehicle in horizontal direction
-            current_veh.positions.insert(0, (r,c))
-            self.occupation[current_veh.positions[-1]] = ''
-            current_veh.positions = current_veh.positions[:-1]
-            print(current_veh.positions)
+    def move_vehicle(self, current_veh, r, c):
+        # insert to left / move to left
+        current_veh.positions.insert(0, (r,c))
+        self.occupation[current_veh.positions[-1]] = ''
+        current_veh.positions = current_veh.positions[:-1]
+        print(current_veh.positions)
 
-    def move_vehicle_vertical(self, current_veh, r, c):
-        if current_veh.orientation == "V":
-            # move vehicle in vertical direction
-            current_veh.positions.insert(-1, (r,c)) # 0 to go back (left), -1 to go ahead(right)
-            self.occupation[current_veh.positions[0]] = '' # -1 to go back (left), 0 to go ahead(right)
-            current_veh.positions = current_veh.positions[1:] # [:-1] for left [1:] for right
-            print(current_veh.positions)
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
