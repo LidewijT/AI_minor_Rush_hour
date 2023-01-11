@@ -119,16 +119,7 @@ class Board():
 
         # move cars
         # check for free squares (not occupied by vehicles)
-<<<<<<< HEAD
-        free_row, free_col = np.where(self.occupation == False)
-
-        # for vehicle in self.vehicle_list:
-            # check if vehicle is around a free square
-
-
-=======
         free_row, free_col = np.where(self.occupation == '')
->>>>>>> a50b44d8e1fcdb68c3645fd297bb41ea3d882c5b
 
         for i in range(len(free_row)):
             # get combination of row and col to determine free square
@@ -164,14 +155,11 @@ class Board():
                     # look at left square
                     self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
 
-<<<<<<< HEAD
-=======
 
             self.update_grid()
 
             break
 
->>>>>>> a50b44d8e1fcdb68c3645fd297bb41ea3d882c5b
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
