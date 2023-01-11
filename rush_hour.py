@@ -125,35 +125,68 @@ class Board():
             # get combination of row and col to determine free square
             r = free_row[i]
             c = free_col[i]
-            print(self.vehicle_dict)
+            # print(self.vehicle_dict)
             # get squares around free square
-            left_square = (r, c - 1)
-            right_square = (r, c + 1)
-            bottom_square = (r - 1, c)
-            upper_square = (r + 1, c)
+            # left_square = (r, c - 1)
+            # right_square = (r, c + 1)
+            # bottom_square = (r - 1, c)
+            # upper_square = (r + 1, c)
 
-            # try:
-            #     # left square
-            #     if len(self.occupation[r][c - 1]) == 1:
-            #         current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
-            #         if current_veh.orientation == "H":
-            #             pass
 
-            # right square
-            if len(self.occupation[r][c + 1]) >= 1:
-                current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
-                if current_veh.orientation == "H":
-                    # use coordinates of empty square
-                    # current_veh.positions.insert(0, (r,c))
-                    # self.occupation[current_veh.positions[-1]] = ''
-                    # current_veh.positions = current_veh.positions[:-1]
-                    # print(current_veh.positions)
+            # # naar links
+            # if len(self.occupation[r][c + 1]) >= 1:
+            #     current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+            #
+            #     if current_veh.orientation == "H":
+            #         # use coordinates of empty square
+            #         current_veh.positions.insert(0, (r,c))
+            #         self.occupation[current_veh.positions[-1]] = ''
+            #         current_veh.positions = current_veh.positions[:-1]
+            #         print(current_veh.positions)
 
-                    # look at right square
-                    self.move_vehicle(current_veh, (r,c), direction_r = 0, direction_c=-1)
+            # # naar rechts
+            # if len(self.occupation[r][c - 1]) >= 1:
+            #     current_veh = self.vehicle_dict[self.occupation[r][c - 1]
+            #
+            #     if current_veh.orientation == "H":
+            #         # use coordinates of empty square
+            #         current_veh.positions.insert(0, (r,c))
+            #         self.occupation[current_veh.positions[-1]] = ''
+            #         current_veh.positions = current_veh.positions[:-1]
+            #         print(current_veh.positions)
+            #
+            #
+            # # naar boven
+            # if len(self.occupation[r - 1][c]) >= 1:
+            #     current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+            #
+            #     if current_veh.orientation == "v":
+            #         # use coordinates of empty square
+            #         current_veh.positions.insert(0, (r,c))
+            #         self.occupation[current_veh.positions[-1]] = ''
+            #         current_veh.positions = current_veh.positions[:-1]
+            #         print(current_veh.positions)
+            #
+            # # naar beneden
+            # if len(self.occupation[r + 1][c]) >= 1:
+            #     current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
+            #
+            #     if current_veh.orientation == "v":
+            #         # use coordinates of empty square
+            #         current_veh.positions.insert(0, (r,c))
+            #         self.occupation[current_veh.positions[-1]] = ''
+            #         current_veh.positions = current_veh.positions[:-1]
+            #         print(current_veh.positions)
 
-                    # look at left square
-                    self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
+            self.test_move_vehicle(r, c, column_variable=1)
+
+                    # # look at right square
+                    # self.move_vehicle(current_veh, (r,c), direction_r = 0, direction_c=-1)
+                    #
+                    # # look at left square
+                    # self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
+
+
 
 
             self.update_grid()
@@ -163,11 +196,23 @@ class Board():
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
-    def move_vehicle(self, vehicle, free_square, direction_r, direction_c):
-        # insert to left / move to left
-        vehicle.positions.insert(direction_r, free_square)
-        self.occupation[vehicle.positions[direction_c]] = ''
-        vehicle.positions = vehicle.positions[:direction_c]
+    def test_move_vehicle(self, r, c, row_variable=0, column_variable=0):
+        # naar beneden
+        if len(self.occupation[r + row_variable][c + column_variable]) >= 1:
+            current_veh = self.vehicle_dict[self.occupation[r + row_variable][c + column_variable]]
+
+            if current_veh.orientation == "H":
+                # use coordinates of empty square
+                current_veh.positions.insert(0, (r,c))
+                self.occupation[current_veh.positions[-1]] = ''
+                current_veh.positions = current_veh.positions[:-1]
+                print(current_veh.positions)
+
+    # def move_vehicle(self, vehicle, free_square, direction_r, direction_c):
+    #     # insert to left / move to left
+    #     vehicle.positions.insert(direction_r, free_square)
+    #     self.occupation[vehicle.positions[direction_c]] = ''
+    #     vehicle.positions = vehicle.positions[:direction_c]
 
 
 if __name__ == "__main__":
