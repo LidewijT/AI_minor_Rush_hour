@@ -20,6 +20,7 @@ class Vehicles():
         self.row = row
         self.length = length
         self.color = color
+        self.move = True
 
 class Board():
     def __init__(self):
@@ -35,6 +36,9 @@ class Board():
         # get grid size
         name_split = input_file.split("Rushhour")[-1]
         self.grid_size = int(name_split.split("x")[0])
+
+        # set each square on the grid to 'not occupied' (= False)
+        self.occupation = np.zeros((self.grid_size, self.grid_size), dtype=bool)
 
         # add vehicles to list
         self.add_vehicles()
@@ -52,7 +56,7 @@ class Board():
                 color_veh = "#FF0000"
             else:
                 # create random hex value for vehicle color
-                color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for j in range(6)])]
+                color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for s in range(6)])]
 
             # create Vehicle() and add to list
             self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
@@ -87,18 +91,32 @@ class Board():
         self.create_grid(self.grid_size)
 
         for vehicle in self.vehicle_list:
+            veh_row = vehicle.row - 1
+            veh_col = vehicle.col - 1
+
             # update position of vehicle
             if vehicle.orientation == 'H':
+                # draw horizontal turned vehicles on the board
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row - 1][vehicle.col - 1 + tiles], vehicle.color)
+                    self.update_square(self.grid[veh_row][veh_col + tiles], vehicle.color)
+                    # update the occupation of the current square
+                    self.occupation[veh_row][veh_col + tiles] = True
             else:
+                # draw vertical turned vehicles on the board
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row - 1 + tiles][vehicle.col - 1], vehicle.color)
+                    self.update_square(self.grid[veh_row + tiles][veh_col], vehicle.color)
+                    # update the occupation of the current square
+                    self.occupation[veh_row + tiles][veh_col] = True
+
+        print(self.occupation)
 
         self.root.mainloop()
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
+
+    def move_vehicles(self):
+        pass
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
