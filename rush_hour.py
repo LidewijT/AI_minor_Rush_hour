@@ -125,7 +125,7 @@ class Board():
             # get combination of row and col to determine free square
             r = free_row[i]
             c = free_col[i]
-
+            print(self.vehicle_dict)
             # get squares around free square
             left_square = (r, c - 1)
             right_square = (r, c + 1)
@@ -140,36 +140,35 @@ class Board():
             #             pass
 
             # right square
-            if len(self.occupation[r][c + 1]) == 1:
+            if len(self.occupation[r][c + 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
-                if current_veh.orientation == "H" and current_veh.length == 2:
+                if current_veh.orientation == "H":
                     # use coordinates of empty square
-                    current_veh.positions[0] = (r, c)
-                    current_veh.positions[1] = (r, c + 1)
-        
+                    # current_veh.positions.insert(0, (r,c))
+                    # self.occupation[current_veh.positions[-1]] = ''
+                    # current_veh.positions = current_veh.positions[:-1]
+                    # print(current_veh.positions)
+
+                    # look at right square
+                    self.move_vehicle(current_veh, (r,c), direction_r = 0, direction_c=-1)
+
+                    # look at left square
+                    self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
+
 
             self.update_grid()
 
-            # except:
-            #     pass
-            
             break
-
-
-
-
-
-
-
-
-
-
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
-    def move_vehicles(self):
-        pass
+    def move_vehicle(self, vehicle, free_square, direction_r, direction_c):
+        # insert to left / move to left
+        vehicle.positions.insert(direction_r, free_square)
+        self.occupation[vehicle.positions[direction_c]] = ''
+        vehicle.positions = vehicle.positions[:direction_c]
+
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
