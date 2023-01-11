@@ -16,16 +16,26 @@ class Vehicles():
         # get attributes
         self.car = car
         self.orientation = orientation
-        # self.position = [(row, col)]
-        self.col = col
-        self.row = row
+        self.positions = []
+        # self.col = col
+        # self.row = row
         self.length = length
         self.color = color
         self.move = True
 
+        if orientation == "H":
+            for tile in range(length):
+                self.positions.append((row, col + tile))
+        else:
+            for tile in range(length):
+                self.positions.append((row + tile, col))
+
 class Board():
-    def __init__(self):
-        self.vehicle_list = []
+    def __init__(self, input_file):
+        # self.vehicle_list = []
+        self.vehicle_dict = {}
+
+        self.make_board(input_file)
 
     def make_board(self, input_file):
         """
@@ -39,7 +49,8 @@ class Board():
         self.grid_size = int(name_split.split("x")[0])
 
         # set each square on the grid to 'not occupied' (= False)
-        self.occupation = np.zeros((self.grid_size, self.grid_size), dtype=bool)
+        # self.occupation = np.zeros((self.grid_size, self.grid_size))
+        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=str)
 
         # add vehicles to list
         self.add_vehicles()
@@ -60,7 +71,7 @@ class Board():
                 color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for s in range(6)])]
 
             # create Vehicle() and add to list
-            self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
+            self.vehicle_dict[vehicle[1]['car']] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
@@ -86,46 +97,90 @@ class Board():
                     fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
-
-    def move(self):
+    def update_grid(self):
         # create an empty grid
         self.create_grid(self.grid_size)
 
-        for vehicle in self.vehicle_list:
-            # update position of vehicle
-            if vehicle.orientation == 'H':
-                # draw horizontal turned vehicles on the board
-                for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row][vehicle.col + tiles], vehicle.color)
-                    # update the occupation of the current square
-                    self.occupation[vehicle.row][vehicle.col + tiles] = True
-            else:
-                # draw vertical turned vehicles on the board
-                for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row + tiles][vehicle.col], vehicle.color)
-                    # update the occupation of the current square
-                    self.occupation[vehicle.row + tiles][vehicle.col] = True
+        for _, veh_obj in self.vehicle_dict.items():
+            # update position of vehicle in grid
+            for row, col in veh_obj.positions:
+                self.update_square(self.grid[row][col], veh_obj.color)
+                # update the occupation of the current square
+                self.occupation[row][col] = veh_obj.car
 
         print(self.occupation)
 
         # plot the grid
         self.root.mainloop()
 
+    def move(self):
+
+        self.update_grid()
+
         # move cars
         # check for free squares (not occupied by vehicles)
+<<<<<<< HEAD
         free_row, free_col = np.where(self.occupation == False)
 
         # for vehicle in self.vehicle_list:
             # check if vehicle is around a free square
 
 
+=======
+        free_row, free_col = np.where(self.occupation == '')
+>>>>>>> a50b44d8e1fcdb68c3645fd297bb41ea3d882c5b
 
+        for i in range(len(free_row)):
+            # get combination of row and col to determine free square
+            r = free_row[i]
+            c = free_col[i]
+            print(self.vehicle_dict)
+            # get squares around free square
+            left_square = (r, c - 1)
+            right_square = (r, c + 1)
+            bottom_square = (r - 1, c)
+            upper_square = (r + 1, c)
 
+            # try:
+            #     # left square
+            #     if len(self.occupation[r][c - 1]) == 1:
+            #         current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+            #         if current_veh.orientation == "H":
+            #             pass
+
+            # right square
+            if len(self.occupation[r][c + 1]) >= 1:
+                current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+                if current_veh.orientation == "H":
+                    # use coordinates of empty square
+                    # current_veh.positions.insert(0, (r,c))
+                    # self.occupation[current_veh.positions[-1]] = ''
+                    # current_veh.positions = current_veh.positions[:-1]
+                    # print(current_veh.positions)
+
+                    # look at right square
+                    self.move_vehicle(current_veh, (r,c), direction_r = 0, direction_c=-1)
+
+                    # look at left square
+                    self.move_vehicle(current_veh, (r,c), direction_r = -1, direction_c=1)
+
+<<<<<<< HEAD
+=======
+
+            self.update_grid()
+
+            break
+
+>>>>>>> a50b44d8e1fcdb68c3645fd297bb41ea3d882c5b
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
-    def move_vehicles(self):
-        pass
+    def move_vehicle(self, vehicle, free_square, direction_r, direction_c):
+        # insert to left / move to left
+        vehicle.positions.insert(direction_r, free_square)
+        self.occupation[vehicle.positions[direction_c]] = ''
+        vehicle.positions = vehicle.positions[:direction_c]
+
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -138,5 +193,5 @@ if __name__ == "__main__":
     # read arguments from command line
     args = parser.parse_args()
 
-    # run board class with provided argument to create the board of the inputfile
-    Board().make_board(args.input_file)
+    # run board class with provided argument
+    Board(args.input_file)
