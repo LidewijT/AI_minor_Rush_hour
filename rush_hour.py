@@ -134,7 +134,7 @@ class Board():
                 self.move_vehicle_horizontal(current_veh, r, c)
 
             # move vehicle to the right
-            elif c - 1 > 0 and len(self.occupation[r][c - 1]) >= 1:
+            if c - 1 > 0 and len(self.occupation[r][c - 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
                 self.move_vehicle_horizontal(current_veh, r, c)
@@ -174,9 +174,9 @@ class Board():
     def move_vehicle_vertical(self, current_veh, r, c):
         if current_veh.orientation == "V":
             # move vehicle in vertical direction
-            current_veh.positions.insert(-1, (r,c)) # 0 to go back (left/up), -1 to go ahead(right/down)
-            self.occupation[current_veh.positions[0]] = '' # -1 to go back (left/up), 0 to go ahead(right/down)
-            current_veh.positions = current_veh.positions[1:] # [:-1] to go back (left/up) [1:] to go ahead(right/down)
+            current_veh.positions.insert(-1, (r,c)) # 0 for horizontal, -1 for vertical
+            self.occupation[current_veh.positions[0]] = '' # -1 for horizontal, 0 for vertical
+            current_veh.positions = current_veh.positions[1:] # [:-1] for horizontal [1:] for vertical
             print(current_veh.positions)
 
 if __name__ == "__main__":
