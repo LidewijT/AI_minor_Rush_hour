@@ -115,11 +115,8 @@ class Board():
         # check for free squares (not occupied by vehicles)
         free_row, free_col = np.where(self.occupation == False)
 
-        for vehicle in self.vehicle_list:
+        # for vehicle in self.vehicle_list:
             # check if vehicle is around a free square
-
-
-
 
 
 
