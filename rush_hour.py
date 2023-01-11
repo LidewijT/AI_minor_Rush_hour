@@ -97,12 +97,11 @@ class Board():
                     fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
-
-    def move(self):
+    def update_grid(self):
         # create an empty grid
         self.create_grid(self.grid_size)
 
-        for vehicle_name, veh_obj in self.vehicle_dict.items():
+        for _, veh_obj in self.vehicle_dict.items():
             # update position of vehicle in grid
             for row, col in veh_obj.positions:
                 self.update_square(self.grid[row][col], veh_obj.color)
@@ -113,6 +112,10 @@ class Board():
 
         # plot the grid
         self.root.mainloop()
+
+    def move(self):
+
+        self.update_grid()
 
         # move cars
         # check for free squares (not occupied by vehicles)
@@ -129,15 +132,29 @@ class Board():
             bottom_square = (r - 1, c)
             upper_square = (r + 1, c)
 
-            # left square
             # try:
+            #     # left square
             #     if len(self.occupation[r][c - 1]) == 1:
-            print(self.vehicle_dict)
-            # print(self.vehicle_list[0].car)
+            #         current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+            #         if current_veh.orientation == "H":
+            #             pass
+
+            # right square
+            if len(self.occupation[r][c + 1]) == 1:
+                current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+                if current_veh.orientation == "H" and current_veh.length == 2:
+                    # use coordinates of empty square
+                    current_veh.positions[0] = (r, c)
+                    current_veh.positions[1] = (r, c + 1)
+        
+
+            self.update_grid()
 
             # except:
             #     pass
-            # for vehicle in self.vehicle_list:
+            
+            break
+
 
 
 
