@@ -16,6 +16,7 @@ class Vehicles():
         # get attributes
         self.car = car
         self.orientation = orientation
+        # self.position = [(row, col)]
         self.col = col
         self.row = row
         self.length = length
@@ -60,7 +61,7 @@ class Board():
 
             # create Vehicle() and add to list
             self.vehicle_list.append(Vehicles(vehicle[1]['car'], \
-                vehicle[1]['orientation'], vehicle[1]['col'], vehicle[1]['row'], \
+                vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
 
@@ -91,26 +92,37 @@ class Board():
         self.create_grid(self.grid_size)
 
         for vehicle in self.vehicle_list:
-            veh_row = vehicle.row - 1
-            veh_col = vehicle.col - 1
-
             # update position of vehicle
             if vehicle.orientation == 'H':
                 # draw horizontal turned vehicles on the board
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[veh_row][veh_col + tiles], vehicle.color)
+                    self.update_square(self.grid[vehicle.row][vehicle.col + tiles], vehicle.color)
                     # update the occupation of the current square
-                    self.occupation[veh_row][veh_col + tiles] = True
+                    self.occupation[vehicle.row][vehicle.col + tiles] = True
             else:
                 # draw vertical turned vehicles on the board
                 for tiles in range(vehicle.length):
-                    self.update_square(self.grid[veh_row + tiles][veh_col], vehicle.color)
+                    self.update_square(self.grid[vehicle.row + tiles][vehicle.col], vehicle.color)
                     # update the occupation of the current square
-                    self.occupation[veh_row + tiles][veh_col] = True
+                    self.occupation[vehicle.row + tiles][vehicle.col] = True
 
         print(self.occupation)
 
+        # plot the grid
         self.root.mainloop()
+
+        # move cars
+        # check for free squares (not occupied by vehicles)
+        free_row, free_col = np.where(self.occupation == False)
+
+        for vehicle in self.vehicle_list:
+            # check if vehicle is around a free square
+
+
+
+
+
+
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
