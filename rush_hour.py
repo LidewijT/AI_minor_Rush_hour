@@ -163,18 +163,6 @@ class Board():
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
-    def test_move_vehicle(self, r, c, row_variable=0, column_variable=0):
-        if len(self.occupation[r + row_variable][c + column_variable]) >= 1:
-            current_veh = self.vehicle_dict[self.occupation[r + row_variable][c + column_variable]]
-
-            if current_veh.orientation == "H":
-                # use coordinates of empty square
-                current_veh.positions.insert(0, (r,c)) # 0 to go back (left), -1 to go ahead(right)
-                self.occupation[current_veh.positions[-1]] = '' # -1 to go back (left), 0 to go ahead(right)
-                current_veh.positions = current_veh.positions[:-1] # [:-1] for left [1:] for right
-                # print(current_veh.positions)
-
-
     def move_vehicle_horizontal(self, current_veh, r, c):
         if current_veh.orientation == "H":
             # move vehicle in horizontal direction
@@ -186,9 +174,9 @@ class Board():
     def move_vehicle_vertical(self, current_veh, r, c):
         if current_veh.orientation == "V":
             # move vehicle in vertical direction
-            current_veh.positions.insert(-1, (r,c)) # 0 to go back (left), -1 to go ahead(right)
-            self.occupation[current_veh.positions[0]] = '' # -1 to go back (left), 0 to go ahead(right)
-            current_veh.positions = current_veh.positions[1:] # [:-1] for left [1:] for right
+            current_veh.positions.insert(-1, (r,c)) # 0 to go back (left/up), -1 to go ahead(right/down)
+            self.occupation[current_veh.positions[0]] = '' # -1 to go back (left/up), 0 to go ahead(right/down)
+            current_veh.positions = current_veh.positions[1:] # [:-1] to go back (left/up) [1:] to go ahead(right/down)
             print(current_veh.positions)
 
 if __name__ == "__main__":
