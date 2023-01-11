@@ -16,16 +16,25 @@ class Vehicles():
         # get attributes
         self.car = car
         self.orientation = orientation
-        # self.position = [(row, col)]
-        self.col = col
-        self.row = row
+        self.positions = []
+        # self.col = col
+        # self.row = row
         self.length = length
         self.color = color
         self.move = True
 
+        if orientation == "H":
+            for tile in range(length):
+                self.positions.append((row, col + tile))
+        else:
+            for tile in range(length):
+                self.positions.append((row + tile, col))
+
 class Board():
-    def __init__(self):
+    def __init__(self, input_file):
         self.vehicle_list = []
+
+        self.make_board(input_file)
 
     def make_board(self, input_file):
         """
@@ -92,19 +101,11 @@ class Board():
         self.create_grid(self.grid_size)
 
         for vehicle in self.vehicle_list:
-            # update position of vehicle
-            if vehicle.orientation == 'H':
-                # draw horizontal turned vehicles on the board
-                for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row][vehicle.col + tiles], vehicle.color)
-                    # update the occupation of the current square
-                    self.occupation[vehicle.row][vehicle.col + tiles] = True
-            else:
-                # draw vertical turned vehicles on the board
-                for tiles in range(vehicle.length):
-                    self.update_square(self.grid[vehicle.row + tiles][vehicle.col], vehicle.color)
-                    # update the occupation of the current square
-                    self.occupation[vehicle.row + tiles][vehicle.col] = True
+            # update position of vehicle in grid
+            for row, col in vehicle.positions:
+                self.update_square(self.grid[row][col], vehicle.color)
+                # update the occupation of the current square
+                self.occupation[row][col] = True
 
         print(self.occupation)
 
@@ -115,8 +116,21 @@ class Board():
         # check for free squares (not occupied by vehicles)
         free_row, free_col = np.where(self.occupation == False)
 
-        for vehicle in self.vehicle_list:
-            # check if vehicle is around a free square
+        for i in range(len(free_row)):
+            # get combination of row and col to determine free square
+            r = free_row[i]
+            c = free_col[i]
+
+            # get squares around free square
+            left_square = (r, c - 1)
+            right_square = (r, c + 1)
+            bottom_square = (r - 1, c)
+            upper_square = (r + 1, c)
+
+            # for vehicle in self.vehicle_list:
+
+
+
 
 
 
@@ -141,5 +155,5 @@ if __name__ == "__main__":
     # read arguments from command line
     args = parser.parse_args()
 
-    # run board class with provided argument to create the board of the inputfile
-    Board().make_board(args.input_file)
+    # run board class with provided argument
+    Board(args.input_file)
