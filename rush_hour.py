@@ -117,9 +117,16 @@ class Board():
 
     def move(self):
 
+        # update the grid
         self.update_grid()
 
         # move cars
+        self.checkfreesquares()
+
+    def update_square(self, square, color):
+        self.canvas.itemconfig(square, fill=color)
+
+    def checkfreesquares(self):
         # check for free squares (not occupied by vehicles)
         free_row, free_col = np.where(self.occupation == '')
 
@@ -173,8 +180,6 @@ class Board():
             # if test_amount_of_loops >= 8:
             # 	break
 
-    def update_square(self, square, color):
-        self.canvas.itemconfig(square, fill=color)
 
     def move_vehicle_back(self, current_veh, r, c):
         # move vehicle backwards (left/up)
