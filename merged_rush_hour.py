@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mlc
 import tkinter as tk
 import random
-from colors import cnames
-
 
 # initiate the classes
 class Vehicles():
@@ -64,20 +62,13 @@ class Board():
         """
         Create a list of all vehicles of class Vehicle() with its attributes
         """
-        i = 0
         for vehicle in self.gameboard_df.iterrows():
-
             # make sure car X has always color red
             if vehicle[1]['car'] == "X":
                 color_veh = "#FF0000"
             else:
-                # retrieve hex value for vehicle color
-                colorl_list = list(cnames.items())
-                color_veh = colorl_list[i][1]
-
-                i += 1
-                if i >= len(colorl_list):
-                    i = 0
+                # create random hex value for vehicle color
+                color_veh = ["#"+''.join([random.choice('01234566789ABCDEF') for s in range(6)])]
 
             # create Vehicle() and add to list
             self.vehicle_dict[vehicle[1]['car']] = (Vehicles(vehicle[1]['car'], \
