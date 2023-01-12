@@ -97,6 +97,9 @@ class Board():
                 row.append(square)
             self.grid.append(row)
 
+        # place created window at the center of the screen
+        self.root.eval('tk::PlaceWindow . center')
+
     def update_grid(self):
         for _, veh_obj in self.vehicle_dict.items():
             # update position of vehicle in grid
@@ -104,8 +107,6 @@ class Board():
                 self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
                 self.occupation[row][col] = veh_obj.car
-
-        # print(self.occupation)
 
         # update the figure
         self.root.update()
