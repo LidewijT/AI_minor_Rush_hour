@@ -1,4 +1,22 @@
 cnames = {
+    "orange": "#ffa500",
+    "yellow": "#ffff00",
+    "green": "#00ff00",
+    "blue": "#0000ff",
+    "purple": "#800080",
+    "pink": "#ffc0cb",
+    "brown": "#a52a2a",
+    "white": "#ffffff",
+    "cyan": "#00ffff",
+    "magenta": "#ff00ff",
+    "olive": "#808000",
+    "navy": "#000080",
+    "teal": "#008080",
+    "aquamarine": "#7fffd4",
+    "peru": "#cd853f"
+}
+
+cnames_full = {
 'aliceblue':            '#F0F8FF',
 'antiquewhite':         '#FAEBD7',
 'aqua':                 '#00FFFF',
