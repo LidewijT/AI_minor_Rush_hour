@@ -55,6 +55,9 @@ class Board():
         # add vehicles to list
         self.add_vehicles()
 
+        # create an empty grid
+        self.create_grid(self.grid_size)
+
         # move function
         self.move()
 
@@ -99,8 +102,6 @@ class Board():
             self.grid.append(row)
 
     def update_grid(self):
-        # create an empty grid
-        self.create_grid(self.grid_size)
 
         for _, veh_obj in self.vehicle_dict.items():
             # update position of vehicle in grid
@@ -113,10 +114,12 @@ class Board():
 
         # plot the grid
         # plt.show()
-        self.root.mainloop()
+        # self.root.mainloop()
+        # self.root.update_idletasks()
+        self.root.update()
+        plt.pause(3)
 
     def move(self):
-
         # update the grid
         self.update_grid()
 
@@ -177,8 +180,8 @@ class Board():
             self.update_grid()
 
             test_amount_of_loops += 1
-            # if test_amount_of_loops >= 8:
-            # 	break
+            if test_amount_of_loops >= 8:
+            	break
 
 
     def move_vehicle_back(self, current_veh, r, c):
