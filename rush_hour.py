@@ -13,7 +13,7 @@ from colors import cnames
 
 # increase maximum recursion depth to prevent RecursionError
 import sys
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(10000)
 
 # initiate the classes
 class Vehicles():
@@ -56,7 +56,7 @@ class Board():
         # create empty grid matrix
         self.occupation = np.empty((self.grid_size, self.grid_size), dtype=str)
 
-        # add vehicles to list
+        # add vehicles to dictionary
         self.add_vehicles()
 
         # create an empty grid
@@ -124,6 +124,7 @@ class Board():
 
         # update the figure
         self.root.update()
+        # self.root.update_idletasks()
         plt.pause(0.01)
 
     def move(self):
@@ -214,7 +215,7 @@ class Board():
                         pick_free_square = False
                         break
 
-        self.update_grid()
+        # self.update_grid() not necessary because that is what we do in self.move()
 
         self.move()
 
