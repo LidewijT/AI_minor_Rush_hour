@@ -11,6 +11,9 @@ import tkinter as tk
 import random
 from colors import cnames
 
+# increase maximum recursion depth to prevent RecursionError
+import sys
+sys.setrecursionlimit(1000000)
 
 # initiate the classes
 class Vehicles():
@@ -119,7 +122,7 @@ class Board():
 
         # update the figure
         self.root.update()
-        plt.pause(0.5)
+        plt.pause(0.05)
 
     def move(self):
         # update the grid
@@ -132,55 +135,84 @@ class Board():
         self.canvas.itemconfig(square, fill=color)
 
     def checkfreesquares(self):
-        # check for free squares (not occupied by vehicles)
+        # determine which squares are free
         free_row, free_col = np.where(self.occupation == '')
 
-        test_amount_of_loops = 0
-        for i in range(len(free_row)):
-            # get combination of row and col to determine free square
-            r = free_row[i]
-            c = free_col[i]
+        # pick random free square until car moves
+        pick_free_square = True
 
-            # move vehicle to the left
-            # is position to the right of the
-            # free square within the grid and occupied
-            if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1:
-                current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+        while pick_free_square == True:
+            # pick random index for free square
+            idx_free_square = random.randint(0, len(free_row) - 1)
 
-                if current_veh.orientation == "H":
-                    self.move_vehicle_back(current_veh, r, c)
+            # get combination of row and col to determine position free square
+            r = free_row[idx_free_square]
+            c = free_col[idx_free_square]
 
-            # move vehicle to the right
-            # is position to the left of the
-            # free square within the grid and occupied
-            if c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1:
-                current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
-                # print(current_veh.positions)
+            # delete chosen free square to not pick again
+            free_row = np.delete(free_row, idx_free_square)
+            free_col = np.delete(free_col, idx_free_square)
 
-                if current_veh.orientation == "H":
-                    self.move_vehicle_ahead(current_veh, r, c)
+            # list for random squares around free square
+            surrounding_squares = ["left", "right", "up", "down"]
 
-            # move vehicle up
-            # is position above the free square within the grid and occupied
-            if r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1:
-                current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
+            # pick until all surroundings squares have been tried
+            for _ in range(4):
+                # pick random surrounding square
+                surr_square = random.choice(surrounding_squares)
+                # delete from list to not pick again
+                surrounding_squares.remove(surr_square)
 
-                if current_veh.orientation == "V":
-                    self.move_vehicle_back(current_veh, r, c)
+                """try the surrounding squares"""
 
-            # move vehicle down
-            # is position above the free square within the grid and occupied
-            if r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1:
-                current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+                # move vehicle to the left
+                # is position to the right of the
+                # free square within the grid and occupied
+                if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1 and surr_square == "left":
+                    current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
-                if current_veh.orientation == "V":
-                    self.move_vehicle_ahead(current_veh, r, c)
+                    if current_veh.orientation == "H":
+                        self.move_vehicle_back(current_veh, r, c)
 
-            self.update_grid()
+                        pick_free_square = False
+                        break
 
-            test_amount_of_loops += 1
-            # if test_amount_of_loops >= 8:
-            # 	break
+                # move vehicle to the right
+                # is position to the left of the
+                # free square within the grid and occupied
+                elif c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1 and surr_square == "right":
+                    current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+                    # print(current_veh.positions)
+
+                    if current_veh.orientation == "H":
+                        self.move_vehicle_ahead(current_veh, r, c)
+
+                        pick_free_square = False
+                        break
+
+                # move vehicle up
+                # is position above the free square within the grid and occupied
+                elif r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1 and surr_square == "up":
+                    current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
+
+                    if current_veh.orientation == "V":
+                        self.move_vehicle_back(current_veh, r, c)
+
+                        pick_free_square = False
+                        break
+
+                # move vehicle down
+                # is position above the free square within the grid and occupied
+                elif r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1 and surr_square == "down":
+                    current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+
+                    if current_veh.orientation == "V":
+                        self.move_vehicle_ahead(current_veh, r, c)
+
+                        pick_free_square = False
+                        break
+
+        self.update_grid()
 
         self.move()
 
