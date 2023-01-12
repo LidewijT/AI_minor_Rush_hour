@@ -36,6 +36,8 @@ class Vehicles():
 
 class Board():
     def __init__(self, input_file):
+        self.counter = 0
+
         self.vehicle_dict = {}
 
         self.make_board(input_file)
@@ -122,7 +124,7 @@ class Board():
 
         # update the figure
         self.root.update()
-        plt.pause(0.05)
+        plt.pause(0.01)
 
     def move(self):
         # update the grid
