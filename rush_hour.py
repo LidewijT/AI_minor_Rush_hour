@@ -97,6 +97,7 @@ class Board():
                     fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
+
     def update_grid(self):
         # create an empty grid
         self.create_grid(self.grid_size)
@@ -111,7 +112,8 @@ class Board():
         print(self.occupation)
 
         # plot the grid
-        # self.root.mainloop()
+        # plt.show()
+        self.root.mainloop()
 
     def move(self):
 
@@ -128,6 +130,8 @@ class Board():
             c = free_col[i]
 
             # move vehicle to the left
+            # is position to the right of the
+            # free square within the grid and occupied
             if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
@@ -135,6 +139,8 @@ class Board():
                     self.move_vehicle_back(current_veh, r, c)
 
             # move vehicle to the right
+            # is position to the left of the
+            # free square within the grid and occupied
             if c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
                 print(current_veh.positions)
@@ -143,6 +149,7 @@ class Board():
                     self.move_vehicle_ahead(current_veh, r, c)
 
             # move vehicle up
+            # is position above the free square within the grid and occupied
             if r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
@@ -150,6 +157,7 @@ class Board():
                     self.move_vehicle_back(current_veh, r, c)
 
             # move vehicle down
+            # is position above the free square within the grid and occupied
             if r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
