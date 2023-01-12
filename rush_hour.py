@@ -128,56 +128,60 @@ class Board():
             c = free_col[i]
 
             # move vehicle to the left
-            if c + 1 < 6 and len(self.occupation[r][c + 1]) >= 1:
+            if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
-                self.move_vehicle_horizontal(current_veh, r, c)
+                if current_veh.orientation == "H":
+                    self.move_vehicle_back(current_veh, r, c)
 
             # move vehicle to the right
-            if c - 1 > 0 and len(self.occupation[r][c - 1]) >= 1:
+            if c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+                print(current_veh.positions)
 
-                self.move_vehicle_horizontal(current_veh, r, c)
+                if current_veh.orientation == "H":
+                    self.move_vehicle_ahead(current_veh, r, c)
 
             # move vehicle up
-            if r + 1 < 6 and len(self.occupation[r + 1][c]) >= 1:
+            if r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
-                self.move_vehicle_vertical(current_veh, r, c)
+                if current_veh.orientation == "V":
+                    self.move_vehicle_back(current_veh, r, c)
 
             # move vehicle down
-            if r - 1 > 0 and len(self.occupation[r - 1][c]) >= 1:
+            if r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1:
                 current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
-                self.move_vehicle_vertical(current_veh, r, c)
+                if current_veh.orientation == "V":
+                    self.move_vehicle_ahead(current_veh, r, c)
 
 
             print("next")
 
             self.update_grid()
 
-            # test_amount_of_loops += 1
-            # if test_amount_of_loops >= 10:
+            test_amount_of_loops += 1
+            # if test_amount_of_loops >= 8:
             # 	break
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
 
-    def move_vehicle_horizontal(self, current_veh, r, c):
-        if current_veh.orientation == "H":
-            # move vehicle in horizontal direction
-            current_veh.positions.insert(0, (r,c))
-            self.occupation[current_veh.positions[-1]] = ''
-            current_veh.positions = current_veh.positions[:-1]
-            print(current_veh.positions)
+    def move_vehicle_back(self, current_veh, r, c):
+        # move vehicle backwards (left/up)
+        current_veh.positions.insert(0, (r,c))
+        self.occupation[current_veh.positions[-1]] = ''
+        current_veh.positions = current_veh.positions[:-1]
+        print(current_veh.positions)
 
-    def move_vehicle_vertical(self, current_veh, r, c):
-        if current_veh.orientation == "V":
-            # move vehicle in vertical direction
-            current_veh.positions.insert(-1, (r,c)) # 0 for horizontal, -1 for vertical
-            self.occupation[current_veh.positions[0]] = '' # -1 for horizontal, 0 for vertical
-            current_veh.positions = current_veh.positions[1:] # [:-1] for horizontal [1:] for vertical
-            print(current_veh.positions)
+    def move_vehicle_ahead(self, current_veh, r, c):
+        # move vehicle ahead (right/down)
+        current_veh.positions.append((r,c))
+        print(current_veh.positions)
+        self.occupation[current_veh.positions[0]] = ''
+        current_veh.positions = current_veh.positions[1:]
+        print(current_veh.positions)
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
