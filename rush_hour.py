@@ -179,14 +179,13 @@ class Board():
                 if current_veh.orientation == "V":
                     self.move_vehicle_ahead(current_veh, r, c)
 
-
-            # print("next")
-
             self.update_grid()
 
             test_amount_of_loops += 1
             # if test_amount_of_loops >= 8:
             # 	break
+
+        self.move()
 
     def move_vehicle_back(self, current_veh, r, c):
         # move vehicle backwards (left/up)
