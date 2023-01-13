@@ -130,8 +130,12 @@ class Board():
         # update the grid
         self.update_grid()
 
-        # move cars
-        self.checkfreesquares()
+        #check if the winning position is reached
+        winning_condition = self.win_check()
+
+        # move cars only if winning condtion is not reached
+        if winning_condition == False:
+            self.checkfreesquares()
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
@@ -144,6 +148,7 @@ class Board():
         pick_free_square = True
 
         while pick_free_square == True:
+
             # pick random index for free square
             idx_free_square = random.randint(0, len(free_row) - 1)
 
@@ -223,8 +228,6 @@ class Board():
                         pick_free_square = False
                         break
 
-        self.update_grid()
-
         self.move()
 
     def move_vehicle_back(self, vehicle, r, c):
@@ -248,6 +251,19 @@ class Board():
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
         vehicle.positions = vehicle.positions[1:]
+
+    def win_check(self):
+
+        winning_c = self.grid_size - 1
+        winning_r = (self.grid_size - 1) // 2
+
+        if self.occupation[(winning_c, winning_r)] == "X":
+            print('dikke win broer')
+
+            return True
+
+        else:
+            return False
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
