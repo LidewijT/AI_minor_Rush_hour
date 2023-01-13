@@ -60,7 +60,7 @@ class Board():
         self.add_vehicles()
 
         # create an empty grid
-        self.create_grid(self.grid_size)
+        self.create_grid()
 
         # move function
         self.move()
@@ -89,24 +89,24 @@ class Board():
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
-    def create_grid(self, grid_size):
-        width_grid = 720
+    def create_grid(self):
+        graph_size = 720
 
         # create the main window
         self.root = tk.Tk()
         # set base for size of grid
-        self.canvas = tk.Canvas(self.root, width=width_grid, height=width_grid)
+        self.canvas = tk.Canvas(self.root, width=graph_size, height=graph_size)
         self.canvas.pack()
 
         # create grid
         self.grid = []
-        for i in range(grid_size):
+        for i in range(self.grid_size):
             row = []
-            for j in range(grid_size):
+            for j in range(self.grid_size):
                 # calculate size of each square corresponding with grid size
-                square = self.canvas.create_rectangle(j * (width_grid / \
-                    grid_size), i * (width_grid / grid_size), (j + 1) * \
-                    (width_grid / grid_size),(i + 1) * (width_grid / grid_size), \
+                square = self.canvas.create_rectangle(j * (graph_size / \
+                    self.grid_size), i * (graph_size / self.grid_size), (j + 1) * \
+                    (graph_size / self.grid_size),(i + 1) * (graph_size / self.grid_size), \
                     fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
@@ -273,7 +273,6 @@ if __name__ == "__main__":
 
     # adding arguments
     parser.add_argument("input_file", help = "location input file (csv)")
-    # parser.add_argument("output_file", help = "location output file (csv)")
 
     # read arguments from command line
     args = parser.parse_args()
