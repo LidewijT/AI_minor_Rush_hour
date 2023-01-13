@@ -17,6 +17,7 @@ class Board():
 
         self.load_vehicles(input_file)
         self.create_board(input_file)
+        self.make_random_move()
 
     def load_vehicles(self, input_file):
         """
@@ -127,8 +128,6 @@ class Board():
         # update the figure window
         self.root.update()
 
-        plt.pause(0.01)
-
     def update_occupation(self, row, col, vehicle):
         """
         Updates the occupation with the vehicle name of the current square.
@@ -152,10 +151,12 @@ class Board():
         # update the board with the new vehicle movement
         self.update_board()
 
+        plt.pause(0.1)
+
         # make another random move
         self.make_random_move()
 
-    def get_free_sqaures(self):
+    def get_free_squares(self):
         """
         Checks where the occumation matrix is not filled with a car. Returns an
         numpy array for both row an column positions in which the indices
@@ -177,7 +178,9 @@ class Board():
             r, c = self.random_free_square()
 
             # list for random squares around free square
-            self.load_vehiclessurrounding_squares = ["left", "right", "up", "down"]
+            self.load_vehicles
+            
+            self.surrounding_squares = ["left", "right", "up", "down"]
 
             # pick until all surroundings squares have been tried
             for _ in range(4):
