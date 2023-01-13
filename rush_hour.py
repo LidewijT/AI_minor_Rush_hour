@@ -13,7 +13,7 @@ from colors import cnames
 
 # increase maximum recursion depth to prevent RecursionError
 import sys
-sys.setrecursionlimit(1000000)
+sys.setrecursionlimit(10**9)
 
 # initiate the classes
 class Vehicles():
@@ -77,11 +77,11 @@ class Board():
                 color_veh = "#FF0000"
             else:
                 # retrieve hex value for vehicle color
-                colorl_list = list(cnames.items())
-                color_veh = colorl_list[i][1]
+                color_list = list(cnames.items())
+                color_veh = color_list[i][1]
 
                 i += 1
-                if i >= len(colorl_list):
+                if i >= len(color_list):
                     i = 0
 
             # create Vehicle() and add to list
@@ -106,7 +106,7 @@ class Board():
                 # calculate size of each square corresponding with grid size
                 square = self.canvas.create_rectangle(j * (width_grid / \
                     grid_size), i * (width_grid / grid_size), (j + 1) * \
-                    (width_grid / grid_size),(i + 1) * (720 / grid_size), \
+                    (width_grid / grid_size),(i + 1) * (width_grid / grid_size), \
                     fill='dimgrey')
                 row.append(square)
             self.grid.append(row)
@@ -162,54 +162,63 @@ class Board():
             for _ in range(4):
                 # pick random surrounding square
                 surr_square = random.choice(surrounding_squares)
+
                 # delete from list to not pick again
                 surrounding_squares.remove(surr_square)
 
                 """try the surrounding squares"""
 
                 # move vehicle to the left
-                # is position to the right of the
-                # free square within the grid and occupied
-                if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1 and surr_square == "left":
-                    current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+                # if position to the right of the
+                # free square is within the grid and occupied
+                # and the orientation of this vehicle is horizontal
+                if c + 1 < self.grid_size and \
+                len(self.occupation[r][c + 1]) >= 1 and surr_square == "left":
 
-                    if current_veh.orientation == "H":
-                        self.move_vehicle_back(current_veh, r, c)
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+
+                    if neighbouring_veh.orientation == "H":
+                        self.move_vehicle_back(neighbouring_veh, r, c)
 
                         pick_free_square = False
                         break
 
                 # move vehicle to the right
-                # is position to the left of the
-                # free square within the grid and occupied
-                elif c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1 and surr_square == "right":
-                    current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
-                    # print(current_veh.positions)
+                # if position to the left of the
+                # free square is within the grid and occupied
+                # and the orientation of this vehicle is horizontal
+                elif c - 1 >= 0 and \
+                len(self.occupation[r][c - 1]) >= 1 and surr_square == "right":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
-                    if current_veh.orientation == "H":
-                        self.move_vehicle_ahead(current_veh, r, c)
-
-                        pick_free_square = False
-                        break
-
-                # move vehicle up
-                # is position above the free square within the grid and occupied
-                elif r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1 and surr_square == "up":
-                    current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
-
-                    if current_veh.orientation == "V":
-                        self.move_vehicle_back(current_veh, r, c)
+                    if neighbouring_veh.orientation == "H":
+                        self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         pick_free_square = False
                         break
 
-                # move vehicle down
-                # is position above the free square within the grid and occupied
-                elif r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1 and surr_square == "down":
-                    current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+                # move vehicle up if position below the
+                # free square is within the grid and occupied
+                # and the orientation of this vehicle is vertical
+                elif r + 1 < self.grid_size \
+                and len(self.occupation[r + 1][c]) >= 1 and surr_square == "up":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
-                    if current_veh.orientation == "V":
-                        self.move_vehicle_ahead(current_veh, r, c)
+                    if neighbouring_veh.orientation == "V":
+                        self.move_vehicle_back(neighbouring_veh, r, c)
+
+                        pick_free_square = False
+                        break
+
+                # move vehicle down if position above the
+                # free square is within the grid and occupied
+                # and the orientation of this vehicle is vertical
+                elif r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1 \
+                and surr_square == "down":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+
+                    if neighbouring_veh.orientation == "V":
+                        self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         pick_free_square = False
                         break
@@ -218,30 +227,27 @@ class Board():
 
         self.move()
 
-    def move_vehicle_back(self, current_veh, r, c):
+    def move_vehicle_back(self, vehicle, r, c):
         # move vehicle backwards (left/up)
-        current_veh.positions.insert(0, (r,c))
-        self.occupation[current_veh.positions[-1]] = ''
+        vehicle.positions.insert(0, (r,c))
+        self.occupation[vehicle.positions[-1]] = ''
 
-        # update square back to grey ("empty")
-        grey_r, grey_c = current_veh.positions[-1]
+        # update square the vehicle moved away from back to grey ("empty")
+        grey_r, grey_c = vehicle.positions[-1]
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
-        current_veh.positions = current_veh.positions[:-1]
-        # print(current_veh.positions)
+        vehicle.positions = vehicle.positions[:-1]
 
-    def move_vehicle_ahead(self, current_veh, r, c):
+    def move_vehicle_ahead(self, vehicle, r, c):
         # move vehicle ahead (right/down)
-        current_veh.positions.append((r,c))
-        # print(current_veh.positions)
-        self.occupation[current_veh.positions[0]] = ''
+        vehicle.positions.append((r,c))
+        self.occupation[vehicle.positions[0]] = ''
 
-        # update square back to grey
-        grey_r, grey_c = current_veh.positions[0]
+        # update square the vehicle moved away from back to grey ("empty")
+        grey_r, grey_c = vehicle.positions[0]
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
-        current_veh.positions = current_veh.positions[1:]
-        # print(current_veh.positions)
+        vehicle.positions = vehicle.positions[1:]
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
