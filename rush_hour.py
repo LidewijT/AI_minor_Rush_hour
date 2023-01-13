@@ -54,7 +54,7 @@ class Board():
         self.grid_size = int(name_split.split("x")[0])
 
         # create empty grid matrix
-        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=str)
+        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=int)
 
         # add vehicles to list
         self.add_vehicles()
@@ -85,7 +85,7 @@ class Board():
                     i = 0
 
             # create Vehicle() and add to list
-            self.vehicle_dict[vehicle[1]['car']] = (Vehicles(vehicle[1]['car'], \
+            self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
@@ -115,16 +115,20 @@ class Board():
         self.root.eval('tk::PlaceWindow . center')
 
     def update_grid(self):
-        for _, veh_obj in self.vehicle_dict.items():
+        for car_number, veh_obj in self.vehicle_dict.items():
+            print(car_number, veh_obj.positions)
             # update position of vehicle in grid
             for row, col in veh_obj.positions:
                 self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
-                self.occupation[row][col] = veh_obj.car
+                self.occupation[row][col] = car_number
 
-        # update the figure
-        self.root.update()
-        plt.pause(0.01)
+        print(self.occupation)
+        print("next")
+
+        # # update the figure
+        # self.root.update()
+        # plt.pause(0.01)
 
     def move(self):
         # update the grid
@@ -135,7 +139,7 @@ class Board():
         self.move_counter += 1
 
         # move cars only if winning condtion is not reached
-        if winning_condition == False:
+        if winning_condition == False and self.move_counter < 2:
             self.checkfreesquares()
 
     def update_square(self, square, color):
@@ -143,7 +147,7 @@ class Board():
 
     def checkfreesquares(self):
         # determine which squares are free
-        free_row, free_col = np.where(self.occupation == '')
+        free_row, free_col = np.where(self.occupation == 0)
 
         # pick random free square until car moves
         pick_free_square = True
@@ -179,12 +183,14 @@ class Board():
                 # free square is within the grid and occupied
                 # and the orientation of this vehicle is horizontal
                 if c + 1 < self.grid_size and \
-                len(self.occupation[r][c + 1]) >= 1 and surr_square == "left":
+                self.occupation[r][c + 1] >= 1 and surr_square == "left":
 
                     neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_back(neighbouring_veh, r, c)
+                        print("horizontal move left")
+                        print(neighbouring_veh.car)
 
                         pick_free_square = False
                         break
@@ -194,11 +200,13 @@ class Board():
                 # free square is within the grid and occupied
                 # and the orientation of this vehicle is horizontal
                 elif c - 1 >= 0 and \
-                len(self.occupation[r][c - 1]) >= 1 and surr_square == "right":
+                self.occupation[r][c - 1] >= 1 and surr_square == "right":
                     neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
+                        print("horizontal move right")
+                        print(neighbouring_veh.car)
 
                         pick_free_square = False
                         break
@@ -207,11 +215,13 @@ class Board():
                 # free square is within the grid and occupied
                 # and the orientation of this vehicle is vertical
                 elif r + 1 < self.grid_size \
-                and len(self.occupation[r + 1][c]) >= 1 and surr_square == "up":
+                and self.occupation[r + 1][c] >= 1 and surr_square == "up":
                     neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_back(neighbouring_veh, r, c)
+                        print("vert up move")
+                        print(neighbouring_veh)#.car)
 
                         pick_free_square = False
                         break
@@ -219,12 +229,14 @@ class Board():
                 # move vehicle down if position above the
                 # free square is within the grid and occupied
                 # and the orientation of this vehicle is vertical
-                elif r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1 \
+                elif r - 1 >= 0 and self.occupation[r - 1][c] >= 1 \
                 and surr_square == "down":
                     neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
+                        print("vert down move")
+                        print(neighbouring_veh.car)
 
                         pick_free_square = False
                         break
@@ -234,7 +246,7 @@ class Board():
     def move_vehicle_back(self, vehicle, r, c):
         # move vehicle backwards (left/up)
         vehicle.positions.insert(0, (r,c))
-        self.occupation[vehicle.positions[-1]] = ''
+        self.occupation[vehicle.positions[-1]] = 0
 
         # update square the vehicle moved away from back to grey ("empty")
         grey_r, grey_c = vehicle.positions[-1]
@@ -245,7 +257,7 @@ class Board():
     def move_vehicle_ahead(self, vehicle, r, c):
         # move vehicle ahead (right/down)
         vehicle.positions.append((r,c))
-        self.occupation[vehicle.positions[0]] = ''
+        self.occupation[vehicle.positions[0]] = 0
 
         # update square the vehicle moved away from back to grey ("empty")
         grey_r, grey_c = vehicle.positions[0]
