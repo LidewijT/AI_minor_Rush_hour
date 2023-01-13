@@ -54,7 +54,7 @@ class Board():
         self.grid_size = int(name_split.split("x")[0])
 
         # create empty grid matrix
-        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=int)
+        self.occupation = np.zeros((self.grid_size, self.grid_size))
 
         # add vehicles to list
         self.add_vehicles()
@@ -116,17 +116,17 @@ class Board():
 
     def update_grid(self):
         for car_number, veh_obj in self.vehicle_dict.items():
-            print(car_number, veh_obj.positions)
+            # print(car_number, veh_obj.positions)
             # update position of vehicle in grid
             for row, col in veh_obj.positions:
-                self.update_square(self.grid[row][col], veh_obj.color)
+                # self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
                 self.occupation[row][col] = car_number
 
         print(self.occupation)
         print("next")
 
-        # # update the figure
+        # update the figure
         # self.root.update()
         # plt.pause(0.01)
 
@@ -139,7 +139,7 @@ class Board():
         self.move_counter += 1
 
         # move cars only if winning condtion is not reached
-        if winning_condition == False and self.move_counter < 2:
+        if winning_condition == False and self.move_counter < 5:
             self.checkfreesquares()
 
     def update_square(self, square, color):
@@ -190,7 +190,7 @@ class Board():
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_back(neighbouring_veh, r, c)
                         print("horizontal move left")
-                        print(neighbouring_veh.car)
+                        print(self.occupation[r][c + 1])
 
                         pick_free_square = False
                         break
@@ -206,7 +206,7 @@ class Board():
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
                         print("horizontal move right")
-                        print(neighbouring_veh.car)
+                        print(self.occupation[r][c - 1])
 
                         pick_free_square = False
                         break
@@ -221,7 +221,7 @@ class Board():
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_back(neighbouring_veh, r, c)
                         print("vert up move")
-                        print(neighbouring_veh)#.car)
+                        print(self.occupation[r + 1][c])#.car)
 
                         pick_free_square = False
                         break
@@ -236,7 +236,7 @@ class Board():
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
                         print("vert down move")
-                        print(neighbouring_veh.car)
+                        print(self.occupation[r - 1][c])
 
                         pick_free_square = False
                         break
