@@ -35,12 +35,13 @@ class Vehicles():
                 self.positions.append((row + tile, col))
 
 class Board():
-    def __init__(self, input_file):
+    def __init__(self, input_file, output_file):
         self.move_counter = 0
-
         self.vehicle_dict = {}
+        self.output_file = output_file
 
         self.make_board(input_file)
+
 
     def make_board(self, input_file):
         """
@@ -265,7 +266,7 @@ class Board():
             if (self.vehicle_dict[occupating_vehicle]).car == "X":
                 print('dikke win broer')
                 print(f"Je hebt gewonnen na {self.move_counter} zetten")
-
+                output_maker()
                 return True
 
             else:
@@ -274,15 +275,23 @@ class Board():
         else:
             return False
 
+
+    def output_maker(self):
+
+        # this function saves a dataframe of moves to a csv file
+        self.moves_df.to_csv(output_file)
+
 if __name__ == "__main__":
     # set-up parsing command line arguments
     parser = argparse.ArgumentParser(description = 'solves rush hour')
 
     # adding arguments
     parser.add_argument("input_file", help = "location input file (csv)")
+    parser.add_argument("output_file", help = "location output file(csv)")
+
 
     # read arguments from command line
     args = parser.parse_args()
 
     # run board class with provided argument
-    Board(args.input_file)
+    Board(args.input_file, args.output_file)
