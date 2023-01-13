@@ -36,7 +36,7 @@ class Vehicles():
 
 class Board():
     def __init__(self, input_file):
-        self.counter = 0
+        self.move_counter = 0
 
         self.vehicle_dict = {}
 
@@ -132,6 +132,7 @@ class Board():
 
         #check if the winning position is reached
         winning_condition = self.win_check()
+        self.move_counter += 1
 
         # move cars only if winning condtion is not reached
         if winning_condition == False:
@@ -257,8 +258,9 @@ class Board():
         winning_c = self.grid_size - 1
         winning_r = (self.grid_size - 1) // 2
 
-        if self.occupation[(winning_c, winning_r)] == "X":
+        if self.occupation[(winning_r, winning_c)] == "X":
             print('dikke win broer')
+            print(f"Je hebt gewonnen na {self.move_counter} zetten")
 
             return True
 
