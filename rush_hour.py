@@ -119,16 +119,13 @@ class Board():
             # print(car_number, veh_obj.positions)
             # update position of vehicle in grid
             for row, col in veh_obj.positions:
-                # self.update_square(self.grid[row][col], veh_obj.color)
+                self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
                 self.occupation[row][col] = car_number
 
-        print(self.occupation)
-        print("next")
-
         # update the figure
-        # self.root.update()
-        # plt.pause(0.01)
+        self.root.update()
+        plt.pause(0.01)
 
     def move(self):
         # update the grid
@@ -139,7 +136,7 @@ class Board():
         self.move_counter += 1
 
         # move cars only if winning condtion is not reached
-        if winning_condition == False and self.move_counter < 5:
+        if winning_condition == False:# and self.move_counter < 5:
             self.checkfreesquares()
 
     def update_square(self, square, color):
@@ -189,8 +186,6 @@ class Board():
 
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_back(neighbouring_veh, r, c)
-                        print("horizontal move left")
-                        print(self.occupation[r][c + 1])
 
                         pick_free_square = False
                         break
@@ -205,8 +200,6 @@ class Board():
 
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
-                        print("horizontal move right")
-                        print(self.occupation[r][c - 1])
 
                         pick_free_square = False
                         break
@@ -220,8 +213,6 @@ class Board():
 
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_back(neighbouring_veh, r, c)
-                        print("vert up move")
-                        print(self.occupation[r + 1][c])#.car)
 
                         pick_free_square = False
                         break
@@ -235,8 +226,6 @@ class Board():
 
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
-                        print("vert down move")
-                        print(self.occupation[r - 1][c])
 
                         pick_free_square = False
                         break
@@ -270,7 +259,9 @@ class Board():
         winning_c = self.grid_size - 1
         winning_r = (self.grid_size - 1) // 2
 
-        if self.occupation[(winning_r, winning_c)] == "X":
+        occupating_vehicle = self.occupation[(winning_r, winning_c)]
+
+        if self.vehicle_dict[occupating_vehicle].car == "X":
             print('dikke win broer')
             print(f"Je hebt gewonnen na {self.move_counter} zetten")
 
