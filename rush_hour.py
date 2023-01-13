@@ -39,6 +39,7 @@ class Board():
         self.move_counter = 0
         self.vehicle_dict = {}
         self.output_file = output_file
+        self.moves_df = pd.DataFrame(columns=['car name', 'move'])
 
         self.make_board(input_file)
 
@@ -136,9 +137,17 @@ class Board():
         winning_condition = self.win_check()
         self.move_counter += 1
 
+        ## to test wether the output maker works
+        # if self.move_counter >= 5:
+        #     winning_condition = True
+        #     self.output_maker()
+
         # move cars only if winning condtion is not reached
         if winning_condition == False:# and self.move_counter < 5:
             self.checkfreesquares()
+
+
+
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
@@ -188,6 +197,11 @@ class Board():
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
+                        # append move to DataFrame
+                        move_df = pd.DataFrame([[neighbouring_veh.car, "left"]], \
+                        columns=['car name', 'move'])
+                        self.moves_df = pd.concat([self.moves_df, move_df])
+
                         pick_free_square = False
                         break
 
@@ -202,6 +216,11 @@ class Board():
                     if neighbouring_veh.orientation == "H":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
 
+                        # append move to DataFrame
+                        move_df = pd.DataFrame([[neighbouring_veh.car, "right"]], \
+                        columns=['car name', 'move'])
+                        self.moves_df = pd.concat([self.moves_df, move_df])
+
                         pick_free_square = False
                         break
 
@@ -215,6 +234,11 @@ class Board():
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
+                        # append move to DataFrame
+                        move_df = pd.DataFrame([[neighbouring_veh.car, "up"]], \
+                        columns=['car name', 'move'])
+                        self.moves_df = pd.concat([self.moves_df, move_df])
+
                         pick_free_square = False
                         break
 
@@ -227,6 +251,11 @@ class Board():
 
                     if neighbouring_veh.orientation == "V":
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
+
+                        # append move to DataFrame
+                        move_df = pd.DataFrame([[neighbouring_veh.car, "down"]], \
+                        columns=['car name', 'move'])
+                        self.moves_df = pd.concat([self.moves_df, move_df])
 
                         pick_free_square = False
                         break
@@ -277,9 +306,8 @@ class Board():
 
 
     def output_maker(self):
-
         # this function saves a dataframe of moves to a csv file
-        self.moves_df.to_csv(output_file)
+        self.moves_df.to_csv(self.output_file, index=False)
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
