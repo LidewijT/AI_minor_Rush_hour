@@ -259,13 +259,17 @@ class Board():
         winning_c = self.grid_size - 1
         winning_r = (self.grid_size - 1) // 2
 
-        occupating_vehicle = self.occupation[(winning_r, winning_c)]
+        if self.occupation[(winning_r, winning_c)] >= 1:
+            occupating_vehicle = self.occupation[(winning_r, winning_c)]
 
-        if self.vehicle_dict[occupating_vehicle].car == "X":
-            print('dikke win broer')
-            print(f"Je hebt gewonnen na {self.move_counter} zetten")
+            if (self.vehicle_dict[occupating_vehicle]).car == "X":
+                print('dikke win broer')
+                print(f"Je hebt gewonnen na {self.move_counter} zetten")
 
-            return True
+                return True
+
+            else:
+                return False
 
         else:
             return False
