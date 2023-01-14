@@ -55,6 +55,9 @@ class Board():
         name_split = input_file.split("Rushhour")[-1]
         self.grid_size = int(name_split.split("x")[0])
 
+        # determine the exit tile
+        self.exit_tile = ((self.grid_size - 1) // 2, self.grid_size - 1)
+
         # create empty grid matrix
         self.occupation = np.zeros((self.grid_size, self.grid_size))
 
@@ -149,8 +152,6 @@ class Board():
         # move cars only if winning condtion is not reached
         if winning_condition == False:# and self.move_counter < 5:
             self.checkfreesquares()
-
-
 
     def update_square(self, square, color):
         self.canvas.itemconfig(square, fill=color)
@@ -295,18 +296,17 @@ class Board():
         self.moves_df = pd.concat([self.moves_df, move_df])
 
     def win_check(self):
-        # check if red car is at winning positions
-        # find coordinates for the exit tile
-        winning_c = self.grid_size - 1
-        winning_r = (self.grid_size - 1) // 2
-
-        # if the red car is at the location of the exit square
-        # print after how many moves you have won and run the output maker
-        # to turn all the made moves into a csv file
-        if self.occupation[(winning_r, winning_c)] == self.red_car:
+        """
+        check if red car is at winning positions
+        if the red car is at the location of the exit tile
+        print after how many moves you have won and run the output maker
+        to turn all the made moves into a csv file
+        """
+        print(self.exit_tile)
+        if self.occupation[self.exit_tile] == self.red_car:
             print('dikke win broer')
             print(f"Je hebt gewonnen na {self.move_counter} zetten")
-            output_maker()
+            self.output_maker()
             return True
 
         else:
