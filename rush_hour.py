@@ -286,10 +286,14 @@ class Board():
         self.moves_df = pd.concat([self.moves_df, move_df])
 
     def win_check(self):
-
+        # check if red car is at winning positions
+        # find coordinates for the exit tile
         winning_c = self.grid_size - 1
         winning_r = (self.grid_size - 1) // 2
 
+        # if the red car is at the location of the exit square
+        # print after how many moves you have won and run the output maker
+        # to turn all the made moves into a csv file
         if self.occupation[(winning_r, winning_c)] == self.red_car:
             print('dikke win broer')
             print(f"Je hebt gewonnen na {self.move_counter} zetten")
@@ -298,21 +302,6 @@ class Board():
 
         else:
             return False
-
-        # if self.occupation[(winning_r, winning_c)] >= 1:
-        #     occupating_vehicle = self.occupation[(winning_r, winning_c)]
-        #
-        #     if (self.vehicle_dict[occupating_vehicle]).car == "X":
-        #         print('dikke win broer')
-        #         print(f"Je hebt gewonnen na {self.move_counter} zetten")
-        #         output_maker()
-        #         return True
-        #
-        #     else:
-        #         return False
-
-
-
 
     def output_maker(self):
         # this function saves a dataframe of moves to a csv file
