@@ -131,7 +131,7 @@ class Board():
 
         # update the figure
         self.root.update()
-        plt.pause(0.01)
+        plt.pause(1)
 
     def move(self):
         # update the grid
@@ -198,6 +198,7 @@ class Board():
                     neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
                     if neighbouring_veh.orientation == "H":
+                        # move the vehicle
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
                         # append move to DataFrame
@@ -215,6 +216,7 @@ class Board():
                     neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
                     if neighbouring_veh.orientation == "H":
+                        # move the vehicle
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         # append move to DataFrame
@@ -231,6 +233,7 @@ class Board():
                     neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
                     if neighbouring_veh.orientation == "V":
+                        # move the vehicle
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
                         # append move to DataFrame
@@ -247,6 +250,7 @@ class Board():
                     neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
                     if neighbouring_veh.orientation == "V":
+                        # move the vehicle
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         # append move to DataFrame
@@ -263,9 +267,9 @@ class Board():
         self.occupation[vehicle.positions[-1]] = 0
 
         # update square the vehicle moved away from back to grey ("empty")
-        grey_r, grey_c = vehicle.positions[-1]
-        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        self.empty_square(vehicle, -1)
 
+        # update the positions the vehicle is at
         vehicle.positions = vehicle.positions[:-1]
 
     def move_vehicle_ahead(self, vehicle, r, c):
@@ -274,10 +278,15 @@ class Board():
         self.occupation[vehicle.positions[0]] = 0
 
         # update square the vehicle moved away from back to grey ("empty")
-        grey_r, grey_c = vehicle.positions[0]
-        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        self.empty_square(vehicle, 0)
 
+        # update the positions the vehicle is at
         vehicle.positions = vehicle.positions[1:]
+
+    def empty_square(self, vehicle, direction):
+        # update square the vehicle moved away from back to grey ("empty")
+        grey_r, grey_c = vehicle.positions[direction]
+        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
     def append_move_to_DataFrame(self, vehicle, direction):
         # append move to DataFrame
