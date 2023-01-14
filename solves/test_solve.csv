@@ -1,5 +1,5 @@
 car name,move
-C,left
-D,left
-G,up
 A,left
+A,right
+A,left
+X,left
