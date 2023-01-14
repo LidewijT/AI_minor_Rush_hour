@@ -77,6 +77,10 @@ class Board():
             # make sure car X has always color red
             if vehicle[1]['car'] == "X":
                 color_veh = "#FF0000"
+
+                # store the number of the red car
+                self.red_car = vehicle[0] + 1
+
             else:
                 # retrieve hex value for vehicle color
                 color_list = list(cnames.items())
@@ -286,20 +290,28 @@ class Board():
         winning_c = self.grid_size - 1
         winning_r = (self.grid_size - 1) // 2
 
-        if self.occupation[(winning_r, winning_c)] >= 1:
-            occupating_vehicle = self.occupation[(winning_r, winning_c)]
-
-            if (self.vehicle_dict[occupating_vehicle]).car == "X":
-                print('dikke win broer')
-                print(f"Je hebt gewonnen na {self.move_counter} zetten")
-                output_maker()
-                return True
-
-            else:
-                return False
+        if self.occupation[(winning_r, winning_c)] == self.red_car:
+            print('dikke win broer')
+            print(f"Je hebt gewonnen na {self.move_counter} zetten")
+            output_maker()
+            return True
 
         else:
             return False
+
+        # if self.occupation[(winning_r, winning_c)] >= 1:
+        #     occupating_vehicle = self.occupation[(winning_r, winning_c)]
+        #
+        #     if (self.vehicle_dict[occupating_vehicle]).car == "X":
+        #         print('dikke win broer')
+        #         print(f"Je hebt gewonnen na {self.move_counter} zetten")
+        #         output_maker()
+        #         return True
+        #
+        #     else:
+        #         return False
+
+
 
 
     def output_maker(self):
