@@ -311,7 +311,7 @@ class Board():
             return False
 
     def output_maker(self):
-        # this function saves a dataframe of moves to a csv file
+        # save dataframe of moves to a csv file
         self.moves_df.to_csv(self.output_file, index=False)
 
 if __name__ == "__main__":
