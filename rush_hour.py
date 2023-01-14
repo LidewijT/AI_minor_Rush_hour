@@ -137,15 +137,14 @@ class Board():
         winning_condition = self.win_check()
         self.move_counter += 1
 
-        ## to test wether the output maker works
-        # if self.move_counter >= 5:
-        #     winning_condition = True
-        #     self.output_maker()
+        # to test wether the output maker works
+        if self.move_counter >= 5:
+            winning_condition = True
+            self.output_maker()
 
         # move cars only if winning condtion is not reached
         if winning_condition == False:# and self.move_counter < 5:
             self.checkfreesquares()
-
 
 
 
@@ -198,9 +197,7 @@ class Board():
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
                         # append move to DataFrame
-                        move_df = pd.DataFrame([[neighbouring_veh.car, "left"]], \
-                        columns=['car name', 'move'])
-                        self.moves_df = pd.concat([self.moves_df, move_df])
+                        self.append_move_to_DataFrame(neighbouring_veh, "left")
 
                         pick_free_square = False
                         break
@@ -217,9 +214,7 @@ class Board():
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         # append move to DataFrame
-                        move_df = pd.DataFrame([[neighbouring_veh.car, "right"]], \
-                        columns=['car name', 'move'])
-                        self.moves_df = pd.concat([self.moves_df, move_df])
+                        self.append_move_to_DataFrame(neighbouring_veh, "right")
 
                         pick_free_square = False
                         break
@@ -235,9 +230,7 @@ class Board():
                         self.move_vehicle_back(neighbouring_veh, r, c)
 
                         # append move to DataFrame
-                        move_df = pd.DataFrame([[neighbouring_veh.car, "up"]], \
-                        columns=['car name', 'move'])
-                        self.moves_df = pd.concat([self.moves_df, move_df])
+                        self.append_move_to_DataFrame(neighbouring_veh, "up")
 
                         pick_free_square = False
                         break
@@ -253,9 +246,7 @@ class Board():
                         self.move_vehicle_ahead(neighbouring_veh, r, c)
 
                         # append move to DataFrame
-                        move_df = pd.DataFrame([[neighbouring_veh.car, "down"]], \
-                        columns=['car name', 'move'])
-                        self.moves_df = pd.concat([self.moves_df, move_df])
+                        self.append_move_to_DataFrame(neighbouring_veh, "down")
 
                         pick_free_square = False
                         break
@@ -283,6 +274,12 @@ class Board():
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
         vehicle.positions = vehicle.positions[1:]
+
+    def append_move_to_DataFrame(self, vehicle, direction):
+        # append move to DataFrame
+        move_df = pd.DataFrame([[vehicle.car, direction]], \
+        columns=['car name', 'move'])
+        self.moves_df = pd.concat([self.moves_df, move_df])
 
     def win_check(self):
 
