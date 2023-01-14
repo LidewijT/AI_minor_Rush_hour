@@ -195,7 +195,6 @@ class Board():
                 # and the orientation of this vehicle is horizontal
                 if c + 1 < self.grid_size and \
                 self.occupation[r][c + 1] >= 1 and surr_square == "left":
-
                     neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
                     if neighbouring_veh.orientation == "H":
@@ -302,7 +301,6 @@ class Board():
         print after how many moves you have won and run the output maker
         to turn all the made moves into a csv file
         """
-        print(self.exit_tile)
         if self.occupation[self.exit_tile] == self.red_car:
             print('dikke win broer')
             print(f"Je hebt gewonnen na {self.move_counter} zetten")
