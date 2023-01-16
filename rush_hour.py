@@ -323,7 +323,6 @@ if __name__ == "__main__":
     parser.add_argument("input_file", help = "location input file (csv)")
     parser.add_argument("output_file", help = "location output file(csv)")
 
-
     # read arguments from command line
     args = parser.parse_args()
 
