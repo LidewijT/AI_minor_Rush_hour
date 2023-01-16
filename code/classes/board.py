@@ -7,17 +7,22 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mlc
 import tkinter as tk
 import random
-from colors import cnames
+from ..colors import cnames
 
 from .vehicle import Vehicles
 
 class Board():
-    def __init__(self, input_file):
+    def __init__(self, input_file, output_file):
+        self.move_counter = 0
+        self.output_file = output_file
+
         self.vehicle_dict = {}
+        # create dataframe to keep track of each move
+        self.moves_df = pd.DataFrame(columns=['car name', 'move'])
 
         self.load_vehicles(input_file)
         self.create_board(input_file)
-        self.make_random_move()
+        self.move()
 
     def load_vehicles(self, input_file):
         """
@@ -40,6 +45,10 @@ class Board():
             # make sure car X has always color red
             if vehicle[1]['car'] == "X":
                 color_veh = "#FF0000"
+
+                # store the number of the red car
+                self.red_car = vehicle[0] + 1
+
             else:
                 # retrieve hex value for vehicle color
                 colorl_list = list(cnames.items())
@@ -53,7 +62,7 @@ class Board():
                     i = 0
 
             # create Vehicle() and add to list
-            self.vehicle_dict[vehicle[1]['car']] = (Vehicles(vehicle[1]['car'], \
+            self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
                 vehicle[1]['length'], color_veh))
 
@@ -65,8 +74,11 @@ class Board():
         # get grid size
         self.grid_size = self.get_gridsize(input_file)
 
-        # create empty grid matrix to keep track of occupied squares
-        self.occupation = np.empty((self.grid_size, self.grid_size), dtype=str)
+        # determine the exit tile
+        self.exit_tile = ((self.grid_size - 1) // 2, self.grid_size - 1)
+
+        # create grid matrix to keep track of occupied squares
+        self.occupation = np.zeros((self.grid_size, self.grid_size))
 
         # create an empty board
         self.create_grid(self.grid_size)
@@ -88,12 +100,12 @@ class Board():
         Takes the gridsize as input and creates an empty board.
         """
         # set size for window on screen
-        width_grid = 720
+        graph_size = 720
 
         # create the main window
         self.root = tk.Tk()
         # set base for size of window
-        self.canvas = tk.Canvas(self.root, width=width_grid, height=width_grid)
+        self.canvas = tk.Canvas(self.root, width=graph_size, height=graph_size)
         self.canvas.pack()
 
         # create empty board
@@ -101,16 +113,18 @@ class Board():
 
         for i in range(grid_size):
             row = []
+
             for j in range(grid_size):
-                # calculate size of each square corresponding with gridsize
-                square = self.canvas.create_rectangle(j * (width_grid / \
-                    grid_size), i * (width_grid / grid_size), (j + 1) * \
-                    (width_grid / grid_size),(i + 1) * (720 / grid_size), \
+                # calculate size of each square corresponding with grid size
+                square = self.canvas.create_rectangle(j * (graph_size / \
+                    grid_size), i * (graph_size / grid_size), (j + 1) * \
+                    (graph_size / grid_size),(i + 1) * (graph_size / grid_size), \
                     fill='dimgrey')
                 row.append(square)
+
             self.grid.append(row)
 
-        # place window at the center of the screen
+        # place created window at the center of the screen
         self.root.eval('tk::PlaceWindow . center')
 
     def update_board(self):
@@ -118,21 +132,21 @@ class Board():
         Updates the board using the positions of all vehicles. Also updates the
         occupation matrix to keep track of occupied squares.
         """
-        for veh_obj in self.vehicle_dict.values():
+        for car_number, veh_obj in self.vehicle_dict.items():
             for row, col in veh_obj.positions:
                 # update position of vehicle in grid
                 self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
-                self.update_occupation(row, col, veh_obj)
+                self.update_occupation(row, col, car_number)
 
         # update the figure window
         self.root.update()
 
-    def update_occupation(self, row, col, vehicle):
+    def update_occupation(self, row, col, car_number):
         """
         Updates the occupation with the vehicle name of the current square.
         """
-        self.occupation[row][col] = vehicle.car
+        self.occupation[row][col] = car_number
 
     def update_square(self, square, color):
         """
@@ -141,20 +155,29 @@ class Board():
         """
         self.canvas.itemconfig(square, fill=color)
 
-    def make_random_move(self):
-        # check for free squares on the board to move to
-        self.free_row, self.free_col = self.get_free_squares()
+    def move(self):
+        self.move_counter += 1
 
-        # make a random vehicle move to a free square
-        self.random_car_move()
+        # to test wether the output maker works
+        # if self.move_counter >= 5:
+        #     winning_condition = True
+        #     self.output_maker()
 
-        # update the board with the new vehicle movement
-        self.update_board()
+        # move cars only if winning condtion is not reached
+        if self.win_check() == False:# and self.move_counter < 5:
+            # check for free squares on the board to move to
+            self.free_row, self.free_col = self.get_free_squares()
 
-        plt.pause(0.1)
+            # make a random vehicle move to a free square
+            self.random_car_move()
 
-        # make another random move
-        self.make_random_move()
+            # update the board with the new vehicle movement
+            self.update_board()
+
+            plt.pause(0.01)
+
+            # make another move
+            self.move()
 
     def get_free_squares(self):
         """
@@ -162,7 +185,7 @@ class Board():
         numpy array for both row an column positions in which the indices
         matches the free squares.
         """
-        free_row, free_col = np.where(self.occupation == '')
+        free_row, free_col = np.where(self.occupation == 0)
 
         return free_row, free_col
 
@@ -177,9 +200,8 @@ class Board():
             # get the position of a randomly chosen free square
             r, c = self.random_free_square()
 
+            # self.load_vehicles
             # list for random squares around free square
-            self.load_vehicles
-            
             self.surrounding_squares = ["left", "right", "up", "down"]
 
             # pick until all surroundings squares have been tried
@@ -187,47 +209,62 @@ class Board():
                 # choose a random surrounding square
                 surr_square = self.random_surrounding_square()
 
-                """
-                try the surrounding squares to move vehicles
-                """
-
                 # move vehicle to the left respectively from free square
-                if c + 1 < self.grid_size and len(self.occupation[r][c + 1]) >= 1 and surr_square == "left":
-                    current_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+                if c + 1 < self.grid_size and \
+                self.occupation[r][c + 1] >= 1 and surr_square == "left":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
-                    if current_veh.orientation == "H":
-                        self.move_vehicle_back(current_veh, r, c)
+                    # only move if the orientation of the vehicle is horizontal
+                    if neighbouring_veh.orientation == "H":
+                        self.move_vehicle_back(neighbouring_veh, r, c)
+
+                        # append move to DataFrame
+                        self.append_move_to_DataFrame(neighbouring_veh, "left")
 
                         pick_free_square = False
                         break
 
                 # move vehicle to the right respectively from free square
-                elif c - 1 >= 0 and len(self.occupation[r][c - 1]) >= 1 and surr_square == "right":
-                    current_veh = self.vehicle_dict[self.occupation[r][c - 1]]
-                    # print(current_veh.positions)
+                elif c - 1 >= 0 and \
+                self.occupation[r][c - 1] >= 1 and surr_square == "right":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
-                    if current_veh.orientation == "H":
-                        self.move_vehicle_ahead(current_veh, r, c)
+                    # only move if the orientation of the vehicle is horizontal
+                    if neighbouring_veh.orientation == "H":
+                        self.move_vehicle_ahead(neighbouring_veh, r, c)
+
+                        # append move to DataFrame
+                        self.append_move_to_DataFrame(neighbouring_veh, "right")
 
                         pick_free_square = False
                         break
 
                 # move vehicle to the up respectively from free square
-                elif r + 1 < self.grid_size and len(self.occupation[r + 1][c]) >= 1 and surr_square == "up":
-                    current_veh = self.vehicle_dict[self.occupation[r + 1][c]]
+                elif r + 1 < self.grid_size \
+                and self.occupation[r + 1][c] >= 1 and surr_square == "up":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
-                    if current_veh.orientation == "V":
-                        self.move_vehicle_back(current_veh, r, c)
+                    # only move if the orientation of the vehicle is vertical
+                    if neighbouring_veh.orientation == "V":
+                        self.move_vehicle_back(neighbouring_veh, r, c)
+
+                        # append move to DataFrame
+                        self.append_move_to_DataFrame(neighbouring_veh, "up")
 
                         pick_free_square = False
                         break
 
                 # move vehicle to the move respectively from free square
-                elif r - 1 >= 0 and len(self.occupation[r - 1][c]) >= 1 and surr_square == "down":
-                    current_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+                elif r - 1 >= 0 and self.occupation[r - 1][c] >= 1 \
+                and surr_square == "down":
+                    neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
-                    if current_veh.orientation == "V":
-                        self.move_vehicle_ahead(current_veh, r, c)
+                    # only move if the orientation of the vehicle is vertical
+                    if neighbouring_veh.orientation == "V":
+                        self.move_vehicle_ahead(neighbouring_veh, r, c)
+
+                        # append move to DataFrame
+                        self.append_move_to_DataFrame(neighbouring_veh, "down")
 
                         pick_free_square = False
                         break
@@ -261,29 +298,59 @@ class Board():
 
         return surr_square
 
-    def move_vehicle_back(self, current_veh, r, c):
+    def move_vehicle_back(self, vehicle, r, c):
         """
         Takes a vehicle object and updates its position based on the gives row
         and column. Updates the occupation matrix and the new vehicle positions.
         """
         # move vehicle backwards (left/up)
-        current_veh.positions.insert(0, (r,c))
-        self.occupation[current_veh.positions[-1]] = ''
+        vehicle.positions.insert(0, (r,c))
+        self.occupation[vehicle.positions[-1]] = 0
 
-        # update square back to grey ("empty")
-        grey_r, grey_c = current_veh.positions[-1]
-        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, -1)
 
-        current_veh.positions = current_veh.positions[:-1]
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[:-1]
 
-    def move_vehicle_ahead(self, current_veh, r, c):
+    def move_vehicle_ahead(self, vehicle, r, c):
         # move vehicle ahead (right/down)
-        current_veh.positions.append((r,c))
-        # print(current_veh.positions)
-        self.occupation[current_veh.positions[0]] = ''
+        vehicle.positions.append((r,c))
+        self.occupation[vehicle.positions[0]] = 0
 
-        # update square back to grey
-        grey_r, grey_c = current_veh.positions[0]
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, 0)
+
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[1:]
+
+    def empty_square(self, vehicle, direction):
+        # update square the vehicle moved away from back to grey ("empty")
+        grey_r, grey_c = vehicle.positions[direction]
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
-        current_veh.positions = current_veh.positions[1:]
+    def append_move_to_DataFrame(self, vehicle, direction):
+        # append move to DataFrame
+        move_df = pd.DataFrame([[vehicle.car, direction]], \
+        columns=['car name', 'move'])
+        self.moves_df = pd.concat([self.moves_df, move_df])
+
+    def win_check(self):
+        """
+        check if red car is at winning positions
+        if the red car is at the location of the exit tile
+        print after how many moves you have won and run the output maker
+        to turn all the made moves into a csv file
+        """
+        if self.occupation[self.exit_tile] == self.red_car:
+            print('dikke win broer')
+            print(f"Je hebt gewonnen na {self.move_counter} zetten")
+            self.output_maker()
+            return True
+
+        else:
+            return False
+
+    def output_maker(self):
+        # save dataframe of moves to a csv file
+        self.moves_df.to_csv(self.output_file, index=False)

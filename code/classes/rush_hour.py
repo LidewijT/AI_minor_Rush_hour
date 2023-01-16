@@ -13,7 +13,7 @@ from colors import cnames
 
 # increase maximum recursion depth to prevent RecursionError
 import sys
-sys.setrecursionlimit(10000)
+sys.setrecursionlimit(10**9)
 
 # initiate the classes
 class Vehicles():
@@ -263,6 +263,10 @@ class Board():
         self.move()
 
     def move_vehicle_back(self, vehicle, r, c):
+        """
+        Takes a vehicle object and updates its position based on the gives row
+        and column. Updates the occupation matrix and the new vehicle positions.
+        """
         # move vehicle backwards (left/up)
         vehicle.positions.insert(0, (r,c))
         self.occupation[vehicle.positions[-1]] = 0
