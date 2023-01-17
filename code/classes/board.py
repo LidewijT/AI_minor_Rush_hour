@@ -125,7 +125,7 @@ class Board():
             self.grid.append(row)
 
         # place created window at the center of the screen
-        self.root.eval('tk::PlaceWindow . center')
+        # self.root.eval('tk::PlaceWindow . center')
 
     def update_board(self):
         """
@@ -140,7 +140,7 @@ class Board():
                 self.update_occupation(row, col, car_number)
 
         # update the figure window
-        self.root.update()
+        # self.root.update()
 
     def update_occupation(self, row, col, car_number):
         """
