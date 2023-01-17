@@ -8,7 +8,6 @@ import matplotlib.colors as mlc
 import tkinter as tk
 import random
 from ..colors import cnames
-import copy
 
 from .vehicle import Vehicles
 
@@ -116,12 +115,18 @@ class Board():
             row = []
 
             for j in range(grid_size +1):
+                # if j < grid_size or i == 2:#(grid_size - 1) // 2:
                 # calculate size of each square corresponding with grid size
                 square = self.canvas.create_rectangle(j * (graph_size / \
                     grid_size), i * (graph_size / grid_size), (j + 1) * \
                     (graph_size / grid_size),(i + 1) * (graph_size / grid_size), \
                     fill='dimgrey')
-
+                # else:
+                #     # calculate size of each square corresponding with grid size
+                #     square = self.canvas.create_rectangle(j * (graph_size / \
+                #         grid_size), i * (graph_size / grid_size), (j + 1) * \
+                #         (graph_size / grid_size),(i + 1) * (graph_size / grid_size), \
+                #         fill='black')
                 row.append(square)
 
             self.grid.append(row)
@@ -190,96 +195,6 @@ class Board():
         free_row, free_col = np.where(self.occupation == 0)
 
         return free_row, free_col
-
-    def move_cars(self):
-        copied_current_sp = copy.deepcopy(self.occupation)
-        state_space_list = []
-
-        for vehicle in self.vehicle_dict:
-
-            movement_list = ["left", "right", "up", "down"]
-            for movement_dir in movement_list:
-                # 'reset' occupation
-                self.occupation = copied_current_sp
-
-                if vehicle.orientation == "H":
-                    # check if the tile to the left of the vehicle is occupied
-                    if movement_dir == "left" and\
-                    self.movement_check(0, vehicle, r=-1) == True:
-                        # make movement
-                        self.move_vehicle_back(vehicle, r=-1)
-
-                        # append state to list
-                        state_space_list.append(self.occupation)
-
-                    # check if the tile to the right of the vehicle is occupied
-                    elif movement_dir == "right" and\
-                    self.movement_check(-1, vehicle, r=1) == True:
-                        # make movement
-                        self.move_vehicle_ahead(vehicle, vehicle, r=1)
-
-                        # append state to list
-                        state_space_list.append(self.occupation)
-
-                else:
-                    # check if the tile above of the vehicle is occupied
-                    if movement_dir == "up" and\
-                    self.movement_check(0, vehicle, c=-1) == True:
-                        # make movement
-                        self.move_vehicle_back(vehicle, c=-1)
-
-                        # append state to list
-                        state_space_list.append(self.occupation)
-
-                    # check if the tile below the vehicle is occupied
-                    elif movement_dir == "down" and\
-                    self.movement_check(-1, vehicle, c=1) == True:
-                        # make movement
-                        self.move_vehicle_ahead(vehicle, c=1)
-
-                        # append state to list
-                        state_space_list.append(self.occupation)
-
-    def movement_check(self, direction, vehicle, r=0, c=0):
-        """check if movement is possible"""
-        # direction 0 for back, -1 for ahead
-        veh_row, veh_column = vehicle.positions[direction]
-
-        if self.occupation[(veh_row + r, veh_column + c)] == 0:
-            return True
-
-        else:
-            return False
-
-    def move_vehicle_back(self, vehicle, r=0, c=0):
-        """
-        Takes a vehicle object and updates its position based on the gives row
-        and column. Updates the occupation matrix and the new vehicle positions.
-        """
-        veh_row, veh_column = vehicle.positions[0]
-
-        # move vehicle backwards (left/up)
-        vehicle.positions.insert(0, (veh_row + r, veh_column + c))
-        self.occupation[vehicle.positions[-1]] = 0
-
-        # update square the vehicle moved away from back to grey ("empty")
-        self.empty_square(vehicle, -1)
-
-        # update the positions the vehicle is at
-        vehicle.positions = vehicle.positions[:-1]
-
-    def move_vehicle_ahead(self, vehicle, r=0, c=0):
-        veh_row, veh_column = vehicle.positions[-1]
-
-        # move vehicle ahead (right/down)
-        vehicle.positions.append((veh_row + r, veh_column + c))
-        self.occupation[vehicle.positions[0]] = 0
-
-        # update square the vehicle moved away from back to grey ("empty")
-        self.empty_square(vehicle, 0)
-
-        # update the positions the vehicle is at
-        vehicle.positions = vehicle.positions[1:]
 
     def random_car_move(self):
         """
@@ -389,6 +304,32 @@ class Board():
         self.surrounding_squares.remove(surr_square)
 
         return surr_square
+
+    def move_vehicle_back(self, vehicle, r, c):
+        """
+        Takes a vehicle object and updates its position based on the gives row
+        and column. Updates the occupation matrix and the new vehicle positions.
+        """
+        # move vehicle backwards (left/up)
+        vehicle.positions.insert(0, (r,c))
+        self.occupation[vehicle.positions[-1]] = 0
+
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, -1)
+
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[:-1]
+
+    def move_vehicle_ahead(self, vehicle, r, c):
+        # move vehicle ahead (right/down)
+        vehicle.positions.append((r,c))
+        self.occupation[vehicle.positions[0]] = 0
+
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, 0)
+
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[1:]
 
     def empty_square(self, vehicle, direction):
         # update square the vehicle moved away from back to grey ("empty")
