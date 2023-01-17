@@ -23,7 +23,7 @@ class Board():
 
         self.load_vehicles(input_file)
         self.create_board(input_file)
-        self.move(algorithm)
+        self.move()
 
     def load_vehicles(self, input_file):
         """
@@ -170,13 +170,12 @@ class Board():
             self.free_row, self.free_col = self.get_free_squares()
 
             # make a random vehicle move to a free square
-            self.random_car_move(self.free_row, self.free_col, self.grid_size, \
-                self.occupation, self.vehicle_dict)
+            self.random_car_move()
 
             # update the board with the new vehicle movement
             self.update_board()
 
-            plt.pause(0.01)
+            plt.pause(0.05)
 
             # make another move
             self.move()
