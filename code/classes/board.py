@@ -10,9 +10,10 @@ import random
 from ..colors import cnames
 
 from .vehicle import Vehicles
+from ..algorithms import randomise
 
 class Board():
-    def __init__(self, input_file, output_file):
+    def __init__(self, input_file, output_file, algorithm):
         self.move_counter = 0
         self.output_file = output_file
 
@@ -22,7 +23,7 @@ class Board():
 
         self.load_vehicles(input_file)
         self.create_board(input_file)
-        self.move()
+        self.move(algorithm)
 
     def load_vehicles(self, input_file):
         """
@@ -169,7 +170,8 @@ class Board():
             self.free_row, self.free_col = self.get_free_squares()
 
             # make a random vehicle move to a free square
-            self.random_car_move()
+            self.random_car_move(self.free_row, self.free_col, self.grid_size, \
+                self.occupation, self.vehicle_dict)
 
             # update the board with the new vehicle movement
             self.update_board()
@@ -314,6 +316,11 @@ class Board():
         vehicle.positions = vehicle.positions[:-1]
 
     def move_vehicle_ahead(self, vehicle, r, c):
+        """
+        Moves input vehicle 'ahead' (either to the right or down) based on the
+        input row and column. Updates the occupation matrix and the left square
+        back to grey.
+        """
         # move vehicle ahead (right/down)
         vehicle.positions.append((r,c))
         self.occupation[vehicle.positions[0]] = 0
@@ -325,11 +332,17 @@ class Board():
         vehicle.positions = vehicle.positions[1:]
 
     def empty_square(self, vehicle, direction):
+        """
+        Updates a square back to default color (=dimgrey)
+        """
         # update square the vehicle moved away from back to grey ("empty")
         grey_r, grey_c = vehicle.positions[direction]
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
     def append_move_to_DataFrame(self, vehicle, direction):
+        """
+        Saves the move in a datafram.
+        """
         # append move to DataFrame
         move_df = pd.DataFrame([[vehicle.car, direction]], \
         columns=['car name', 'move'])
@@ -337,10 +350,10 @@ class Board():
 
     def win_check(self):
         """
-        check if red car is at winning positions
-        if the red car is at the location of the exit tile
-        print after how many moves you have won and run the output maker
-        to turn all the made moves into a csv file
+        Checks whether the red car is positioned at the exit tile (=winning
+        position). If so, end the game, print the number of moves needed to
+        solve, create a csv file of the move dataframe and return True.
+        Otherwise, return False.
         """
         if self.occupation[self.exit_tile] == self.red_car:
             print('dikke win broer')
@@ -352,5 +365,7 @@ class Board():
             return False
 
     def output_maker(self):
-        # save dataframe of moves to a csv file
+        """
+        Exports the dataframe of moves to a csv file.
+        """
         self.moves_df.to_csv(self.output_file, index=False)

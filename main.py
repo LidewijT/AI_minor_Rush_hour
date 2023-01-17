@@ -2,6 +2,7 @@ import argparse
 import sys
 
 from code.classes import board
+from code.algorithms import randomise
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -17,5 +18,5 @@ if __name__ == "__main__":
     # increase maximum recursion depth to prevent RecursionError
     sys.setrecursionlimit(10**9)
 
-    # run board class with provided argument
-    board.Board(args.input_file, args.output_file)
+    # --------------------- Solve by random car movements ---------------------
+    board.Board(args.input_file, args.output_file, randomise.random_car_move)
