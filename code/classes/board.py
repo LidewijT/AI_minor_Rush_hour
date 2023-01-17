@@ -355,8 +355,7 @@ class Board():
         Otherwise, return False.
         """
         if self.occupation[self.exit_tile] == self.red_car:
-            print('dikke win broer')
-            print(f"Je hebt gewonnen na {self.move_counter} zetten")
+            print(f"\n Rush Hour was solved in {self.move_counter} moves\n")
             self.output_maker()
             return True
 

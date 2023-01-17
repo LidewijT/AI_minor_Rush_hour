@@ -1,4 +1,8 @@
 # Rush Hour
+<<<<<<< HEAD
+=======
+By Judith Atsma, Michiel Beltman and Lidewij Tijhuis
+>>>>>>> main
 
 ## The game
 Rush Hour is a game in which the goal is to get the red car out as fast aspossible, minimising its number of moves.
@@ -27,10 +31,13 @@ Here, you can find a list with the most important folders and files of this proj
     - **/data/gameboards**: folder which contains all gameboard files (input)
     - **/data/solutions**: folder which contains all solution files of the runned programs (output)
 
+<<<<<<< HEAD
 ## Authors
 - Judith Atsma
 - Michiel Beltman
 - Lidewij Tijhuis
+=======
+>>>>>>> main
 
 
 
