@@ -4,10 +4,11 @@ Solves rush hour with the given algorithm
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import math
 
 class Game:
-    def __init__(self, output_file, test_board, algorithm, nr_moves_to_solve):
+    def __init__(self, output_file, test_board, algorithm, \
+        branch_and_bound = False, nr_moves_to_solve = None):
+
         self.output_file = output_file
         self.test_board = test_board
         self.algorithm = algorithm
@@ -15,14 +16,17 @@ class Game:
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
         self.move_counter = 0
-        self.nr_moves_to_solve = nr_moves_to_solve
 
         # start solving with algorithm
-        self.run()
+        if branch_and_bound == True:
+            self.nr_moves_to_solve = nr_moves_to_solve
+            self.run_branch_and_bound()
+
+        else:
+            self.run()
 
     def run(self):
-        # keep moving cars until red car is at exit
-        while self.win_check() == False and self.move_counter < self.nr_moves_to_solve:
+        while self.win_check() == False:
             self.move_counter += 1
 
             # make a move
@@ -34,7 +38,24 @@ class Game:
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
-            # plt.pause(0.005)
+            # plt.pause(0.1)
+
+    def run_branch_and_bound(self):
+        # keep moving cars until red car is at exit
+        while self.win_check() == False and \
+            self.move_counter < self.nr_moves_to_solve:
+            self.move_counter += 1
+
+            # make a move
+            vehicle, direction = self.algorithm(self.test_board)
+
+            # save movement
+            self.append_move_to_DataFrame(vehicle, direction)
+
+            # update the board with the new vehicle movement
+            self.test_board.update_board()
+
+            # plt.pause(0.5)
 
     def append_move_to_DataFrame(self, vehicle, direction):
         """

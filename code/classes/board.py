@@ -77,7 +77,7 @@ class Board():
         self.occupation = np.zeros((self.grid_size, self.grid_size))
 
         # create an empty board
-        # self.create_grid(self.grid_size)
+        self.create_grid(self.grid_size)
 
         # place vehicles onto the board
         self.update_board()
@@ -131,12 +131,12 @@ class Board():
         for car_number, veh_obj in self.vehicle_dict.items():
             for row, col in veh_obj.positions:
                 # update position of vehicle in grid
-                # self.update_square(self.grid[row][col], veh_obj.color)
+                self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
                 self.update_occupation(row, col, car_number)
 
         # # update the figure window
-        # self.root.update()
+        self.root.update()
 
     def update_occupation(self, row, col, car_number):
         """
@@ -168,11 +168,11 @@ class Board():
         """
         # update square the vehicle moved away from back to grey ("empty")
         grey_r, grey_c = vehicle.positions[direction]
-        # self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
     def move_vehicle_back(self, vehicle, r, c):
         """
-        Takes a vehicle object and updates its position based on the gives row
+        Takes a vehicle object and updates its position towards the given row
         and column. Updates the occupation matrix and the new vehicle positions.
         """
         # move vehicle backwards (left/up)
