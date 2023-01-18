@@ -55,7 +55,7 @@ class Game:
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
-            plt.pause(0.5)
+            # plt.pause(0.5)
 
     def append_move_to_DataFrame(self, vehicle, direction):
         """

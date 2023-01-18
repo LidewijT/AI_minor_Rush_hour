@@ -24,6 +24,7 @@ if __name__ == "__main__":
     # nr_moves_to_solve = math.inf
 
     # for i in tqdm(range(100), desc="Solving boards…", ascii=False, ncols=75):
+        # test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         copy.deepcopy(test_board), randomise.random_car_move, \
     #             branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
@@ -33,7 +34,9 @@ if __name__ == "__main__":
     # --------- Solve by priority red car and random car movements ------------
     nr_moves_to_solve = math.inf
 
-    for i in tqdm(range(1000), desc="Solving boards…", ascii=False, ncols=75):
+    for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
+        test_board = board.Board(f"data/gameboards/" + args.input_file)
+
         test_game = game.Game(f"data/solutions/" + args.output_file, \
                 test_board, priority_red_car.move_priority_red_car, \
                     branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
