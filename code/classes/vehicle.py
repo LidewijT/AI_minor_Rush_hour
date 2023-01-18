@@ -6,6 +6,7 @@ class Vehicles():
         self.positions = []
         self.length = length
         self.color = color
+        self.last_move = None
 
         # create a list of positions the vehicle occupies
         if orientation == "H":

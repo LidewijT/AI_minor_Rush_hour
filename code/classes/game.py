@@ -5,6 +5,8 @@ Solves rush hour with the given algorithm
 import pandas as pd
 import matplotlib.pyplot as plt
 
+from ..algorithms import randomise, priority_red_car, move_cars_in_way
+
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None):
@@ -26,19 +28,26 @@ class Game:
             self.run()
 
     def run(self):
+        print(self.test_board.occupation)
         while self.win_check() == False:
             self.move_counter += 1
 
             # make a move
-            vehicle, direction = self.algorithm(self.test_board)
+            # vehicle, direction = self.algorithm(self.test_board)
+            print("\nstart move")
+            self.algorithm(self.test_board)
+            print(f"move made\n")
 
             # save movement
-            self.append_move_to_DataFrame(vehicle, direction)
+            # self.append_move_to_DataFrame(vehicle, direction)
 
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
-            # plt.pause(0.1)
+            print(self.test_board.occupation)
+
+            plt.pause(4)
+
 
     def run_branch_and_bound(self):
         # keep moving cars until red car is at exit

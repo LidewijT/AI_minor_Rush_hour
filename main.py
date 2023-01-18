@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, randomise2, priority_red_car
+from code.algorithms import randomise, priority_red_car, move_cars_in_way
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -32,13 +32,20 @@ if __name__ == "__main__":
     #     nr_moves_to_solve = test_game.nr_moves_to_solve
 
     # --------- Solve by priority red car and random car movements ------------
-    nr_moves_to_solve = math.inf
+    # nr_moves_to_solve = math.inf
 
-    for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
-        test_board = board.Board(f"data/gameboards/" + args.input_file)
+    # for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
+    #     test_board = board.Board(f"data/gameboards/" + args.input_file)
 
-        test_game = game.Game(f"data/solutions/" + args.output_file, \
-                test_board, priority_red_car.move_priority_red_car, \
-                    branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
+    #     test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #             test_board, priority_red_car.move_priority_red_car, \
+    #                 branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
 
-        nr_moves_to_solve = test_game.nr_moves_to_solve
+    #     nr_moves_to_solve = test_game.nr_moves_to_solve
+
+    # ---------
+
+    test_board = board.Board(f"data/gameboards/" + args.input_file)
+
+    test_game = game.Game(f"data/solutions/" + args.output_file, test_board, \
+        move_cars_in_way.move_red_car)
