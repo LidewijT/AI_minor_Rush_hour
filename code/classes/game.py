@@ -4,10 +4,11 @@ Solves rush hour with the given algorithm
 
 import pandas as pd
 import matplotlib.pyplot as plt
-import math
 
 class Game:
-    def __init__(self, output_file, test_board, algorithm, nr_moves_to_solve):
+    def __init__(self, output_file, test_board, algorithm, \
+        branch_and_bound = False, nr_moves_to_solve = None):
+
         self.output_file = output_file
         self.test_board = test_board
         self.algorithm = algorithm
@@ -15,14 +16,23 @@ class Game:
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
         self.move_counter = 0
-        self.nr_moves_to_solve = nr_moves_to_solve
 
         # start solving with algorithm
-        self.run()
+        if branch_and_bound == True:
+            self.nr_moves_to_solve = nr_moves_to_solve
+            self.run_branch_and_bound()
+        
+        else:
+            self.run()
 
     def run(self):
+        pass
+
+
+    def run_branch_and_bound(self):
         # keep moving cars until red car is at exit
-        while self.win_check() == False and self.move_counter < self.nr_moves_to_solve:
+        while self.win_check() == False and \
+            self.move_counter < self.nr_moves_to_solve:
             self.move_counter += 1
 
             # make a move

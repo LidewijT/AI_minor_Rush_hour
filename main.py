@@ -21,9 +21,11 @@ if __name__ == "__main__":
 
     # ---------- Solve by random car movements - Branch and Bound -------------
     nr_moves_to_solve = math.inf
+
     for i in range(1000):
-        test_game = game.Game(f"data/solutions/" + args.output_file, copy.deepcopy(test_board), \
-            randomise.random_car_move, nr_moves_to_solve)
+        test_game = game.Game(f"data/solutions/" + args.output_file, \
+            copy.deepcopy(test_board), randomise.random_car_move, \
+                branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
 
         nr_moves_to_solve = test_game.nr_moves_to_solve
 
