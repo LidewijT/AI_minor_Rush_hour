@@ -4,9 +4,10 @@ Solves rush hour with the given algorithm
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import math
 
 class Game:
-    def __init__(self, output_file, test_board, algorithm):
+    def __init__(self, output_file, test_board, algorithm, nr_moves_to_solve):
         self.output_file = output_file
         self.test_board = test_board
         self.algorithm = algorithm
@@ -14,15 +15,16 @@ class Game:
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
         self.move_counter = 0
+        self.nr_moves_to_solve = nr_moves_to_solve
 
         # start solving with algorithm
         self.run()
 
     def run(self):
         # keep moving cars until red car is at exit
-        self.move_counter += 1
+        while self.win_check() == False and self.move_counter < self.nr_moves_to_solve:
+            self.move_counter += 1
 
-        if self.win_check() == False:
             # make a move
             vehicle, direction = self.algorithm(self.test_board)
 
@@ -32,10 +34,7 @@ class Game:
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
-            plt.pause(0.1)
-
-            # # make another move
-            self.run()
+            # plt.pause(0.005)
 
     def append_move_to_DataFrame(self, vehicle, direction):
         """
@@ -53,8 +52,11 @@ class Game:
         Otherwise, return False.
         """
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
-            print(f"\nRush Hour was solved in {self.move_counter} moves\n")
+            self.nr_moves_to_solve = self.move_counter
+
+            print(f"Rush Hour was solved in {self.nr_moves_to_solve} moves\n")
             self.output_maker()
+
             return True
 
         else:
