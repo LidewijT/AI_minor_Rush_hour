@@ -1,5 +1,4 @@
 # Rush Hour
-=======
 By Judith Atsma, Michiel Beltman and Lidewij Tijhuis
 
 ## The game
@@ -33,7 +32,6 @@ Here, you can find a list with the most important folders and files of this proj
 - Judith Atsma
 - Michiel Beltman
 - Lidewij Tijhuis
-=======
 
 
 
