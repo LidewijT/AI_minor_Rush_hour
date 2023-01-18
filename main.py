@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, randomise2, priority_red_car
+from code.algorithms import randomise, randomise2, priority_red_car#, state_spaces
 
 if __name__ == "__main__":
     # set-up parsing command line arguments

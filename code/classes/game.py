@@ -5,7 +5,7 @@ Solves rush hour with the given algorithm
 import pandas as pd
 import matplotlib.pyplot as plt
 
-class Game:
+class Game():
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None):
 
