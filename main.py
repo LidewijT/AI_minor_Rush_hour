@@ -26,7 +26,7 @@ if __name__ == "__main__":
     # for i in tqdm(range(100), desc="Solving boards…", ascii=False, ncols=75):
         # test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
-    #         copy.deepcopy(test_board), randomise.random_car_move, \
+    #         test_board, randomise.random_car_move, \
     #             branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
 
     #     nr_moves_to_solve = test_game.nr_moves_to_solve
