@@ -18,7 +18,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # create a board for the data
-    test_board = board.Board(f"data/gameboards/" + args.input_file)
+    # test_board = board.Board(f"data/gameboards/" + args.input_file)
 
     # ---------- Solve by random car movements - Branch and Bound -------------
     # nr_moves_to_solve = math.inf

@@ -46,7 +46,7 @@ class Game:
 
             print(self.test_board.occupation)
 
-            plt.pause(4)
+            plt.pause(3)
 
 
     def run_branch_and_bound(self):
