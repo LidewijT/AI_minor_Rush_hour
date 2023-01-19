@@ -169,6 +169,48 @@ class Board():
         # update square the vehicle moved away from back to grey ("empty")
         grey_r, grey_c = vehicle.positions[direction]
         self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        
+    def car_move(self, direction, r, c):
+        # move vehicle to the left respectively from free square
+        if c + 1 < self.grid_size and \
+        self.occupation[r][c + 1] >= 1 and direction == "left" and \
+        self.vehicle_dict[self.occupation[r][c + 1]].orientation == "H":
+            neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+
+            self.move_vehicle_back(neighbouring_veh, r, c)
+
+            return neighbouring_veh
+
+        # move vehicle to the right respectively from free square
+        elif c - 1 >= 0 and \
+        self.occupation[r][c - 1] >= 1 and direction == "right" and \
+        self.vehicle_dict[self.occupation[r][c - 1]].orientation == "H":
+            neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+
+            self.move_vehicle_ahead(neighbouring_veh, r, c)
+
+            return neighbouring_veh
+
+        # move vehicle to the up respectively from free square
+        elif r + 1 < self.grid_size \
+        and self.occupation[r + 1][c] >= 1 and direction == "up" and \
+        self.vehicle_dict[self.occupation[r + 1][c]].orientation == "V":
+            neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
+
+            self.move_vehicle_back(neighbouring_veh, r, c)
+
+            return neighbouring_veh
+
+        # move vehicle to the move respectively from free square
+        elif r - 1 >= 0 and self.occupation[r - 1][c] >= 1 \
+        and direction == "down" and \
+        self.vehicle_dict[self.occupation[r - 1][c]].orientation == "V":
+            neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
+
+            self.move_vehicle_ahead(neighbouring_veh, r, c)
+
+            return neighbouring_veh
+        
 
     def move_vehicle_back(self, vehicle, r, c):
         """
