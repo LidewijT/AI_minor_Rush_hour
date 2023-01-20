@@ -1,5 +1,6 @@
 from ..algorithms import randomise
 import random
+from itertools import chain
 """"
 Assumes that red car is horizontally oriented.
 """
@@ -181,6 +182,9 @@ class Move_blocking_cars():
 
             if result == True:
                 return self.moved_veh, self.move
+
+            # unnest list
+            list(chain.from_iterable(result))
 
         print("did not work")
 
