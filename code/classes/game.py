@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 class Game():
     def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None):
+        branch_and_bound = False, nr_moves_to_solve = None, breath_first = False):
 
         self.output_file = output_file
         self.test_board = test_board
@@ -21,6 +21,9 @@ class Game():
         if branch_and_bound == True:
             self.nr_moves_to_solve = nr_moves_to_solve
             self.run_branch_and_bound()
+
+        elif breath_first == True:
+            self.run_breath_first_algorithm()
 
         else:
             self.run()
@@ -56,6 +59,30 @@ class Game():
             self.test_board.update_board()
 
             # plt.pause(0.5)
+
+    def run_breath_first_algorithm(self):
+        self.moves_df = self.algorithm(self.test_board)
+
+        print("algorithm klaar")
+        # print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
+
+        # self.output_maker()
+
+
+        # # keep moving cars until red car is at exit
+        # while self.win_check() == False
+        #
+        #     # make a move
+        #     vehicle, direction = self.algorithm(self.test_board)
+        #
+        #     # save movement
+        #     self.append_move_to_DataFrame(vehicle, direction)
+        #
+        #     # update the board with the new vehicle movement
+        #     self.test_board.update_board()
+        #
+        #     # plt.pause(0.5)
+
 
     def append_move_to_DataFrame(self, vehicle, direction):
         """

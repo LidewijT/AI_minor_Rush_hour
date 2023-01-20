@@ -1,4 +1,6 @@
 from ..algorithms import randomise
+from ..algorithms import breath_first
+
 import random
 """"
 Assumes that red car is horizontally oriented.
@@ -21,7 +23,7 @@ def move_priority_red_car(test_board):
 
     else:
         # red car is blocked, so move random car
-        return randomise.random_car_move(test_board)
+        return breath_first.breath_first_search(test_board)
 
 
 

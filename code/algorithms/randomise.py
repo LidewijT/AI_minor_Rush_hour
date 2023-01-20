@@ -28,49 +28,11 @@ def random_car_move(test_board):
             # choose a random surrounding square
             surr_square, surrounding_squares = random_surrounding_square(surrounding_squares)
 
-            # move vehicle to the left respectively from free square
-            if c + 1 < test_board.grid_size and \
-            test_board.occupation[r][c + 1] >= 1 and surr_square == "left":
-                neighbouring_veh = test_board.vehicle_dict[test_board.occupation[r][c + 1]]
+            # make movement with the given surr_square
+            vehicle = test_board.car_move(surr_square, r, c)
+            if vehicle:
+                return vehicle, surr_square
 
-                # only move if the orientation of the vehicle is horizontal
-                if neighbouring_veh.orientation == "H":
-                    test_board.move_vehicle_back(neighbouring_veh, r, c)
-
-                    return neighbouring_veh, "left"
-
-            # move vehicle to the right respectively from free square
-            elif c - 1 >= 0 and \
-            test_board.occupation[r][c - 1] >= 1 and surr_square == "right":
-                neighbouring_veh = test_board.vehicle_dict[test_board.occupation[r][c - 1]]
-
-                # only move if the orientation of the vehicle is horizontal
-                if neighbouring_veh.orientation == "H":
-                    test_board.move_vehicle_ahead(neighbouring_veh, r, c)
-
-                    return neighbouring_veh, "right"
-
-            # move vehicle to the up respectively from free square
-            elif r + 1 < test_board.grid_size \
-            and test_board.occupation[r + 1][c] >= 1 and surr_square == "up":
-                neighbouring_veh = test_board.vehicle_dict[test_board.occupation[r + 1][c]]
-
-                # only move if the orientation of the vehicle is vertical
-                if neighbouring_veh.orientation == "V":
-                    test_board.move_vehicle_back(neighbouring_veh, r, c)
-
-                    return neighbouring_veh, "up"
-
-            # move vehicle to the move respectively from free square
-            elif r - 1 >= 0 and test_board.occupation[r - 1][c] >= 1 \
-            and surr_square == "down":
-                neighbouring_veh = test_board.vehicle_dict[test_board.occupation[r - 1][c]]
-
-                # only move if the orientation of the vehicle is vertical
-                if neighbouring_veh.orientation == "V":
-                    test_board.move_vehicle_ahead(neighbouring_veh, r, c)
-
-                    return neighbouring_veh, "down"
 
 def random_free_square(row, col):
     """
