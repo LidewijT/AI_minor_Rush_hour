@@ -29,13 +29,16 @@ class Game:
 
     def run(self):
         print(self.test_board.occupation)
+
+
+
         while self.win_check() == False:
             self.move_counter += 1
 
             # make a move
             # vehicle, direction = self.algorithm(self.test_board)
             print("\nstart move")
-            self.algorithm(self.test_board)
+            self.algorithm()
             print(f"move made\n")
 
             # save movement

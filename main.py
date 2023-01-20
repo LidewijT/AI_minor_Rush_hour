@@ -46,6 +46,10 @@ if __name__ == "__main__":
     # ---------
 
     test_board = board.Board(f"data/gameboards/" + args.input_file)
+    
+    mbc = move_cars_in_way.Move_blocking_cars(test_board)
+    
+    print("test")
 
     test_game = game.Game(f"data/solutions/" + args.output_file, test_board, \
-        move_cars_in_way.move_red_car)
+        mbc.move_red_car)
