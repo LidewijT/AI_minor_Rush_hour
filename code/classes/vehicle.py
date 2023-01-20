@@ -16,6 +16,9 @@ class Vehicles():
         # keep track of future moves if one way (ahead/back) does not work
         self.future_move = None
 
+        # keep track of the vehicle(s) that blocks this vehicle
+        self.blocked_by = []
+
         # create a list of positions the vehicle occupies
         if orientation == "H":
             # positions for horizontal orientated vehicles
