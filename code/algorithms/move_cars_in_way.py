@@ -39,7 +39,10 @@ class Move_blocking_cars():
                 self.red_car.blocking_veh = None
 
                 # move the car that was blocked before to the free square
-                self.car_movement(self, blocked_veh, direction, self.red_r_es, self.red_c_es + 1)
+                if direction == "ahead":
+                    self.test_board.move_vehicle_ahead(blocked_veh, self.red_r_es, self.red_c_es + 1)
+                else:
+                    self.test_board.move_vehicle_back(blocked_veh, self.red_r_es, self.red_c_es + 1)
 
         # red car is blocked
         else:                                                                  # red car is blocked
@@ -107,6 +110,13 @@ class Move_blocking_cars():
 
                 elif self.test_board.occupation[move[0], move[1]] == self.red_car_nr:
                     self.red_car.blocking_veh = veh_object, direction
+                    
+
+
+                    # save the vehicle that is blocking the way if it is not already in the list
+                    if veh_object.blocked_by.count(self.test_board.occupation[move[0], move[1]]) == 0:
+                        veh_object.blocked_by.append(self.test_board.occupation[move[0], move[1]])
+                        pass
 
                 else:
                     square_occupation = self.test_board.occupation[move[0], move[1]]
@@ -151,13 +161,16 @@ class Move_blocking_cars():
 
         result = veh_object.blocked_by
 
-        # look 5 cars further
-        for _ in range(5):
+        # look 6 cars further
+        for _ in range(6):
             # try to move these vehicles (layer n)
             result = self.move_blocking_vehicle(result)
 
             if result == True:
                 return self.moved_veh, self.move
+
+            # unnest list
+            result = list(chain.from_iterable(result))
 
         # change direction and repeat
         for veh in veh_object.blocked_by:
@@ -175,16 +188,16 @@ class Move_blocking_cars():
 
         print(f"\ntry to make a move again\n")
 
-        # look 5 cars further
-        for _ in range(5):
+        # look 6 cars further
+        for _ in range(6):
             # try to move these vehicles (layer n)
-            result = self.try_move_vehicle(self, result)
+            result = self.move_blocking_vehicle(result)
 
             if result == True:
                 return self.moved_veh, self.move
 
             # unnest list
-            list(chain.from_iterable(result))
+            result = list(chain.from_iterable(result))
 
         print("did not work")
 
