@@ -6,7 +6,7 @@ import pandas as pd
 import queue
 import copy
 
-test = set()
+occupation_set = set()
 numberino = 0
 
 def breath_first_search(start_state):
@@ -64,6 +64,7 @@ def get_next_states(current_state):
     children_parent_dict = {}
 
     parent_state = copy.deepcopy(current_state)
+    parent_occupation_tuple = str(tuple([tuple(row) for row in parent_state.occupation]))
 
     free_row, free_col = current_state.get_free_squares()
 
@@ -79,19 +80,20 @@ def get_next_states(current_state):
             vehicle = current_state.car_move(direction, r, c)
 
             if vehicle:
-                next_states.append(current_state)
-
                 # convert nparray to tuple of tuples
-                occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
+                current_occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
 
-                children_parent_dict[current_state] = ((vehicle.car, direction), parent_state)
-                # print(current_state.occupation)
-                # numberino = numberino + 1
-                test.add(occupation_tuple)
-                print(test)
-                print(f"number: {len(test)}")
-                # "reset" curent state
-                current_state = copy.deepcopy(parent_state)
+                if current_occupation_tuple not in occupation_set:
+                    next_states.append(current_state)
+
+                    children_parent_dict[current_occupation_tuple] = ((vehicle.car, direction), parent_occupation_tuple)
+                    # print(current_state.occupation)
+                    # numberino = numberino + 1
+                    occupation_set.add(current_occupation_tuple)
+                    print(occupation_set)
+                    print(f"number: {len(occupation_set)}")
+                    # "reset" curent state
+                    current_state = copy.deepcopy(parent_state)
 
     return next_states, children_parent_dict
 
