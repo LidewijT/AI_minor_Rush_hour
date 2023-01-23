@@ -12,11 +12,12 @@ import copy
 def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
     child, children_parent_dict = search(start_state)
-    print("test")
+    child_tuple = str(tuple([tuple(row) for row in start_state.occupation]))
+
     # search back in dict to find all the moves made to get to winning state
-    while children_parent_dict[child] != None:
-        move, parent = children_parent_dict[child]
-        child = parent
+    while children_parent_dict[child_tuple] != None:
+        move, parent = children_parent_dict[child_tuple]
+        child_tuple = parent
 
         # put move into df
         moves_df = append_move_to_DataFrame_reversed(moves_df, move)
@@ -27,7 +28,7 @@ def breath_first_search(start_state):
 def search(start_state):
     # dictionary with children as key and as value a tuple of (move, parent)
     # where move is also a tuple of (vehicle, direction)
-    children_parent_dict = {start_state: None}
+    children_parent_dict = {str(tuple([tuple(row) for row in start_state.occupation])): None}
 
     visited = set()
     q = queue.Queue()
@@ -84,15 +85,12 @@ def get_next_states(current_state, children_parent_dict):
                 # convert nparray to tuple of tuples
                 current_occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
 
+                # check if this state is unique (pruning)
                 if current_occupation_tuple not in children_parent_dict:
                     next_states.append(current_state)
 
                     children_parent_dict[current_occupation_tuple] = ((vehicle.car, direction), parent_occupation_tuple)
-                    # print(current_state.occupation)
-                    # numberino = numberino + 1
-                    # occupation_set.add(current_occupation_tuple)
-                    # print(occupation_set)
-                    # print(f"number: {len(children_parent_dict)}")
+
                     # "reset" curent state
                     current_state = copy.deepcopy(parent_state)
 
