@@ -6,26 +6,18 @@ import pandas as pd
 import queue
 import copy
 
-# occupation_set = set()
-# numberino = 0
 
 def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
     child, children_parent_dict = search(start_state)
     child_tuple = str(tuple([tuple(row) for row in child.occupation]))
 
-    # children_parent_dict = {'a' : (('a', 'left'), 'ab'), 'ab' : (('b', 'left'), 'abc'), 'abc' : (('c', 'left'), 'abcd'), 'abcd' : None}
-    # child_tuple = 'a'
-
     # search back in dict to find all the moves made to get to winning state
     while children_parent_dict[child_tuple] != None:
         move, parent = children_parent_dict[child_tuple]
         child_tuple = parent
 
-        # print(move, parent)
-        # put move into df
         moves_df = append_move_to_DataFrame_reversed(moves_df, move)
-    # print(moves_df)
 
     return moves_df
 
@@ -46,7 +38,6 @@ def search(start_state):
         if current_state.occupation[current_state.exit_tile] \
         == current_state.red_car:
             print("winner winner chicken dinner")
-        # game.Game.win_check(current_state) == True:
             return current_state, children_parent_dict
 
         if current_state in visited:
@@ -54,11 +45,8 @@ def search(start_state):
 
         visited.add(current_state)
 
-        # print("next")
         next_states_list, children_parent_dict = get_next_states(current_state, children_parent_dict)
         print(f"number: {len(children_parent_dict)}")
-
-        # children_parent_dict.update(child_dict)
 
         for next_state in next_states_list:
             q.put(next_state)
