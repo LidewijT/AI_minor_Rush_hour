@@ -6,8 +6,8 @@ import pandas as pd
 import queue
 import copy
 
-occupation_set = set()
-numberino = 0
+# occupation_set = set()
+# numberino = 0
 
 def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -48,9 +48,11 @@ def search(start_state):
 
         visited.add(current_state)
 
-        print("next")
-        next_states_list, child_dict = get_next_states(current_state)
-        children_parent_dict.update(child_dict)
+        # print("next")
+        next_states_list, children_parent_dict = get_next_states(current_state, children_parent_dict)
+        print(f"number: {len(children_parent_dict)}")
+
+        # children_parent_dict.update(child_dict)
 
         for next_state in next_states_list:
             q.put(next_state)
@@ -59,9 +61,8 @@ def search(start_state):
 
 
 
-def get_next_states(current_state):
+def get_next_states(current_state, children_parent_dict):
     next_states = []
-    children_parent_dict = {}
 
     parent_state = copy.deepcopy(current_state)
     parent_occupation_tuple = str(tuple([tuple(row) for row in parent_state.occupation]))
@@ -83,15 +84,15 @@ def get_next_states(current_state):
                 # convert nparray to tuple of tuples
                 current_occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
 
-                if current_occupation_tuple not in occupation_set:
+                if current_occupation_tuple not in children_parent_dict:
                     next_states.append(current_state)
 
                     children_parent_dict[current_occupation_tuple] = ((vehicle.car, direction), parent_occupation_tuple)
                     # print(current_state.occupation)
                     # numberino = numberino + 1
-                    occupation_set.add(current_occupation_tuple)
-                    print(occupation_set)
-                    print(f"number: {len(occupation_set)}")
+                    # occupation_set.add(current_occupation_tuple)
+                    # print(occupation_set)
+                    # print(f"number: {len(children_parent_dict)}")
                     # "reset" curent state
                     current_state = copy.deepcopy(parent_state)
 
