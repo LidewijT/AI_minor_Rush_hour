@@ -18,7 +18,7 @@ if __name__ == "__main__":
 
     # ---------- Solve by random car movements - Branch and Bound -------------
     nr_moves_to_solve = math.inf
-    n = 1000
+    n = 10000
 
     # solve the rush hour n times and save the lowest number of moves
     for i in tqdm(range(n), desc="Solving boards…", ascii=False, ncols=75):
