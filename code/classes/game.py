@@ -69,7 +69,7 @@ class Game():
         print("algorithm klaar")
         # print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
 
-        # self.output_maker()
+        self.output_maker()
 
 
         # # keep moving cars until red car is at exit

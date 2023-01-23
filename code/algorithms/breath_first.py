@@ -12,15 +12,20 @@ import copy
 def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
     child, children_parent_dict = search(start_state)
-    child_tuple = str(tuple([tuple(row) for row in start_state.occupation]))
+    child_tuple = str(tuple([tuple(row) for row in child.occupation]))
+
+    # children_parent_dict = {'a' : (('a', 'left'), 'ab'), 'ab' : (('b', 'left'), 'abc'), 'abc' : (('c', 'left'), 'abcd'), 'abcd' : None}
+    # child_tuple = 'a'
 
     # search back in dict to find all the moves made to get to winning state
     while children_parent_dict[child_tuple] != None:
         move, parent = children_parent_dict[child_tuple]
         child_tuple = parent
 
+        # print(move, parent)
         # put move into df
         moves_df = append_move_to_DataFrame_reversed(moves_df, move)
+    # print(moves_df)
 
     return moves_df
 
@@ -61,7 +66,6 @@ def search(start_state):
     return None
 
 
-
 def get_next_states(current_state, children_parent_dict):
     next_states = []
 
@@ -100,4 +104,6 @@ def get_next_states(current_state, children_parent_dict):
 def append_move_to_DataFrame_reversed(moves_df, move):
     # append move to DataFrame in reverse order since you start at the end
     move_df = pd.DataFrame([[move[0], move[1]]], columns=['car name', 'move'])
-    moves_df = pd.concat([moves_df, move_df])
+    moves_df = pd.concat([move_df, moves_df])
+
+    return moves_df
