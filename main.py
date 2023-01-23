@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, randomise2, priority_red_car
+from code.algorithms import randomise, randomise2, priority_red_car, breath_first
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -23,7 +23,7 @@ if __name__ == "__main__":
     # ---------- Solve by random car movements - Branch and Bound -------------
     # nr_moves_to_solve = math.inf
     #
-    # for i in tqdm(range(6000), desc="Solving boards…", ascii=False, ncols=75):
+    # for i in tqdm(range(1), desc="Solving boards…", ascii=False, ncols=75):
     #     test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, randomise.random_car_move, \
@@ -46,4 +46,4 @@ if __name__ == "__main__":
 
     # ---------- Solve by breath first algorithm -------------
     test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, randomise.random_car_move, breath_first = True)
+        test_board, breath_first.breath_first_search, breath_first = True)

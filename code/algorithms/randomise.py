@@ -31,6 +31,7 @@ def random_car_move(test_board):
             # make movement with the given surr_square
             vehicle = test_board.car_move(surr_square, r, c)
             if vehicle:
+                # print(test_board.occupation)
                 return vehicle, surr_square
 
 

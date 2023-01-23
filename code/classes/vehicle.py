@@ -1,11 +1,12 @@
 class Vehicles():
-    def __init__(self, car, orientation, col, row, length, color):
+    def __init__(self, car, orientation, col, row, length, color, number):
         # get attributes
         self.car = car
         self.orientation = orientation
         self.positions = []
         self.length = length
         self.color = color
+        self.number = number
 
         # create a list of positions the vehicle occupies
         if orientation == "H":

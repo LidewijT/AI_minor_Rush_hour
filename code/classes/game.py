@@ -58,9 +58,12 @@ class Game():
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
+            print(self.test_board.occupation)
+
             # plt.pause(0.5)
 
     def run_breath_first_algorithm(self):
+        # print(self.algorithm(self.test_board))
         self.moves_df = self.algorithm(self.test_board)
 
         print("algorithm klaar")

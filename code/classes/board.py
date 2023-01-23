@@ -61,7 +61,7 @@ class Board():
             # create Vehicle() and add to list
             self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
-                vehicle[1]['length'], color_veh))
+                vehicle[1]['length'], color_veh, vehicle[0] + 1))
 
     def create_board(self, input_file):
         """
@@ -78,7 +78,7 @@ class Board():
         self.occupation = np.zeros((self.grid_size, self.grid_size))
 
         # create an empty board
-        self.create_grid(self.grid_size)
+        # self.create_grid(self.grid_size)
 
         # place vehicles onto the board
         self.update_board()
@@ -132,12 +132,12 @@ class Board():
         for car_number, veh_obj in self.vehicle_dict.items():
             for row, col in veh_obj.positions:
                 # update position of vehicle in grid
-                self.update_square(self.grid[row][col], veh_obj.color)
+                # self.update_square(self.grid[row][col], veh_obj.color)
                 # update the occupation of the current square
                 self.update_occupation(row, col, car_number)
 
         # # update the figure window
-        self.root.update()
+        # self.root.update()
 
     def update_occupation(self, row, col, car_number):
         """
@@ -168,8 +168,8 @@ class Board():
         Updates a square back to default color (=dimgrey)
         """
         # update square the vehicle moved away from back to grey ("empty")
-        grey_r, grey_c = vehicle.positions[direction]
-        self.update_square(self.grid[grey_r][grey_c], "dimgrey")
+        # grey_r, grey_c = vehicle.positions[direction]
+        # self.update_square(self.grid[grey_r][grey_c], "dimgrey")
 
 
     def car_move(self, direction, r, c):
@@ -180,6 +180,7 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
+            self.update_board()
 
             return neighbouring_veh
 
@@ -190,6 +191,7 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
+            self.update_board()
 
             return neighbouring_veh
 
@@ -200,6 +202,7 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
+            self.update_board()
 
             return neighbouring_veh
 
@@ -210,6 +213,7 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
+            self.update_board()
 
             return neighbouring_veh
 

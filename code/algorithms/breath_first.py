@@ -1,9 +1,13 @@
 from ..classes import game
 from ..classes import board
 
+import numpy as np
+import pandas as pd
 import queue
 import copy
 
+test = set()
+numberino = 0
 
 def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -31,10 +35,11 @@ def search(start_state):
 
     while not q.empty():
         current_state = q.get()
-        print(current_state.test_board.occupation)
+        # print(current_state.occupation)
 
-        if current_state.test_board.occupation[current_state.test_board.exit_tile] \
-        == current_state.test_board.red_car:
+        if current_state.occupation[current_state.exit_tile] \
+        == current_state.red_car:
+            print("winner winner chicken dinner")
         # game.Game.win_check(current_state) == True:
             return current_state, children_parent_dict
 
@@ -43,7 +48,11 @@ def search(start_state):
 
         visited.add(current_state)
 
-        for next_state in get_next_states(current_state):
+        print("next")
+        next_states_list, child_dict = get_next_states(current_state)
+        children_parent_dict.update(child_dict)
+
+        for next_state in next_states_list:
             q.put(next_state)
 
     return None
@@ -52,6 +61,7 @@ def search(start_state):
 
 def get_next_states(current_state):
     next_states = []
+    children_parent_dict = {}
 
     parent_state = copy.deepcopy(current_state)
 
@@ -60,7 +70,7 @@ def get_next_states(current_state):
     direction_list = ["left", "right", "up", "down"]
 
     # systimatically go trough the empty tiles
-    for free_tile_nbr in range(free_row):
+    for free_tile_nbr in range(len(free_row)):
 
         r, c = free_row[free_tile_nbr], free_col[free_tile_nbr]
 
@@ -70,11 +80,20 @@ def get_next_states(current_state):
 
             if vehicle:
                 next_states.append(current_state)
-                children_parent_dict[current_state.occupation] = ((vehicle.car, direction), parent_state.occupation)
 
+                # convert nparray to tuple of tuples
+                occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
+
+                children_parent_dict[current_state] = ((vehicle.car, direction), parent_state)
+                # print(current_state.occupation)
+                # numberino = numberino + 1
+                test.add(occupation_tuple)
+                print(test)
+                print(f"number: {len(test)}")
                 # "reset" curent state
                 current_state = copy.deepcopy(parent_state)
 
+    return next_states, children_parent_dict
 
 
 def append_move_to_DataFrame_reversed(moves_df, move):
