@@ -9,7 +9,8 @@ from ..algorithms import randomise, priority_red_car, move_cars_in_way
 
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None):
+        branch_and_bound = False, nr_moves_to_solve = None, depth_first = None, \
+            breath_first = None):
 
         self.output_file = output_file
         self.test_board = test_board
@@ -24,8 +25,29 @@ class Game:
             self.nr_moves_to_solve = nr_moves_to_solve
             self.run_branch_and_bound()
 
+        elif depth_first == True:
+            self.run_depth_first_algorithm()
+
+        elif breath_first == True:
+            self.run_breath_first_algorithm()
+
         else:
             self.run()
+
+    def run_depth_first_algorithm(self):
+        self.moves_df = self.algorithm(self.test_board).moves_df
+
+        print("algorithm klaar")
+
+        self.output_maker()
+
+    def run_breath_first_algorithm(self):
+        # print(self.algorithm(self.test_board))
+        self.moves_df = self.algorithm(self.test_board)
+
+        print("algorithm klaar Breath First")
+
+        self.output_maker()
 
     def run(self):
         print(self.test_board.occupation)
@@ -50,7 +72,6 @@ class Game:
             print(self.test_board.occupation)
 
             plt.pause(2)
-
 
     def run_branch_and_bound(self):
         # keep moving cars until red car is at exit
@@ -99,4 +120,5 @@ class Game:
         """
         Exports the dataframe of moves to a csv file.
         """
+        print(self.output_file)
         self.moves_df.to_csv(self.output_file, index=False)

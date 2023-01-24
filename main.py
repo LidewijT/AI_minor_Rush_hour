@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, priority_red_car, move_cars_in_way
+from code.algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breath_first
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -46,10 +46,20 @@ if __name__ == "__main__":
     # ---------
 
     test_board = board.Board(f"data/gameboards/" + args.input_file)
+    test_game = game.Game(f"data/solutions/" + args.output_file, \
+        test_board, depth_first.DepthFirst, depth_first = True)
     
-    mbc = move_cars_in_way.Move_blocking_cars(test_board)
-    
-    print("test")
+    # test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #         test_board, breath_first.breath_first_search, breath_first = True)
 
-    test_game = game.Game(f"data/solutions/" + args.output_file, test_board, \
-        mbc.move_red_car)
+
+
+
+    
+    # mbc = move_cars_in_way.Move_blocking_cars(test_board)
+    
+    # print("test")
+
+    # test_game = game.Game(f"data/solutions/" + args.output_file, test_board, \
+    #     mbc.move_red_car)
+
