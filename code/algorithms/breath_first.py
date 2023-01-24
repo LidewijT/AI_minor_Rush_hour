@@ -11,7 +11,8 @@ def breath_first_search(start_state):
     moves_df = pd.DataFrame(columns=['car name', 'move'])
     child, children_parent_dict = search(start_state)
     child_tuple = str(tuple([tuple(row) for row in child.occupation]))
-
+    print(start_state.occupation)
+    print(child_tuple)
     # search back in dict to find all the moves made to get to winning state
     while children_parent_dict[child_tuple] != None:
         move, parent = children_parent_dict[child_tuple]
@@ -19,13 +20,15 @@ def breath_first_search(start_state):
 
         moves_df = append_move_to_DataFrame_reversed(moves_df, move)
 
+        print(parent)
     return moves_df
 
 
 def search(start_state):
     # dictionary with children as key and as value a tuple of (move, parent)
     # where move is also a tuple of (vehicle, direction)
-    children_parent_dict = {str(tuple([tuple(row) for row in start_state.occupation])): None}
+    children_parent_dict = {str(tuple([tuple(row) for row in \
+    start_state.occupation])): None}
 
     visited = set()
     q = queue.Queue()
@@ -34,6 +37,8 @@ def search(start_state):
     while not q.empty():
         current_state = q.get()
         # print(current_state.occupation)
+        # print(current_state.occupation[current_state.exit_tile])
+        # print(current_state.red_car)
 
         if current_state.occupation[current_state.exit_tile] \
         == current_state.red_car:
@@ -45,20 +50,23 @@ def search(start_state):
 
         visited.add(current_state)
 
-        next_states_list, children_parent_dict = get_next_states(current_state, children_parent_dict)
+        next_states_list, children_parent_dict = \
+        get_next_states(current_state, children_parent_dict)
+
         print(f"number: {len(children_parent_dict)}")
 
         for next_state in next_states_list:
             q.put(next_state)
 
-    return None
+    # return None
 
 
 def get_next_states(current_state, children_parent_dict):
     next_states = []
 
     parent_state = copy.deepcopy(current_state)
-    parent_occupation_tuple = str(tuple([tuple(row) for row in parent_state.occupation]))
+    parent_occupation_tuple = str(tuple([tuple(row) for row in \
+    parent_state.occupation]))
 
     free_row, free_col = current_state.get_free_squares()
 
@@ -75,16 +83,19 @@ def get_next_states(current_state, children_parent_dict):
 
             if vehicle:
                 # convert nparray to tuple of tuples
-                current_occupation_tuple = str(tuple([tuple(row) for row in current_state.occupation]))
+                current_occupation_tuple = str(tuple([tuple(row) for row in \
+                current_state.occupation]))
 
                 # check if this state is unique (pruning)
                 if current_occupation_tuple not in children_parent_dict:
                     next_states.append(current_state)
 
-                    children_parent_dict[current_occupation_tuple] = ((vehicle.car, direction), parent_occupation_tuple)
+                    children_parent_dict[current_occupation_tuple] = \
+                    ((vehicle.car, direction), parent_occupation_tuple)
 
                     # "reset" curent state
                     current_state = copy.deepcopy(parent_state)
+                    current_state.update_board()
 
     return next_states, children_parent_dict
 

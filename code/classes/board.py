@@ -180,7 +180,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
-            self.update_board()
 
             return neighbouring_veh
 
@@ -191,7 +190,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
-            self.update_board()
 
             return neighbouring_veh
 
@@ -202,7 +200,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
-            self.update_board()
 
             return neighbouring_veh
 
@@ -213,11 +210,8 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
-            self.update_board()
 
             return neighbouring_veh
-
-
 
     def move_vehicle_back(self, vehicle, r, c):
         """
@@ -233,6 +227,7 @@ class Board():
 
         # update the positions the vehicle is at
         vehicle.positions = vehicle.positions[:-1]
+        self.update_board()
 
     def move_vehicle_ahead(self, vehicle, r, c):
         """
@@ -249,3 +244,4 @@ class Board():
 
         # update the positions the vehicle is at
         vehicle.positions = vehicle.positions[1:]
+        self.update_board()
