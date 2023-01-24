@@ -180,7 +180,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
-
             return neighbouring_veh
 
         # move vehicle to the right respectively from free square
@@ -190,7 +189,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
-
             return neighbouring_veh
 
         # move vehicle to the up respectively from free square
@@ -200,7 +198,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
-
             return neighbouring_veh
 
         # move vehicle to the move respectively from free square
@@ -210,7 +207,6 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
-
             return neighbouring_veh
 
     def move_vehicle_back(self, vehicle, r, c):
