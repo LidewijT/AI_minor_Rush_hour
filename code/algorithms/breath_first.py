@@ -60,11 +60,12 @@ def search(start_state):
 def get_next_states(current_state, children_parent_dict):
     next_states = []
 
-    # parent_state = copy.deepcopy(current_state)
-    parent_occupation_tuple = str(tuple([tuple(row) for row in \
-    current_state.occupation]))
+    parent_state = copy.deepcopy(current_state)
 
-    free_row, free_col = current_state.get_free_squares()
+    parent_occupation_tuple = str(tuple([tuple(row) for row in \
+    parent_state.occupation]))
+
+    free_row, free_col = parent_state.get_free_squares()
 
     direction_list = ["left", "right", "up", "down"]
 
@@ -75,21 +76,26 @@ def get_next_states(current_state, children_parent_dict):
 
         for direction in direction_list:
             # make movement with the given surr_square
-            child_state = copy.deepcopy(current_state)
-            vehicle = child_state.car_move(direction, r, c)
+            # child_state = copy.deepcopy(current_state)
+            vehicle = current_state.car_move(direction, r, c)
 
             if vehicle:
                 # convert nparray to tuple of tuples to make it hashable
                 child_occupation_tuple = str(tuple([tuple(row) for row in \
-                child_state.occupation]))
+                current_state.occupation]))
+
+
 
                 # check if this state is unique (pruning)
                 if child_occupation_tuple not in children_parent_dict:
                     # append child to next states list and children parent dict
-                    next_states.append(child_state)
+                    next_states.append(current_state)
 
                     children_parent_dict[child_occupation_tuple] = \
                     ((vehicle.car, direction), parent_occupation_tuple)
+
+                # reset state
+                current_state = copy.deepcopy(parent_state)
 
 
     return next_states, children_parent_dict
