@@ -35,7 +35,7 @@ class Game:
             self.run()
 
     def run_depth_first_algorithm(self):
-        self.moves_df = self.algorithm(self.test_board).moves_df
+        self.moves_df = self.algorithm(self.test_board).best_move_df
 
         print("algorithm klaar")
 
