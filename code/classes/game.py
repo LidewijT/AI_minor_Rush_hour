@@ -5,9 +5,10 @@ Solves rush hour with the given algorithm
 import pandas as pd
 import matplotlib.pyplot as plt
 import time
+from ..algorithms import breath_first
 
 class Game():
-    def __init__(self, output_file, test_board, algorithm, \
+    def __init__(self, output_file, test_board, algorithm = None, \
         branch_and_bound = False, nr_moves_to_solve = None, breath_first = False):
 
         self.output_file = output_file
@@ -67,14 +68,15 @@ class Game():
     def run_breath_first_algorithm(self):
         # print(self.algorithm(self.test_board))
         start_time = time.time()
-        print("start")
-        self.moves_df = self.algorithm(self.test_board)
+        print("starting breath first search algorithm... \n")
+
+        self.moves_df = breath_first.Breath_first_search(self.test_board).moves_df
 
         end_time = time.time()
         elapsed_time = end_time - start_time
+
+        print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
         print(f"finished in: {elapsed_time} seconds")
-        # print("algorithm klaar")
-        # print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
 
         self.output_maker()
 

@@ -12,11 +12,21 @@ class Breath_first_search():
         self.start_state = start_state
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
 
-        # start the algorithms
+        # save variables locally to improve runtime
+        self.exit_tile = start_state.exit_tile
+        self.red_car = start_state.red_car
+
+        # start the algorithm
         self.breath_first_search()
 
+        print(f"number of visited states: {len(self.children_parent_dict)}")
+
+        # string the moves leading up to the winning state together
+        self.string_moves_together()
+
     def breath_first_search(self):
-        self.children_parent_dict = {tuple([tuple(row) for row in self.start_state.occupation]): None}
+        self.children_parent_dict = \
+        {tuple([tuple(row) for row in self.start_state.occupation]): None}
 
         q = queue.Queue()
         q.put(self.start_state)
@@ -24,8 +34,9 @@ class Breath_first_search():
         while not q.empty():
             current_state = q.get()
 
-            if current_state.occupation[current_state.exit_tile] == current_state.red_car:
-                self.child_tuple = tuple([tuple(row) for row in current_state.occupation])
+            if current_state.occupation[self.exit_tile] == self.red_car:
+                self.child_tuple = \
+                tuple([tuple(row) for row in current_state.occupation])
                 return
 
             next_states_list = self.get_next_states(current_state)
@@ -33,11 +44,11 @@ class Breath_first_search():
             for next_state in next_states_list:
                 q.put(next_state)
 
-
     def get_next_states(self, current_state):
         next_states = []
         parent_state = copy.deepcopy(current_state)
-        parent_occupation_tuple = tuple([tuple(row) for row in parent_state.occupation])
+        parent_occupation_tuple = \
+        tuple([tuple(row) for row in parent_state.occupation])
         free_row, free_col = parent_state.get_free_squares()
 
         direction_list = ["left", "right", "up", "down"]
@@ -49,33 +60,32 @@ class Breath_first_search():
                 vehicle = current_state.car_move(direction, r, c)
 
                 if vehicle:
-                    child_occupation_tuple = tuple([tuple(row) for row in current_state.occupation])
+                    child_occupation_tuple = \
+                    tuple([tuple(row) for row in current_state.occupation])
 
                     if child_occupation_tuple not in self.children_parent_dict:
                         next_states.append(current_state)
-                        self.children_parent_dict[child_occupation_tuple] = (vehicle.car, direction), parent_occupation_tuple
+                        self.children_parent_dict[child_occupation_tuple] = \
+                        (vehicle.car, direction), parent_occupation_tuple
 
                     current_state = copy.deepcopy(parent_state)
 
         return next_states
 
-
-    def string_moves_together(self, child_tuple, self.children_parent_dict):
-        print(f"number: {len(self.children_parent_dict)}")
+    def string_moves_together(self):
 
         while self.children_parent_dict[self.child_tuple] != None:
             move, parent = self.children_parent_dict[self.child_tuple]
+            # print(move,parent)
             self.child_tuple = parent
 
-            self.moves_df = self.append_move_to_DataFrame_reversed(move)
-
-        return self.moves_df
-
+            self.append_move_to_DataFrame_reversed(move)
+            # print(self.moves_df)
 
     def append_move_to_DataFrame_reversed(self, move):
         move_df = pd.DataFrame([[move[0], move[1]]], columns=['car name', 'move'])
         self.moves_df = pd.concat([move_df, self.moves_df])
-
+        # print("test2")
 
 
 

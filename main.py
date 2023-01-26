@@ -43,21 +43,21 @@ if __name__ == "__main__":
 
 
     # ----------- Solve by priority red car and random car movements -----------
-    moves_to_solve_df = pd.DataFrame(columns=['total moves'])
-
-    for i in tqdm(range(400), desc="Solving boards…", ascii=False, ncols=75):
-        test_board = board.Board(f"data/gameboards/" + args.input_file)
-        test_game = game.Game(f"data/solutions/" + args.output_file, \
-                test_board, priority_red_car.move_priority_red_car)
-
-        number_of_moves = test_game.move_counter
-        move_df = pd.DataFrame([number_of_moves], columns=['total moves'], index=[i])
-        moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
-
-    print(moves_to_solve_df)
-
-    histplot = sns.histplot(moves_to_solve_df)#, bins = 20)#, y = 'total moves')
-    plt.show()
+    # moves_to_solve_df = pd.DataFrame(columns=['total moves'])
+    #
+    # for i in tqdm(range(400), desc="Solving boards…", ascii=False, ncols=75):
+    #     test_board = board.Board(f"data/gameboards/" + args.input_file)
+    #     test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #             test_board, priority_red_car.move_priority_red_car)
+    #
+    #     number_of_moves = test_game.move_counter
+    #     move_df = pd.DataFrame([number_of_moves], columns=['total moves'], index=[i])
+    #     moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
+    #
+    # print(moves_to_solve_df)
+    #
+    # histplot = sns.histplot(moves_to_solve_df)#, bins = 20)#, y = 'total moves')
+    # plt.show()
 
 
     # ------------ Solve by random car movements - Branch and Bound ------------
@@ -88,5 +88,5 @@ if __name__ == "__main__":
 
 
     # -------------------- Solve by breath first algorithm ---------------------
-    # test_game = game.Game(f"data/solutions/" + args.output_file, \
-    #     test_board, breath_first.breath_first_search, breath_first = True)
+    test_game = game.Game(f"data/solutions/" + args.output_file, \
+        test_board, breath_first = True) #breath_first.breath_first_search,
