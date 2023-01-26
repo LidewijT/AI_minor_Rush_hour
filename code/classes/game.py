@@ -4,6 +4,7 @@ Solves rush hour with the given algorithm
 
 import pandas as pd
 import matplotlib.pyplot as plt
+import time
 
 from ..algorithms import randomise, priority_red_car, move_cars_in_way
 
@@ -11,6 +12,9 @@ class Game:
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, depth_first = None, \
             breath_first = None):
+
+        self.start_time = time.time()
+
 
         self.output_file = output_file
         self.test_board = test_board
@@ -34,10 +38,12 @@ class Game:
         else:
             self.run()
 
-    def run_depth_first_algorithm(self):
-        self.moves_df = self.algorithm(self.test_board).moves_df
+        print(f"Solve time: {time.time() - self.start_time}")
 
-        print("algorithm klaar")
+    def run_depth_first_algorithm(self):
+
+        print("Start depth-first search algorithm...")
+        self.moves_df = self.algorithm(self.test_board).moves_df
 
         self.output_maker()
 
