@@ -14,7 +14,7 @@ def move_priority_red_car(test_board):
 
 
     # move red car if not blocked with a 75% chance
-    if test_board.occupation[red_row, red_col + 1] == 0 and random.random() > 0.4:
+    if test_board.occupation[red_row, red_col + 1] == 0 and random.random() <= 0.3:
         # red car is not blocked, move it towards the exit
         test_board.move_vehicle_ahead(test_board.vehicle_dict[red_car], red_row, red_col + 1)
 

@@ -39,7 +39,7 @@ class Game():
 
             # print(test_board.occupation)
             # save movement
-            self.append_move_to_DataFrame(vehicle, direction)
+            # self.append_move_to_DataFrame(vehicle, direction)
 
             # # update the board with the new vehicle movement
             # self.test_board.update_board()
@@ -101,7 +101,7 @@ class Game():
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            self.output_maker()
+            # self.output_maker()
 
             return True
 

@@ -25,38 +25,78 @@ if __name__ == "__main__":
     test_board = board.Board(f"data/gameboards/" + args.input_file)
 
     # --------------------- Solve by random car movements ----------------------
-    # moves_to_solve_df = pd.DataFrame(columns=['total moves'])
-    #
-    # for i in tqdm(range(2000), desc="Solving boards…", ascii=False, ncols=75):
-    #     test_board = board.Board(f"data/gameboards/" + args.input_file)
-    #     test_game = game.Game(f"data/solutions/" + args.output_file, \
-    #         test_board, randomise.random_car_move)
-    #
-    #     number_of_moves = test_game.move_counter
-    #     move_df = pd.DataFrame([number_of_moves], columns=['total moves'], index=[i])
-    #     moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
-    #
-    # print(moves_to_solve_df)
-    #
-    # histplot = sns.histplot(moves_to_solve_df)#, bins = 20)#, y = 'total moves')
+    # moves_to_solve_df = pd.DataFrame(columns=['total moves random'])
+
+    # figure, axis = plt.subplots(1, 2)
+    # print(axis)
+
+    random_moves_list = []
+    priority_moves_list = []
+
+
+    for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
+        # random algorithm
+        test_board = board.Board(f"data/gameboards/" + args.input_file)
+        test_game = game.Game(f"data/solutions/" + args.output_file, \
+            test_board, randomise.random_car_move)
+
+        number_of_moves_random = test_game.move_counter
+        random_moves_list.append(number_of_moves_random)
+        # move_df = pd.DataFrame([number_of_moves], columns=['total moves random'], index=[i])
+        # moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
+
+        # random with priority algorithm
+        test_board = board.Board(f"data/gameboards/" + args.input_file)
+        test_game = game.Game(f"data/solutions/" + args.output_file, \
+                test_board, priority_red_car.move_priority_red_car)
+
+        number_of_moves_prio = test_game.move_counter
+        priority_moves_list.append(number_of_moves_prio)
+
+    moves_to_solve_df = pd.DataFrame(data=[[random_moves_list], [priority_moves_list]], columns=[['total moves random'],['total moves priority']])
+    # moves_to_solve_df['total moves priority'] = priority_list
+
+    print(moves_to_solve_df)
+    moves_to_solve_df.to_csv(args.output_file, index=False)
+
+    sns.histplot(moves_to_solve_df, kde=True)#, color = ['blue', 'green'])#, stat='percent')
+
+    plt.xlabel('Total number of moves to reach winning state')
+    # plt.ylabel('Percentage this amount of moves was made')
+    plt.xlim(0,50000)
+    plt.ylim(0,115)
+    plt.title('Arrangement of total number of moves needed to solve board 6x6_2')
+    plt.show()
+
+    # moves_to_solve_df.to_csv(args.output_file, index=False)
+
+    # sns.histplot(moves_to_solve_random_df, stat='percent', ax=axis[0])
     # plt.show()
 
 
-    # ----------- Solve by priority red car and random car movements -----------
-    # moves_to_solve_df = pd.DataFrame(columns=['total moves'])
+    # # ----------- Solve by priority red car and random car movements -----------
+    # moves_to_solve_priority_df = pd.DataFrame(columns=['total moves'])
     #
-    # for i in tqdm(range(400), desc="Solving boards…", ascii=False, ncols=75):
+    # priority_list = []
+    #
+    # for i in tqdm(range(100), desc="Solving boards…", ascii=False, ncols=75):
     #     test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
     #             test_board, priority_red_car.move_priority_red_car)
     #
     #     number_of_moves = test_game.move_counter
-    #     move_df = pd.DataFrame([number_of_moves], columns=['total moves'], index=[i])
-    #     moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
+    #     priority_list.append(number_of_moves)
     #
-    # print(moves_to_solve_df)
+    # moves_to_solve_df['total moves priority'] = priority_list
     #
-    # histplot = sns.histplot(moves_to_solve_df)#, bins = 20)#, y = 'total moves')
+    #     # move_df = pd.DataFrame([number_of_moves], columns=['total moves'], index=[i])
+    #     # moves_to_solve_priority_df = pd.concat([moves_to_solve_priority_df, move_df])
+    #
+    # moves_to_solve_df.to_csv(args.output_file, index=False)
+    #
+    # # sns.histplot(moves_to_solve_priority_df, stat='percent', ax=axis[1])
+    # sns.histplot(moves_to_solve_df, stat='percent')
+    #
     # plt.show()
 
 
@@ -88,5 +128,5 @@ if __name__ == "__main__":
 
 
     # -------------------- Solve by breath first algorithm ---------------------
-    test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, breath_first = True) #breath_first.breath_first_search,
+    # test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #     test_board, breath_first = True) #breath_first.breath_first_search,

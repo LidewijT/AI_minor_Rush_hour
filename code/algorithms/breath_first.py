@@ -33,11 +33,11 @@ class Breath_first_search():
         self.children_parent_dict = \
         {tuple([tuple(row) for row in self.start_state.occupation]): None}
 
-        q = queue.Queue()
-        q.put(self.start_state)
+        self.q = queue.Queue()
+        self.q.put(self.start_state)
 
-        while not q.empty():
-            current_state = q.get()
+        while not self.q.empty():
+            current_state = self.q.get()
 
             # check if winning condtion is reached
             if current_state.occupation[self.exit_tile] == self.red_car:
@@ -47,10 +47,6 @@ class Breath_first_search():
 
             # get list of possible children current state can give
             next_states_list = self.get_next_states(current_state)
-
-            # put these children states in the queue
-            for next_state in next_states_list:
-                q.put(next_state)
 
     def get_next_states(self, current_state):
         """
@@ -86,9 +82,10 @@ class Breath_first_search():
 
                     # check if this state is unique (pruning)
                     if child_occupation_tuple not in self.children_parent_dict:
-                        # append child to next states list and children parent dict
-                        next_states.append(current_state)
+                        # put child in queue
+                        self.q.put(current_state)
 
+                        # add child occupation tuple to children parent dict
                         self.children_parent_dict[child_occupation_tuple] = \
                         (vehicle.car, direction), parent_occupation_tuple
 
