@@ -17,6 +17,8 @@ if __name__ == "__main__":
     # adding arguments
     parser.add_argument("input_file", help = "location input file (csv)",)
     parser.add_argument("output_file", help = "location output file(csv)")
+    parser.add_argument("output_png", help = "location output file(png)")
+    parser.add_argument("iterations", help = "the amount of runs you want done")
 
     # read arguments from command line
     args = parser.parse_args()
@@ -24,52 +26,44 @@ if __name__ == "__main__":
     # create a board for the data
     test_board = board.Board(f"data/gameboards/" + args.input_file)
 
-    # --------------------- Solve by random car movements ----------------------
-    # moves_to_solve_df = pd.DataFrame(columns=['total moves random'])
-
-    # figure, axis = plt.subplots(1, 2)
-    # print(axis)
-
+    # -------- Test random algorithm to random with priority algorithm --------
     random_moves_list = []
     priority_moves_list = []
 
-    for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
-        # random algorithm
-        test_board = board.Board(f"data/gameboards/" + args.input_file)
+    for i in tqdm(range(int(args.iterations)), desc="Solving boards…", ascii=False, ncols=75):
+        # run random algorithm
         test_game = game.Game(f"data/solutions/" + args.output_file, \
-            test_board, randomise.random_car_move)
+            copy.deepcopy(test_board), randomise.random_car_move)
 
+        # append the number of moves it took to solve the board to list
         number_of_moves_random = test_game.move_counter
         random_moves_list.append(number_of_moves_random)
-        # move_df = pd.DataFrame([number_of_moves], columns=['total moves random'], index=[i])
-        # moves_to_solve_df = pd.concat([moves_to_solve_df, move_df])
 
-        # random with priority algorithm
-        test_board = board.Board(f"data/gameboards/" + args.input_file)
+        # run random with priority algorithm
         test_game = game.Game(f"data/solutions/" + args.output_file, \
-                test_board, priority_red_car.move_priority_red_car)
+            copy.deepcopy(test_board), priority_red_car.move_priority_red_car)
 
+        # append the number of moves it took to solve the board to list
         number_of_moves_prio = test_game.move_counter
         priority_moves_list.append(number_of_moves_prio)
 
-        moves_to_solve_df = pd.DataFrame({'total moves random': random_moves_list, 'total moves priority': priority_moves_list})    # moves_to_solve_df['total moves priority'] = priority_list
+    # make lists into dataframe
+    moves_to_solve_df = pd.DataFrame({'total moves random': random_moves_list, \
+    'total moves priority': priority_moves_list})
 
     print(moves_to_solve_df)
+
+    # save dataframe to csv
     moves_to_solve_df.to_csv(args.output_file, index=False)
 
-    sns.histplot(moves_to_solve_df, kde=True)#, color = ['blue', 'green'])#, stat='percent')
-
+    # plot data to histplot with kernal density estimate
+    sns.histplot(moves_to_solve_df, kde=True)
     plt.xlabel('Total number of moves to reach winning state')
-    # plt.ylabel('Percentage this amount of moves was made')
-    plt.xlim(0,50000)
-    plt.ylim(0,115)
+    plt.xlim(0, 50000)
+    plt.ylim(0, 115)
     plt.title('Arrangement of total number of moves needed to solve board 6x6_2')
+    plt.savefig(f"data/graphs/" + args.output_png)
     plt.show()
-
-    # moves_to_solve_df.to_csv(args.output_file, index=False)
-
-    # sns.histplot(moves_to_solve_random_df, stat='percent', ax=axis[0])
-    # plt.show()
 
 
     # # ----------- Solve by priority red car and random car movements -----------
