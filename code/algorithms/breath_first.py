@@ -20,6 +20,7 @@ def breath_first_search(start_state):
     # search back in dict to find all the moves made to get to winning state
     while children_parent_dict[child_tuple] != None:
         move, parent = children_parent_dict[child_tuple]
+        # print(parent)
         child_tuple = parent
 
         moves_df = append_move_to_DataFrame_reversed(moves_df, move)

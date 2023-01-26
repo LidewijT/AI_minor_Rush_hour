@@ -13,8 +13,6 @@ from .vehicle import Vehicles
 
 class Board():
     def __init__(self, input_file):
-        self.move_counter = 0
-
         self.vehicle_dict = {}
         # self.parent_occupation = np.zeros((self.grid_size, self.grid_size))
 
@@ -180,6 +178,10 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
+            # vehicle_number = self.occupation[r][c + 1]
+            # self.occupation[r][c] = vehicle_number
+            # self.occupation[r][c + neighbouring_veh.length] = 0
+            # print(self.occupation)
             return neighbouring_veh
 
         # move vehicle to the right respectively from free square
@@ -189,6 +191,9 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
 
             self.move_vehicle_ahead(neighbouring_veh, r, c)
+            # vehicle_number = self.occupation[r][c - 1]
+            # self.occupation[r][c] = vehicle_number
+            # self.occupation[r][c - neighbouring_veh.length] = 0
             return neighbouring_veh
 
         # move vehicle to the up respectively from free square
@@ -198,6 +203,9 @@ class Board():
             neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
 
             self.move_vehicle_back(neighbouring_veh, r, c)
+            # vehicle_number = self.occupation[r + 1][c]
+            # self.occupation[r][c] = vehicle_number
+            # self.occupation[r + neighbouring_veh.length][c] = 0
             return neighbouring_veh
 
         # move vehicle to the move respectively from free square
@@ -206,14 +214,27 @@ class Board():
         self.vehicle_dict[self.occupation[r - 1][c]].orientation == "V":
             neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
 
+            # vehicle_number = self.occupation[r - 1][c]
+            # self.occupation[r][c] = vehicle_number
+            # self.occupation[r - neighbouring_veh.length][c] = 0
             self.move_vehicle_ahead(neighbouring_veh, r, c)
+            # self.vertical_move(neighbouring_veh, r, c)
             return neighbouring_veh
+
+    # def horizontal_move(self, vehicle, r, c):
+    #
+    # def vertical_move(self, vehicle, r, c):
+    #     vehicle_number = self.occupation[r - 1][c]
+    #     self.occupation[r][c] = vehicle_number
+    #     self.occupation[r - neighbouring_veh.length][c]
+
 
     def move_vehicle_back(self, vehicle, r, c):
         """
         Takes a vehicle object and updates its position towards the given row
         and column. Updates the occupation matrix and the new vehicle positions.
         """
+        # self.occupation[r][c]
         # move vehicle backwards (left/up)
         vehicle.positions.insert(0, (r,c))
         self.occupation[vehicle.positions[-1]] = 0

@@ -6,7 +6,6 @@ import random
 Assumes that red car is horizontally oriented.
 """
 
-
 def move_priority_red_car(test_board):
     # get information red car
     red_car = test_board.red_car
@@ -23,7 +22,7 @@ def move_priority_red_car(test_board):
 
     else:
         # red car is blocked, so move random car
-        return breath_first.breath_first_search(test_board)
+        return randomise.random_car_move(test_board)
 
 
 

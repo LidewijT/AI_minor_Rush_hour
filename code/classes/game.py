@@ -36,11 +36,12 @@ class Game():
             # make a move
             vehicle, direction = self.algorithm(self.test_board)
 
+            # print(test_board.occupation)
             # save movement
             self.append_move_to_DataFrame(vehicle, direction)
 
-            # update the board with the new vehicle movement
-            self.test_board.update_board()
+            # # update the board with the new vehicle movement
+            # self.test_board.update_board()
 
             # plt.pause(0.1)
 
@@ -77,22 +78,6 @@ class Game():
 
         self.output_maker()
 
-
-        # # keep moving cars until red car is at exit
-        # while self.win_check() == False
-        #
-        #     # make a move
-        #     vehicle, direction = self.algorithm(self.test_board)
-        #
-        #     # save movement
-        #     self.append_move_to_DataFrame(vehicle, direction)
-        #
-        #     # update the board with the new vehicle movement
-        #     self.test_board.update_board()
-        #
-        #     # plt.pause(0.5)
-
-
     def append_move_to_DataFrame(self, vehicle, direction):
         """
         Saves the move in a dataframe.
@@ -111,7 +96,6 @@ class Game():
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            print(f"Rush Hour was solved in {self.nr_moves_to_solve} moves\n")
             self.output_maker()
 
             return True
