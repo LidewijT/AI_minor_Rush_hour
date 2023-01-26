@@ -23,8 +23,8 @@ if __name__ == "__main__":
     # ---------- Solve by random car movements - Branch and Bound -------------
     # nr_moves_to_solve = math.inf
 
-    # for i in tqdm(range(100), desc="Solving boards…", ascii=False, ncols=75):
-        # test_board = board.Board(f"data/gameboards/" + args.input_file)
+    # for i in tqdm(range(10000), desc="Solving boards…", ascii=False, ncols=75):
+    #     test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, randomise.random_car_move, \
     #             branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     # --------- Solve by priority red car and random car movements ------------
     # nr_moves_to_solve = math.inf
 
-    # for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
+    # for i in tqdm(range(10000), desc="Solving boards…", ascii=False, ncols=75):
     #     test_board = board.Board(f"data/gameboards/" + args.input_file)
 
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
@@ -53,13 +53,4 @@ if __name__ == "__main__":
     #         test_board, breath_first.breath_first_search, breath_first = True)
 
 
-
-
-    
-    # mbc = move_cars_in_way.Move_blocking_cars(test_board)
-    
-    # print("test")
-
-    # test_game = game.Game(f"data/solutions/" + args.output_file, test_board, \
-    #     mbc.move_red_car)
 
