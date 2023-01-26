@@ -33,7 +33,6 @@ if __name__ == "__main__":
     random_moves_list = []
     priority_moves_list = []
 
-
     for i in tqdm(range(10), desc="Solving boards…", ascii=False, ncols=75):
         # random algorithm
         test_board = board.Board(f"data/gameboards/" + args.input_file)
@@ -53,8 +52,7 @@ if __name__ == "__main__":
         number_of_moves_prio = test_game.move_counter
         priority_moves_list.append(number_of_moves_prio)
 
-    moves_to_solve_df = pd.DataFrame(data=[[random_moves_list], [priority_moves_list]], columns=[['total moves random'],['total moves priority']])
-    # moves_to_solve_df['total moves priority'] = priority_list
+        moves_to_solve_df = pd.DataFrame({'total moves random': random_moves_list, 'total moves priority': priority_moves_list})    # moves_to_solve_df['total moves priority'] = priority_list
 
     print(moves_to_solve_df)
     moves_to_solve_df.to_csv(args.output_file, index=False)
