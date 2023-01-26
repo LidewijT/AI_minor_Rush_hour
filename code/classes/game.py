@@ -66,18 +66,21 @@ class Game():
             # plt.pause(0.5)
 
     def run_breath_first_algorithm(self):
-        # print(self.algorithm(self.test_board))
+        # start timer
         start_time = time.time()
         print("starting breath first search algorithm... \n")
 
+        # run the algorithm and set moves df
         self.moves_df = breath_first.Breath_first_search(self.test_board).moves_df
 
+        # stop timer
         end_time = time.time()
         elapsed_time = end_time - start_time
 
         print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
         print(f"finished in: {elapsed_time} seconds")
 
+        # finalize into output
         self.output_maker()
 
     def append_move_to_DataFrame(self, vehicle, direction):
