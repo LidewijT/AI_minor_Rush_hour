@@ -10,9 +10,14 @@ from ..algorithms import randomise, priority_red_car, move_cars_in_way
 
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None, depth_first = None,\
-            breath_first = None):
-
+        branch_and_bound = False, nr_moves_to_solve = None, first_search =
+            False):
+        """
+        It initializes the attributes for the class including the output file,
+        the test board, and the algorithm to be used. It also has additional
+        parameters such as branch_and_bound which is a heuristic, and
+        first_search which is used for a specific type of algorithm.
+        """
         # attributes
         self.output_file = output_file
         self.test_board = test_board
@@ -27,79 +32,64 @@ class Game:
             self.nr_moves_to_solve = nr_moves_to_solve
             self.run_branch_and_bound()
 
-        elif depth_first == True:
-            self.run_depth_first_algorithm()
-
-        elif breath_first == True:
-            self.run_breath_first_algorithm()
+        elif first_search == True:
+            self.run_first_search()
 
         else:
             self.run()
 
-    def run_depth_first_algorithm(self):
-        print("Start depth-first search algorithm...")
+    def run_branch_and_bound(self):
+        """
+        This function is used when the branch_and_bound parameter is set to true.
+        It uses the algorithm passed in to make moves on the board until the red
+        car reaches the exit or the move counter reaches the value of
+        nr_moves_to_solve. Furtermore, it keeps track of all moves made in a
+        DataFrame.
+        """
+        # keep moving cars until red car is at exit
+        while self.win_check() == False and \
+            self.move_counter < self.nr_moves_to_solve:
+            self.move_counter += 1
+
+            veh_lst = self.algorithm(self.test_board)
+
+            # make a move
+            for vehicle, direction in veh_lst:
+                self.append_move_to_DataFrame(vehicle, direction)
+
+            # update the board with the new vehicle movement
+            self.test_board.update_board()
+
+    def run_first_search(self):
+        """
+        This function is used when the first_search parameter is set to true.
+        It uses the algorithm passed in to make moves on the board.
+        It gets the move dataframe created by the algorithm and export it to a
+        csv file.
+        """
+        print("Start algorithm...")
 
         # get the move dataframe created by the algorithm
         self.moves_df = self.algorithm(self.test_board).moves_df
 
         self.output_maker()
 
-    def run_breath_first_algorithm(self):
-        # print(self.algorithm(self.test_board))
-        self.moves_df = self.algorithm(self.test_board)
-
-        print("algorithm klaar Breath First")
-
-        self.output_maker()
-
     def run(self):
-        print(self.test_board.occupation)
-
-
-
         while self.win_check() == False:
             self.move_counter += 1
 
             # make a move
-            # vehicle, direction = self.algorithm(self.test_board)
             print("\nstart move")
-            self.algorithm()
+            veh_lst = self.algorithm(self.test_board)
             print(f"move made\n")
 
-            # save movement
-            # self.append_move_to_DataFrame(vehicle, direction)
+            # save move
+            for vehicle, direction in veh_lst:
+                self.append_move_to_DataFrame(vehicle, direction)
 
-            # update the board with the new vehicle movement
-            self.test_board.update_board()
-
-            print(self.test_board.occupation)
-
-            plt.pause(2)
-
-    def run_branch_and_bound(self):
-        # keep moving cars until red car is at exit
-        while self.win_check() == False and \
-            self.move_counter < self.nr_moves_to_solve:
-            self.move_counter += 1
-
-            # make a move
-            vehicle, direction = self.algorithm(self.test_board)
-
-            # save movement
-            self.append_move_to_DataFrame(vehicle, direction)
-
-            # update the board with the new vehicle movement
-            self.test_board.update_board()
-
-            # plt.pause(0.5)
-
-    def append_move_to_DataFrame(self, vehicle, direction):
-        """
-        Saves the move in a dataframe.
-        """
-        # append move to DataFrame
-        move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
-        self.moves_df = pd.concat([self.moves_df, move_df])
+            # update the board with the new vehicle move
+            # self.test_board.update_board()
+            plt.pause(0.4)
 
     def win_check(self):
         """
@@ -118,6 +108,14 @@ class Game:
 
         else:
             return False
+
+    def append_move_to_DataFrame(self, vehicle, direction):
+        """
+        Saves the move in a dataframe.
+        """
+        # append move to DataFrame
+        move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
+        self.moves_df = pd.concat([self.moves_df, move_df])
 
     def output_maker(self):
         """

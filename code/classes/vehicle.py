@@ -15,7 +15,6 @@ class Vehicles():
         self.status = "move"
         # keep track of future moves if one way (ahead/back) does not work
         self.future_move = None
-
         # keep track of the vehicle(s) that blocks this vehicle
         self.blocked_by = []
 

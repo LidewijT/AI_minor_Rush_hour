@@ -4,7 +4,6 @@ Picks one random car movement of the given board and returns this movement.
 
 import random
 import numpy as np
-from ..classes import board
 
 def random_car_move(test_board):
     """

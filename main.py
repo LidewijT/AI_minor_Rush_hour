@@ -4,7 +4,8 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breath_first
+from code.algorithms import randomise, priority_red_car, move_cars_in_way, \
+    depth_first, breath_first, randomise_move_more_squares
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -44,10 +45,15 @@ if __name__ == "__main__":
     #     nr_moves_to_solve = test_game.nr_moves_to_solve
 
     # ---------
+    # test_board = board.Board(f"data/gameboards/" + args.input_file)
+    # test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #     test_board, randomise_move_more_squares.random_car_move)
 
+    # --------
+    
     test_board = board.Board(f"data/gameboards/" + args.input_file)
     test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, depth_first.DepthFirst, depth_first = True)
+        test_board, depth_first.DepthFirst, first_search=True)
     
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, breath_first.breath_first_search, breath_first = True)

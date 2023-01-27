@@ -213,5 +213,3 @@ class Move_blocking_cars():
             blocking_veh.append(self.test_board.vehicle_dict[veh].blocked_by)
 
         return blocking_veh
-
-

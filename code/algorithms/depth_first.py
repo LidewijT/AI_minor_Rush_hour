@@ -12,6 +12,11 @@ class DepthFirst():
     start backtracking.
     """
     def __init__(self, start_state):
+        """
+        Initializes the class by setting the start state, exit tile, red car
+        name, and maximum depth, and runs the algorithm. Afterwards, it puts all
+        moves of the optimal solution ordered into a dataframe.
+        """
         # keep track of time
         start_time = time.time()
 
@@ -20,8 +25,8 @@ class DepthFirst():
         self.exit_tile = start_state.exit_tile
         self.red_car = self.start_state.red_car
 
-        # set a limit to the depth the algorithm can go
-        self.max_depth = 500
+        # set maximum depth the algorithm can go
+        self.max_depth = 1000
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent, depth)
@@ -32,18 +37,19 @@ class DepthFirst():
 
         # moves to dataframe
         print("Export moves to dataframe...")
-        self.moves_to_df(self.solution)
+        self.moves_to_df(self.current_state)
 
         print(f"Time to get a solution {time.time() - start_time}")
         print(f"number states: {len(self.children_parent_dict)}")
         print(f"number moves: {len(self.moves_df)}")
 
-
-    def run(self, start_depth=0):
+    def run(self):
         """
         Starts running the algorithm until the board is in a winning position:
         the red car is at the exit tile.
         """
+        # initialize start depth of the algorithm
+        start_depth = 0
         # initialize the stack with the starting state and the starting depth
         self.stack = [(self.start_state, start_depth)]
 
@@ -55,23 +61,16 @@ class DepthFirst():
             if depth >= self.max_depth:
                 continue
 
-            # solution if the red car is at the exit
-            if self.current_state.occupation[self.exit_tile] == \
-                self.red_car:
-
-                # save solution
-                self.solution = self.current_state
-
-                # set max_depth to current depth, to get minimal solution
-                self.max_depth = depth
-
             # get all the children states of the current state
-            else:
-                self.build_children(depth + 1)
+            won = self.build_children(depth + 1)
+
+            # stop if a solution was created
+            if won == True:
+                return
 
     def get_next_state(self):
         """
-        Returns last element of de queue while removing it.
+        Returns last element of de stack while removing it.
         """
         return self.stack.pop()
 
@@ -119,8 +118,18 @@ class DepthFirst():
                             ((vehicle.car, direction), parent_occupation_hash, \
                                  depth)
 
+                        # solution if the red car is at the exit
+                        if self.current_state.occupation[self.exit_tile] == \
+                            self.red_car:
+                            return True
+
                     # reset the current state as parent state for next child
                     self.current_state = copy.deepcopy(parent_state)
+
+    def remove_deep_branches(self):
+        for k, v in list(self.children_parent_dict.items()):
+            if v[2] > self.max_depth:
+                del self.children_parent_dict[k]
 
     def append_move_to_DataFrame_reversed(self, moves_df, move):
         """
