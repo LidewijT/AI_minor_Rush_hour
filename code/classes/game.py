@@ -10,12 +10,10 @@ from ..algorithms import randomise, priority_red_car, move_cars_in_way
 
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None, depth_first = None, \
+        branch_and_bound = False, nr_moves_to_solve = None, depth_first = None,\
             breath_first = None):
 
-        self.start_time = time.time()
-
-
+        # attributes
         self.output_file = output_file
         self.test_board = test_board
         self.algorithm = algorithm
@@ -38,11 +36,10 @@ class Game:
         else:
             self.run()
 
-        print(f"Solve time: {time.time() - self.start_time}")
-
     def run_depth_first_algorithm(self):
-
         print("Start depth-first search algorithm...")
+
+        # get the move dataframe created by the algorithm
         self.moves_df = self.algorithm(self.test_board).moves_df
 
         self.output_maker()
