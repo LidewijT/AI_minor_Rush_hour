@@ -39,14 +39,11 @@ class Breath_first_search():
         while not self.q.empty():
             current_state = self.q.get()
 
-            # check if winning condtion is reached
-            if current_state.occupation[self.exit_tile] == self.red_car:
-                self.child_tuple = \
-                tuple([tuple(row) for row in current_state.occupation])
-                return
-
             # get list of possible children current state can give
             next_states_list = self.get_next_states(current_state)
+
+            if next_states_list == "won":
+                return
 
     def get_next_states(self, current_state):
         """
@@ -88,6 +85,11 @@ class Breath_first_search():
                         # add child occupation tuple to children parent dict
                         self.children_parent_dict[child_occupation_tuple] = \
                         (vehicle.car, direction), parent_occupation_tuple
+
+                        # check if this is a winning board
+                        if current_state.occupation[self.exit_tile] == self.red_car:
+                            self.child_tuple = child_occupation_tuple
+                            return "won"
 
                     # reset state
                     current_state = copy.deepcopy(parent_state)
