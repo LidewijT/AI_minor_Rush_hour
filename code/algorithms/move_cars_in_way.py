@@ -135,7 +135,6 @@ class Move_blocking_cars():
 
         return False
 
-
     def car_movement(self, vehicle, direction, r, c):
             # move vehicle to the left respectively from free square
             if direction == "left":

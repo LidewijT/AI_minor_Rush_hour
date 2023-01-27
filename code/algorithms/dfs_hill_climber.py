@@ -26,7 +26,7 @@ class DepthFirst():
         self.red_car = self.start_state.red_car
 
         # set maximum depth the algorithm can go
-        self.max_depth = 2000
+        self.max_depth = 500
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent, depth)
@@ -37,7 +37,7 @@ class DepthFirst():
 
         # moves to dataframe
         print("Export moves to dataframe...")
-        self.moves_to_df(self.current_state)
+        self.moves_to_df(self.solution)
 
         print(f"Time to get a solution {time.time() - start_time}")
         print(f"number states: {len(self.children_parent_dict)}")
@@ -61,12 +61,22 @@ class DepthFirst():
             if depth >= self.max_depth:
                 continue
 
-            # get all the children states of the current state
-            won = self.build_children(depth + 1)
+            # solution if the red car is at the exit
+            if self.current_state.occupation[self.exit_tile] == \
+                self.red_car:
 
-            # stop if a solution was created
-            if won == True:
-                return
+                # save solution
+                self.solution = self.current_state
+
+                # set max_depth to current depth, to get minimal solution
+                self.max_depth = depth
+
+                # remove deeper branches than new max_depth
+                self.remove_deep_branches()
+
+            # get all the children states of the current state
+            else:
+                self.build_children(depth + 1)
 
     def get_next_state(self):
         """
@@ -118,13 +128,13 @@ class DepthFirst():
                             ((vehicle.car, direction), parent_occupation_hash, \
                                  depth)
 
-                        # solution if the red car is at the exit
-                        if self.current_state.occupation[self.exit_tile] == \
-                            self.red_car:
-                            return True
-
                     # reset the current state as parent state for next child
                     self.current_state = copy.deepcopy(parent_state)
+
+    def remove_deep_branches(self):
+        for k, v in list(self.children_parent_dict.items()):
+            if v[2] > self.max_depth:
+                del self.children_parent_dict[k]
 
     def append_move_to_DataFrame_reversed(self, moves_df, move):
         """
@@ -158,3 +168,4 @@ class DepthFirst():
 
             # put move into df
             self.moves_df = self.append_move_to_DataFrame_reversed(self.moves_df, move)
+

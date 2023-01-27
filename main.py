@@ -4,7 +4,7 @@ import copy
 from tqdm import tqdm
 
 from code.classes import board, game
-from code.algorithms import randomise, priority_red_car, move_cars_in_way, \
+from code.algorithms import dfs_hill_climber, randomise, priority_red_car, move_cars_in_way, \
     depth_first, breath_first, randomise_move_more_squares
 
 if __name__ == "__main__":

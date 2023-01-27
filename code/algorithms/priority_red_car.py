@@ -23,12 +23,6 @@ def move_priority_red_car(test_board):
         # red car is blocked, so move random car
         return randomise.random_car_move(test_board)
 
-
-
-
-
-
-
 # def move_cars(self):
 #         copied_current_sp = copy.deepcopy(self.occupation)
 #         state_space_list = []
