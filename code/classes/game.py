@@ -89,6 +89,59 @@ class Game:
             # update the board with the new vehicle move
             # self.test_board.update_board()
             plt.pause(0.4)
+            # print(test_board.occupation)
+            # save movement
+            # self.append_move_to_DataFrame(vehicle, direction)
+
+            # # update the board with the new vehicle movement
+            # self.test_board.update_board()
+
+            # plt.pause(0.1)
+
+    def run_branch_and_bound(self):
+        # keep moving cars until red car is at exit
+        while self.win_check() == False and \
+            self.move_counter < self.nr_moves_to_solve:
+            self.move_counter += 1
+
+            # make a move
+            vehicle, direction = self.algorithm(self.test_board)
+
+            # save movement
+            self.append_move_to_DataFrame(vehicle, direction)
+
+            # update the board with the new vehicle movement
+            self.test_board.update_board()
+
+            print(self.test_board.occupation)
+
+            # plt.pause(0.5)
+
+    def run_breath_first_algorithm(self):
+        # start timer
+        start_time = time.time()
+        print("starting breath first search algorithm... \n")
+
+        # run the algorithm and set moves df
+        self.moves_df = breath_first.Breath_first_search(self.test_board).moves_df
+
+        # stop timer
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
+        print(f"finished in: {elapsed_time} seconds")
+
+        # finalize into output
+        self.output_maker()
+
+    def append_move_to_DataFrame(self, vehicle, direction):
+        """
+        Saves the move in a dataframe.
+        """
+        # append move to DataFrame
+        move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
+        self.moves_df = pd.concat([self.moves_df, move_df])
 
     def win_check(self):
         """
@@ -100,8 +153,7 @@ class Game:
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            print(f"Rush Hour was solved in {self.nr_moves_to_solve} moves\n")
-            self.output_maker()
+            # self.output_maker()
 
             return True
 
@@ -120,5 +172,4 @@ class Game:
         """
         Exports the dataframe of moves to a csv file.
         """
-        print(self.output_file)
         self.moves_df.to_csv(self.output_file, index=False)
