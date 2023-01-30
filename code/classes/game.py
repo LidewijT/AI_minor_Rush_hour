@@ -66,11 +66,22 @@ class Game:
         It gets the move dataframe created by the algorithm and export it to a
         csv file.
         """
+        # start timer
+        start_time = time.time()
+
         print("Start algorithm...")
 
         # get the move dataframe created by the algorithm
         self.moves_df = self.algorithm(self.test_board).moves_df
 
+        # stop timer
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+
+        print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
+        print(f"finished in: {elapsed_time} seconds")
+
+        # finalize into output
         self.output_maker()
 
     def run(self):
@@ -113,27 +124,6 @@ class Game:
             # update the board with the new vehicle movement
             self.test_board.update_board()
 
-            print(self.test_board.occupation)
-
-            # plt.pause(0.5)
-
-    def run_breath_first_algorithm(self):
-        # start timer
-        start_time = time.time()
-        print("starting breath first search algorithm... \n")
-
-        # run the algorithm and set moves df
-        self.moves_df = breath_first.Breath_first_search(self.test_board).moves_df
-
-        # stop timer
-        end_time = time.time()
-        elapsed_time = end_time - start_time
-
-        print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
-        print(f"finished in: {elapsed_time} seconds")
-
-        # finalize into output
-        self.output_maker()
 
     def append_move_to_DataFrame(self, vehicle, direction):
         """
@@ -167,6 +157,12 @@ class Game:
         # append move to DataFrame
         move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
         self.moves_df = pd.concat([self.moves_df, move_df])
+
+    def compress_DataFrame(self):
+        """
+        If one vehicle was moved multiple times in a row,
+        compress them to one move of multiple tiles
+        """
 
     def output_maker(self):
         """
