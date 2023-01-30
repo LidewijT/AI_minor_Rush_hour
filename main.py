@@ -24,7 +24,7 @@ if __name__ == "__main__":
     # ---------- Solve by random car movements - Branch and Bound -------------
     # nr_moves_to_solve = math.inf
 
-    # for i in tqdm(range(10000), desc="Solving boards…", ascii=False, ncols=75):
+    # for i in tqdm(range(1), desc="Solving boards…", ascii=False, ncols=75):
     #     test_board = board.Board(f"data/gameboards/" + args.input_file)
     #     test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, randomise.random_car_move, \
@@ -33,16 +33,16 @@ if __name__ == "__main__":
     #     nr_moves_to_solve = test_game.nr_moves_to_solve
 
     # --------- Solve by priority red car and random car movements ------------
-    # nr_moves_to_solve = math.inf
+    nr_moves_to_solve = math.inf
 
-    # for i in tqdm(range(10000), desc="Solving boards…", ascii=False, ncols=75):
-    #     test_board = board.Board(f"data/gameboards/" + args.input_file)
+    for i in tqdm(range(10000), desc="Solving boards…", ascii=False, ncols=75):
+        test_board = board.Board(f"data/gameboards/" + args.input_file)
 
-    #     test_game = game.Game(f"data/solutions/" + args.output_file, \
-    #             test_board, priority_red_car.move_priority_red_car, \
-    #                 branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
+        test_game = game.Game(f"data/solutions/" + args.output_file, \
+                test_board, priority_red_car.move_priority_red_car, \
+                    branch_and_bound=True, nr_moves_to_solve=nr_moves_to_solve)
 
-    #     nr_moves_to_solve = test_game.nr_moves_to_solve
+        nr_moves_to_solve = test_game.nr_moves_to_solve
 
     # ---------
     # test_board = board.Board(f"data/gameboards/" + args.input_file)
@@ -51,12 +51,12 @@ if __name__ == "__main__":
 
     # --------
 
-    test_board = board.Board(f"data/gameboards/" + args.input_file)
+    # test_board = board.Board(f"data/gameboards/" + args.input_file)
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #     test_board, priority_children.PriorityChildren, first_search=True)
 
-    test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, depth_first.Depth_First_Search, first_search=True)
+    # test_game = game.Game(f"data/solutions/" + args.output_file, \
+    #     test_board, depth_first.Depth_First_Search, first_search=True)
 
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, breadth_first.BreadthFirst, first_search=True)

@@ -4,13 +4,14 @@ Picks one random car movement of the given board and returns this movement.
 
 import random
 import numpy as np
+from ..classes.board import Board
 
-def random_car_move(test_board):
+def random_car_move(test_board, occupation_board):
     """
     Picks a random vehicle to move.
     """
     # get all free squares
-    free_row, free_col = test_board.get_free_squares()
+    free_row, free_col = Board.get_free_squares(test_board, occupation_board)
     # pick random free square until vehicle moves
     pick_free_square = True
 
@@ -23,14 +24,16 @@ def random_car_move(test_board):
         surrounding_squares = ["left", "right", "up", "down"]
 
         # pick until all surroundings squares have been tried
-        for _ in range(4):
+        for _ in range(len(surrounding_squares)):
             # choose a random surrounding square
             surr_square, surrounding_squares = random_surrounding_square(surrounding_squares)
 
             # make movement with the given surr_square
-            vehicle = test_board.car_move(surr_square, r, c)
+            vehicle, occupation_board = Board.car_move(test_board, occupation_board, surr_square, r, c)
+
+            # return if a vehicle was found to move and the updated board
             if vehicle:
-                return vehicle, surr_square
+                return occupation_board, vehicle, surr_square
 
 def random_free_square(row, col):
     """

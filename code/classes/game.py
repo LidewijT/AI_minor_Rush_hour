@@ -20,6 +20,7 @@ class Game:
         # attributes
         self.output_file = output_file
         self.test_board = test_board
+        self.occupation_board = test_board.occupation
         self.algorithm = algorithm
 
         # keep track of all moves
@@ -50,14 +51,13 @@ class Game:
             self.move_counter < self.nr_moves_to_solve:
             self.move_counter += 1
 
-            veh_lst = self.algorithm(self.test_board)
+            self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
 
             # make a move
-            for vehicle, direction in veh_lst:
-                self.append_move_to_DataFrame(vehicle, direction)
+            self.append_move_to_DataFrame(vehicle, direction)
 
             # update the board with the new vehicle movement
-            self.test_board.update_board()
+            # self.test_board.update_board()
 
     def run_first_search(self):
         """
@@ -78,17 +78,16 @@ class Game:
             self.move_counter += 1
 
             # make a move
-            print("\nstart move")
-            veh_lst = self.algorithm(self.test_board)
-            print(f"move made\n")
+            # print("\nstart move")
+            self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
+            # print(f"move made\n")
 
             # save move
-            for vehicle, direction in veh_lst:
-                self.append_move_to_DataFrame(vehicle, direction)
+            self.append_move_to_DataFrame(vehicle, direction)
 
             # update the board with the new vehicle move
             # self.test_board.update_board()
-            plt.pause(0.4)
+            # plt.pause(0.4)
 
     def win_check(self):
         """
