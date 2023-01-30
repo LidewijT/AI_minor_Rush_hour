@@ -52,11 +52,11 @@ if __name__ == "__main__":
     # --------
     
     test_board = board.Board(f"data/gameboards/" + args.input_file)
-    test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, priority_children.PriorityChildren, first_search=True)
-
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
-        # test_board, depth_first.DepthFirst, first_search=True)
+    #     test_board, priority_children.PriorityChildren, first_search=True)
+
+    test_game = game.Game(f"data/solutions/" + args.output_file, \
+        test_board, depth_first.DepthFirst, first_search=True)
     
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #         test_board, breath_first.breath_first_search, breath_first = True)

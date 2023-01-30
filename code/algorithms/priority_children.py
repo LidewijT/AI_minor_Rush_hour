@@ -2,6 +2,8 @@ from .depth_first import DepthFirst
 from itertools import chain
 import copy
 from ..classes.board import Board
+import heapq
+import numpy as np
 
 class PriorityChildren(DepthFirst):
     """
@@ -62,8 +64,7 @@ class PriorityChildren(DepthFirst):
                             self.red_car:
                             return True
 
-                        # get the priority value of the current child
-                        self.check_blocking_cars(self.current_state)
+                        # append to the list of children
                         children_list.append(self.current_state)
 
                     # reset the current state as parent state for next child
@@ -73,13 +74,21 @@ class PriorityChildren(DepthFirst):
         self.sort_children_states(children_list, depth)
 
     def sort_children_states(self, children_states, depth):
+        """
+        Priority Queue
+        """
+        pq = []
+        # put all childs in priority queue
+        for child in children_states:
+            # get priority values
+            blocking_cars, squares_to_exit = self.get_priority_values(child)
+            heapq.heappush(pq, (blocking_cars, squares_to_exit, child.tolist()))
 
-        # descending order
-        sorted_children_states = sorted(children_states, reverse=True)
-        for child in sorted_children_states:
+        while pq:
+            child = np.array(heapq.heappop(pq)[2])
             self.stack.append((child, depth))
 
-    def check_blocking_cars(self, state):
+    def get_priority_values(self, state):
         """
         Calculates priority value based on blocking cars before exit for red car
         """
@@ -97,11 +106,8 @@ class PriorityChildren(DepthFirst):
             # get the value of the square to check if there is a vehicle
             if state[red_car_position[0]][red_car_position[1] + \
                 c+1] > 0:
-                blocking_cars += 1
-            squares_to_exit += 1
+                blocking_cars -= 1
+            squares_to_exit -= 1
 
-        state.priority = blocking_cars
-        state.squares_to_exit = squares_to_exit
-
-        return blocking_cars
+        return blocking_cars, squares_to_exit
 
