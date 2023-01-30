@@ -98,43 +98,7 @@ class Game:
 
             # update the board with the new vehicle move
             # self.test_board.update_board()
-<<<<<<< HEAD
             # plt.pause(0.4)
-=======
-            plt.pause(0.4)
-            # print(test_board.occupation)
-            # save movement
-            # self.append_move_to_DataFrame(vehicle, direction)
-
-            # # update the board with the new vehicle movement
-            # self.test_board.update_board()
-
-            # plt.pause(0.1)
-
-    def run_branch_and_bound(self):
-        # keep moving cars until red car is at exit
-        while self.win_check() == False and \
-            self.move_counter < self.nr_moves_to_solve:
-            self.move_counter += 1
-
-            # make a move
-            vehicle, direction = self.algorithm(self.test_board)
-
-            # save movement
-            self.append_move_to_DataFrame(vehicle, direction)
-
-            # update the board with the new vehicle movement
-            self.test_board.update_board()
-
-
-    def append_move_to_DataFrame(self, vehicle, direction):
-        """
-        Saves the move in a dataframe.
-        """
-        # append move to DataFrame
-        move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
-        self.moves_df = pd.concat([self.moves_df, move_df])
->>>>>>> main
 
     def win_check(self):
         """
