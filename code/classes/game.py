@@ -5,7 +5,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import time
 
-from ..algorithms import randomise, priority_red_car, move_cars_in_way
+from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breadth_first
 
 class Game:
     def __init__(self, output_file, test_board, algorithm, \

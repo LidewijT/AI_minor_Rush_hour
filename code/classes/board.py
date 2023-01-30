@@ -208,58 +208,72 @@ class Board():
 
         return occupation_board
 
+    def get_vehicle(self, occupation_board, r, c):
+        self.vehicle_number = occupation_board[r][c]
+        self.vehicle_obj = self.vehicle_dict[self.vehicle_number]
+
+    def update_occupation_board(self, occupation_board, r, c, sign):
+        veh_length = self.vehicle_obj.length
+
+        # update the 'head' of the vehicle to the free square (r, c)
+        occupation_board[r][c] = self.vehicle_number
+
+
+        # update the 'tail' of the horizontal vehicle back to a free square
+        if self.vehicle_obj.orientation == "H":
+            col = c + veh_length if sign == '+' else c - veh_length
+            occupation_board[r][col] = 0
+
+        # update the 'tail' of the vertical vehicle back to a free square
+        else:
+            row = r + veh_length if sign == '+' else r - veh_length
+            occupation_board[row][c] = 0
+
+
+        return occupation_board
+
     def car_move(self, occupation_board, direction, r, c):
         """
-        werkt met copy.copy
+        works with copy.copy
         """
-        # move vehicle to the left respectively from free square
+        # move vehicle left to free square
         if c + 1 < self.grid_size and \
         occupation_board[r][c + 1] >= 1 and direction == "left" and \
         self.vehicle_dict[occupation_board[r][c + 1]].orientation == "H":
-            vehicle_number = occupation_board[r][c + 1]
-            neighbouring_veh = self.vehicle_dict[vehicle_number]
+            # get vehicle and update occupation board
+            self.get_vehicle(occupation_board, r, c + 1)
+            occupation_board = self.update_occupation_board(occupation_board, r, c, '+')
 
-            occupation_board[r][c] = vehicle_number
-            occupation_board[r][c + neighbouring_veh.length] = 0
 
-        # move vehicle to the right respectively from free square
+        # move vehicle right to free square
         elif c - 1 >= 0 and \
         occupation_board[r][c - 1] >= 1 and direction == "right" and \
         self.vehicle_dict[occupation_board[r][c - 1]].orientation == "H":
-            vehicle_number = occupation_board[r][c - 1]
-            neighbouring_veh = self.vehicle_dict[vehicle_number]
+            # get vehicle and update occupation board
+            self.get_vehicle(occupation_board, r, c - 1)
+            occupation_board = self.update_occupation_board(occupation_board, r, c, '-')
 
-            occupation_board[r][c] = vehicle_number
-            occupation_board[r][c - neighbouring_veh.length] = 0
-
-        # move vehicle to the up respectively from free square
+        # move vehicle up to free square
         elif r + 1 < self.grid_size \
         and occupation_board[r + 1][c] >= 1 and direction == "up" and \
         self.vehicle_dict[occupation_board[r + 1][c]].orientation == "V":
-
-            vehicle_number = occupation_board[r + 1][c]
-            neighbouring_veh = self.vehicle_dict[vehicle_number]
-
-            occupation_board[r][c] = vehicle_number
-            occupation_board[r + neighbouring_veh.length][c] = 0
+            # get vehicle and update occupation board
+            self.get_vehicle(occupation_board, r + 1, c)
+            occupation_board = self.update_occupation_board(occupation_board, r , c, '+')
 
         # move vehicle down respectively from free square
         elif r - 1 >= 0 and occupation_board[r - 1][c] >= 1 \
         and direction == "down" and \
         self.vehicle_dict[occupation_board[r - 1][c]].orientation == "V":
+            # get vehicle and update occupation board
+            self.get_vehicle(occupation_board, r - 1, c)
+            occupation_board = self.update_occupation_board(occupation_board, r, c, '-')
 
-
-            vehicle_number = occupation_board[r - 1][c]
-            neighbouring_veh = self.vehicle_dict[vehicle_number]
-
-            occupation_board[r][c] = vehicle_number
-            occupation_board[r - neighbouring_veh.length][c] = 0
-
-
+        # no vehicles able to move to the free square
         else:
             return False, occupation_board
 
-        return neighbouring_veh, occupation_board
+        return self.vehicle_obj, occupation_board
 
     def car_move_old(self, direction, r, c):
         """

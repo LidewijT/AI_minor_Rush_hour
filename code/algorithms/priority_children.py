@@ -1,11 +1,11 @@
-from .depth_first import DepthFirst
+from .depth_first import Depth_First_Search
 from itertools import chain
 import copy
 from ..classes.board import Board
 import heapq
 import numpy as np
 
-class PriorityChildren(DepthFirst):
+class PriorityChildren(Depth_First_Search):
     """
     This subclass of DepthFirst provides an implementation of the A* search
     algorithm. It has the ability to prioritize the order in which the children
@@ -75,7 +75,10 @@ class PriorityChildren(DepthFirst):
 
     def sort_children_states(self, children_states, depth):
         """
-        Priority Queue
+        This functions sorts the input children states (list) with a priority
+        queue based on the priority values blocking cars (primary) and squares
+        to exit (secondary). It appends each sorted child state, along with its
+        depth, to the stack.
         """
         pq = []
         # put all childs in priority queue
@@ -85,19 +88,24 @@ class PriorityChildren(DepthFirst):
             heapq.heappush(pq, (blocking_cars, squares_to_exit, child.tolist()))
 
         while pq:
+            # append each child to the stack with its depth
             child = np.array(heapq.heappop(pq)[2])
             self.stack.append((child, depth))
 
     def get_priority_values(self, state):
         """
         Calculates priority value based on blocking cars before exit for red car
+        (primary priority) and the number of squares the red car is away from
+        exit (secondary). Returns both values.
         """
         exit_row = self.exit_tile[0]
+
         # get red car position of exit site of state:
         for col in range(self.exit_tile[1]):
             if state[exit_row][col] == self.red_car:
                 red_car_position = (exit_row, col)
 
+        # set base for priority
         blocking_cars = 0
         squares_to_exit = 0
 

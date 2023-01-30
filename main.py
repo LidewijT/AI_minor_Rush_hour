@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from code.classes import board, game
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, move_cars_in_way, \
-    depth_first, breath_first, randomise_move_more_squares, priority_children
+    depth_first, breadth_first, randomise_move_more_squares, priority_children
 
 if __name__ == "__main__":
     # set-up parsing command line arguments
@@ -50,16 +50,16 @@ if __name__ == "__main__":
     #     test_board, randomise_move_more_squares.random_car_move)
 
     # --------
-    
+
     test_board = board.Board(f"data/gameboards/" + args.input_file)
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #     test_board, priority_children.PriorityChildren, first_search=True)
 
     test_game = game.Game(f"data/solutions/" + args.output_file, \
-        test_board, depth_first.DepthFirst, first_search=True)
-    
+        test_board, depth_first.Depth_First_Search, first_search=True)
+
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
-    #         test_board, breath_first.breath_first_search, breath_first = True)
+    #         test_board, breadth_first.BreadthFirst, first_search=True)
 
 
 

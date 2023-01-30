@@ -3,21 +3,21 @@ import copy
 import time
 from itertools import chain
 from ..classes.board import Board
-import numpy as np
 
-class DepthFirst():
+class Depth_First_Search():
     """
     This class computes the depth-first search algorithm, which travers in a
     tree data structure based on a dictionary. The algorithm explores as fas as
     possible along each branch before backtracking. This exploration does not go
-    deeper when it reached the maximum depth or a winning state, then it will
-    start backtracking.
+    deeper when it reached a winning state, then it will start backtracking the
+    moves into a dataframe.
+
     """
     def __init__(self, start_state):
         """
         Initializes the class by setting the start state, exit tile, red car
-        name, and maximum depth, and runs the algorithm. Afterwards, it puts all
-        moves of the solution ordered into a dataframe.
+        name, and runs the algorithm. Afterwards, it puts all moves of the
+        solution ordered into a dataframe.
         """
         # keep track of time
         start_time = time.time()
@@ -28,13 +28,11 @@ class DepthFirst():
         self.exit_tile = start_state.exit_tile
         self.red_car = start_state.red_car
 
-        # set maximum depth the algorithm can go
-        self.max_depth = 10000
-
         # create dictionary to keep track of all states. Key values are children
-        # and the corresponding value is a tuple of (move, parent, depth)
+        # and the corresponding value is a tuple of (move, parent)
         self.children_parent_dict = {hash(tuple(chain.from_iterable( \
             self.start_state))): (None, None, 0)}
+
         # run the algorithm
         self.run()
 
@@ -51,21 +49,15 @@ class DepthFirst():
         Starts running the algorithm until the board is in a winning position:
         the red car is at the exit tile.
         """
-        # initialize start depth of the algorithm
-        start_depth = 0
-        # initialize the stack with the starting state and the starting depth
-        self.stack = [(self.start_state, start_depth)]
+        # initialize the stack with the starting state
+        self.stack = [self.start_state]
 
         while self.stack != []:
             # get next state
-            self.current_state, depth = self.get_next_state()
-
-            # go to next state if we are deeper than current minimal solution
-            if depth >= self.max_depth:
-                continue
+            self.current_state = self.get_next_state()
 
             # get all the children states of the current state
-            won = self.build_children(depth + 1)
+            won = self.build_children()
 
             # stop if a solution was created
             if won == True:
@@ -73,15 +65,15 @@ class DepthFirst():
 
     def get_next_state(self):
         """
-        Returns last element of de stack while removing it.
+        Returns the last element of de stack while removing it at the same time.
         """
         return self.stack.pop()
 
-    def build_children(self, depth):
+    def build_children(self):
         """
         Get all the children of the input state and add them the dictionary.
         Creation of children are done by moving one car, checked for their
-        uniqueness and depth, and adds them to the stack. Also checks if red car
+        uniqueness, and adds them to the stack. Also checks if red car
         is at winning position.
         """
         # save parent state
@@ -89,7 +81,6 @@ class DepthFirst():
 
         # parent_occupation_hash = hash(parent_state)
         parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state)))
-
 
         # get lists for free squares and their surrounding directions
         free_row, free_col = Board.get_free_squares(self.board, self.current_state)
@@ -111,15 +102,12 @@ class DepthFirst():
                     current_occupation_hash = hash(tuple(chain.from_iterable( \
                         self.current_state)))
 
-                    # check if state is unique or is better (lower depth)
-                    if current_occupation_hash not in self.children_parent_dict\
-                        or self.children_parent_dict[current_occupation_hash] \
-                            [2] > depth:
+                    # check if state is unique
+                    if current_occupation_hash not in self.children_parent_dict:
 
-                        # save child in dictionary with (move, parent, depth)
+                        # save child in dictionary with (move, parent)
                         self.children_parent_dict[current_occupation_hash] = \
-                            ((vehicle.car, direction), parent_occupation_hash, \
-                                 depth)
+                            ((vehicle.car, direction), parent_occupation_hash)
 
                         # solution if the red car is at the exit
                         if self.current_state[self.exit_tile] == \
@@ -127,7 +115,7 @@ class DepthFirst():
                             return True
 
                         # add child to list
-                        self.stack.append((self.current_state, depth))
+                        self.stack.append(self.current_state)
 
                     # reset the current state as parent state for next child
                     self.current_state = copy.copy(parent_state)
@@ -160,7 +148,7 @@ class DepthFirst():
         # search back in dict to find all the moves made to get to winning state
         while self.children_parent_dict[child_hash][0] != None:
 
-            move, parent, _ = self.children_parent_dict[child_hash]
+            move, parent = self.children_parent_dict[child_hash]
             child_hash = parent
 
             # put move into df
