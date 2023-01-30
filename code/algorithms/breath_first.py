@@ -33,24 +33,18 @@ class Breath_first_search():
         self.children_parent_dict = \
         {tuple([tuple(row) for row in self.start_state.occupation]): None}
 
-        q = queue.Queue()
-        q.put(self.start_state)
+        # start a queue
+        self.q = queue.Queue()
+        self.q.put(self.start_state)
 
-        while not q.empty():
-            current_state = q.get()
-
-            # check if winning condtion is reached
-            if current_state.occupation[self.exit_tile] == self.red_car:
-                self.child_tuple = \
-                tuple([tuple(row) for row in current_state.occupation])
-                return
+        while not self.q.empty():
+            current_state = self.q.get()
 
             # get list of possible children current state can give
-            next_states_list = self.get_next_states(current_state)
+            won = self.get_next_states(current_state)
 
-            # put these children states in the queue
-            for next_state in next_states_list:
-                q.put(next_state)
+            if won == "yes":
+                return
 
     def get_next_states(self, current_state):
         """
@@ -62,7 +56,7 @@ class Breath_first_search():
         # save the parent state to recall back to
         parent_state = copy.deepcopy(current_state)
 
-        # safe the parent occupation as a tuple so it is hashable
+        # save the parent occupation as a tuple so it is hashable
         parent_occupation_tuple = \
         tuple([tuple(row) for row in parent_state.occupation])
 
@@ -86,11 +80,17 @@ class Breath_first_search():
 
                     # check if this state is unique (pruning)
                     if child_occupation_tuple not in self.children_parent_dict:
-                        # append child to next states list and children parent dict
-                        next_states.append(current_state)
+                        # put child in queue
+                        self.q.put(current_state)
 
+                        # add child occupation tuple to children parent dict
                         self.children_parent_dict[child_occupation_tuple] = \
                         (vehicle.car, direction), parent_occupation_tuple
+
+                        # check if this is a winning board
+                        if current_state.occupation[self.exit_tile] == self.red_car:
+                            self.child_tuple = child_occupation_tuple
+                            return "yes"
 
                     # reset state
                     current_state = copy.deepcopy(parent_state)
