@@ -221,13 +221,6 @@ class Board():
             # self.vertical_move(neighbouring_veh, r, c)
             return neighbouring_veh
 
-    # def horizontal_move(self, vehicle, r, c):
-    #
-    # def vertical_move(self, vehicle, r, c):
-    #     vehicle_number = self.occupation[r - 1][c]
-    #     self.occupation[r][c] = vehicle_number
-    #     self.occupation[r - neighbouring_veh.length][c]
-
 
     def move_vehicle_back(self, vehicle, r, c):
         """

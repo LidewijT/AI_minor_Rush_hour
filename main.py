@@ -17,6 +17,8 @@ if __name__ == "__main__":
     # adding arguments
     parser.add_argument("input_file", help = "location input file (csv)",)
     parser.add_argument("output_file", help = "location output file(csv)")
+
+    # arguments for running experiments
     # parser.add_argument("output_png", help = "location output file(png)")
     # parser.add_argument("iterations", help = "the amount of runs you want done")
 

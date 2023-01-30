@@ -99,3 +99,14 @@ def Breath_first_search():
         moves_df = pd.concat([move_df, moves_df])
 
         return moves_df
+
+
+
+
+
+
+            # check if winning condtion is reached
+            if current_state.occupation[self.exit_tile] == self.red_car:
+                self.child_tuple = \
+                tuple([tuple(row) for row in current_state.occupation])
+                return
