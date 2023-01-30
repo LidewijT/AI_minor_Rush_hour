@@ -5,7 +5,7 @@ Picks one random car movement of the given board and returns this movement.
 import random
 import numpy as np
 
-def random_car_move(test_board):
+def random_car_move(test_board, move_again=False):
     """
     Picks a random vehicle to move.
     """
@@ -28,9 +28,16 @@ def random_car_move(test_board):
             surr_square, surrounding_squares = random_surrounding_square(surrounding_squares)
 
             # make movement with the given surr_square
-            vehicle = test_board.car_move(surr_square, r, c)
+            vehicle, new_r, new_c = test_board.car_move(surr_square, r, c)
+
             if vehicle:
-                return vehicle, surr_square
+                veh_list = [(vehicle, surr_square)]
+
+                while move_again == True or random.random() < 0.01:
+                    vehicle, new_r, new_c = test_board.car_move(surr_square, new_r, new_c)
+                    veh_list.append(vehicle, surr_square)
+
+                return veh_list
 
 def random_free_square(row, col):
     """
