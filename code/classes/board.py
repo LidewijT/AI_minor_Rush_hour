@@ -17,7 +17,6 @@ class Board():
         self.priority = None
         self.squares_to_exit = None
 
-
         self.load_vehicles(input_file)
         self.create_board(input_file)
 
@@ -67,7 +66,7 @@ class Board():
             # create Vehicle() and add to list
             self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'], \
                 vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
-                vehicle[1]['length'], color_veh))
+                vehicle[1]['length'], color_veh, vehicle[0] + 1))
 
     def create_board(self, input_file):
         """
@@ -329,55 +328,38 @@ class Board():
             # self.vertical_move(neighbouring_veh, r, c)
             return neighbouring_veh
 
-    def car_move_new(self, direction, r, c):
+
+    def move_vehicle_back(self, vehicle, r, c):
         """
-        Lidewij Car Move aangepast
+        Takes a vehicle object and updates its position towards the given row
+        and column. Updates the occupation matrix and the new vehicle positions.
         """
+        # self.occupation[r][c]
+        # move vehicle backwards (left/up)
+        vehicle.positions.insert(0, (r,c))
+        self.occupation[vehicle.positions[-1]] = 0
 
-        # move vehicle to the left respectively from free square
-        if c + 1 < self.grid_size and \
-        self.occupation[r][c + 1] >= 1 and direction == "left" and \
-        self.vehicle_dict[self.occupation[r][c + 1]].orientation == "H":
-            neighbouring_veh = self.vehicle_dict[self.occupation[r][c + 1]]
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, -1)
 
-            self.move_vehicle_back(neighbouring_veh, r, c)
-            self.update_board()
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[:-1]
+        self.update_board()
 
-            c+=1
-            return neighbouring_veh, r, c
 
-        # move vehicle to the right respectively from free square
-        elif c - 1 >= 0 and \
-        self.occupation[r][c - 1] >= 1 and direction == "right" and \
-        self.vehicle_dict[self.occupation[r][c - 1]].orientation == "H":
-            neighbouring_veh = self.vehicle_dict[self.occupation[r][c - 1]]
+    def move_vehicle_ahead(self, vehicle, r, c):
+        """
+        Moves input vehicle 'ahead' (either to the right or down) based on the
+        input row and column. Updates the occupation matrix and the left square
+        back to grey.
+        """
+        # move vehicle ahead (right/down)
+        vehicle.positions.append((r,c))
+        self.occupation[vehicle.positions[0]] = 0
 
-            self.move_vehicle_ahead(neighbouring_veh, r, c)
-            self.update_board()
-            c-=1
-            return neighbouring_veh, r, c
+        # update square the vehicle moved away from back to grey ("empty")
+        self.empty_square(vehicle, 0)
 
-        # move vehicle to the up respectively from free square
-        elif r + 1 < self.grid_size \
-        and self.occupation[r + 1][c] >= 1 and direction == "up" and \
-        self.vehicle_dict[self.occupation[r + 1][c]].orientation == "V":
-            neighbouring_veh = self.vehicle_dict[self.occupation[r + 1][c]]
-
-            self.move_vehicle_back(neighbouring_veh, r, c)
-            self.update_board()
-
-            r+=1
-            return neighbouring_veh, r, c
-
-        # move vehicle to the move respectively from free square
-        elif r - 1 >= 0 and self.occupation[r - 1][c] >= 1 \
-        and direction == "down" and \
-        self.vehicle_dict[self.occupation[r - 1][c]].orientation == "V":
-            neighbouring_veh = self.vehicle_dict[self.occupation[r - 1][c]]
-
-            self.move_vehicle_ahead(neighbouring_veh, r, c)
-            self.update_board()
-
-            r-=1
-            return neighbouring_veh, r, c
-
+        # update the positions the vehicle is at
+        vehicle.positions = vehicle.positions[1:]
+        self.update_board()

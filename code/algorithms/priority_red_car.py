@@ -1,4 +1,6 @@
 from ..algorithms import randomise
+from ..algorithms import breath_first
+
 import random
 """"
 Assumes that red car is horizontally oriented.
@@ -17,7 +19,7 @@ def move_priority_red_car(test_board, occupation_board):
         if occupation_board[exit_row][col] == red_car:
             red_car_position = (exit_row, col)
 
-    # move red car to the exit (right) if not blocked with a 60% chance
+    # move red car to the exit (right) if not blocked with a 70% chance
     if occupation_board[red_car_position[0], red_car_position[1] + 1] == 0 and random.random() > 0.4:
         # red car is not blocked, move it towards the exit
         vehicle_obj, occupation_board = test_board.car_move(occupation_board, "right", red_car_position[0], red_car_position[1] + 1)
@@ -114,6 +116,9 @@ def move_priority_red_car(test_board, occupation_board):
 
 #         # update square the vehicle moved away from back to grey ("empty")
 #         self.empty_square(vehicle, 0)
+
+#         # update the positions the vehicle is at
+#         vehicle.positions = vehicle.positions[1:]
 
 #         # update the positions the vehicle is at
 #         vehicle.positions = vehicle.positions[1:]
