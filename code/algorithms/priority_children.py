@@ -1,6 +1,7 @@
 from .depth_first import DepthFirst
 from itertools import chain
 import copy
+from ..classes.board import Board
 
 class PriorityChildren(DepthFirst):
     """
@@ -22,12 +23,12 @@ class PriorityChildren(DepthFirst):
         children_list = []
 
         # save parent state
-        parent_state = copy.deepcopy(self.current_state)
+        parent_state = copy.copy(self.current_state)
 
-        parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state.occupation)))
+        parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state)))
 
         # get lists for free squares and their surrounding directions
-        free_row, free_col = self.current_state.get_free_squares()
+        free_row, free_col = Board.get_free_squares(self.board, self.current_state)
         direction_list = ["left", "right", "up", "down"]
 
         # systematically go through the free squares to create children
@@ -38,13 +39,13 @@ class PriorityChildren(DepthFirst):
             # systematically go through all sides of the empty square
             for direction in direction_list:
                 # make movement with the given surrounding square
-                vehicle = self.current_state.car_move(direction, r, c)
+                vehicle, self.current_state = Board.car_move(self.board, self.current_state, direction, r, c)
 
                 # check if a vehicle was found on the surrounding square
-                if vehicle:
+                if vehicle != False:
                     # convert nparray to hashed flattened tuple
                     current_occupation_hash = hash(tuple(chain.from_iterable( \
-                        self.current_state.occupation)))
+                        self.current_state)))
 
                     # check if state is unique or is better (lower depth)
                     if current_occupation_hash not in self.children_parent_dict\
@@ -57,7 +58,7 @@ class PriorityChildren(DepthFirst):
                                  depth)
 
                         # solution if the red car is at the exit
-                        if self.current_state.occupation[self.exit_tile] == \
+                        if self.current_state[self.exit_tile] == \
                             self.red_car:
                             return True
 
@@ -66,7 +67,7 @@ class PriorityChildren(DepthFirst):
                         children_list.append(self.current_state)
 
                     # reset the current state as parent state for next child
-                    self.current_state = copy.deepcopy(parent_state)
+                    self.current_state = copy.copy(parent_state)
 
         # sort by heuristic
         self.sort_children_states(children_list, depth)
@@ -82,15 +83,19 @@ class PriorityChildren(DepthFirst):
         """
         Calculates priority value based on blocking cars before exit for red car
         """
+        exit_row = self.exit_tile[0]
         # get red car position of exit site of state:
-        red_car_position = state.vehicle_dict[self.red_car].positions[-1]
+        for col in range(self.exit_tile[1]):
+            if state[exit_row][col] == self.red_car:
+                red_car_position = (exit_row, col)
+
         blocking_cars = 0
         squares_to_exit = 0
 
         # go through every column
         for c in range(self.exit_tile[1] - red_car_position[1]):
             # get the value of the square to check if there is a vehicle
-            if state.occupation[red_car_position[0]][red_car_position[1] + \
+            if state[red_car_position[0]][red_car_position[1] + \
                 c+1] > 0:
                 blocking_cars += 1
             squares_to_exit += 1
