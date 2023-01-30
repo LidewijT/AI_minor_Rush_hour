@@ -2,6 +2,8 @@ import pandas as pd
 import copy
 import time
 from itertools import chain
+from ..classes.board import Board
+import numpy as np
 
 class DepthFirst():
     """
@@ -21,17 +23,18 @@ class DepthFirst():
         start_time = time.time()
 
         # attributes
-        self.start_state = start_state
+        self.board = start_state
+        self.start_state = copy.copy(start_state.occupation)
         self.exit_tile = start_state.exit_tile
-        self.red_car = self.start_state.red_car
+        self.red_car = start_state.red_car
 
         # set maximum depth the algorithm can go
         self.max_depth = 10000
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent, depth)
-        self.children_parent_dict = {hash(tuple(chain.from_iterable(start_state.occupation))): (None, None, 0)}
-
+        self.children_parent_dict = {hash(tuple(chain.from_iterable( \
+            self.start_state))): (None, None, 0)}
         # run the algorithm
         self.run()
 
@@ -56,8 +59,6 @@ class DepthFirst():
         while self.stack != []:
             # get next state
             self.current_state, depth = self.get_next_state()
-            # print(f"New pop:{self.current_state.priority}")
-            # print(self.current_state.occupation)
 
             # go to next state if we are deeper than current minimal solution
             if depth >= self.max_depth:
@@ -84,12 +85,14 @@ class DepthFirst():
         is at winning position.
         """
         # save parent state
-        parent_state = copy.deepcopy(self.current_state)
+        parent_state = copy.copy(self.current_state)
 
-        parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state.occupation)))
+        # parent_occupation_hash = hash(parent_state)
+        parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state)))
+
 
         # get lists for free squares and their surrounding directions
-        free_row, free_col = self.current_state.get_free_squares()
+        free_row, free_col = Board.get_free_squares(self.board, self.current_state)
         direction_list = ["left", "right", "up", "down"]
 
         # systematically go through the free squares to create children
@@ -100,13 +103,13 @@ class DepthFirst():
             # systematically go through all sides of the empty square
             for direction in direction_list:
                 # make movement with the given surrounding square
-                vehicle = self.current_state.car_move(direction, r, c)
+                vehicle, self.current_state = Board.car_move(self.board, self.current_state, direction, r, c)
 
                 # check if a vehicle was found on the surrounding square
-                if vehicle:
+                if vehicle != False:
                     # convert nparray to hashed flattened tuple
                     current_occupation_hash = hash(tuple(chain.from_iterable( \
-                        self.current_state.occupation)))
+                        self.current_state)))
 
                     # check if state is unique or is better (lower depth)
                     if current_occupation_hash not in self.children_parent_dict\
@@ -119,7 +122,7 @@ class DepthFirst():
                                  depth)
 
                         # solution if the red car is at the exit
-                        if self.current_state.occupation[self.exit_tile] == \
+                        if self.current_state[self.exit_tile] == \
                             self.red_car:
                             return True
 
@@ -127,7 +130,8 @@ class DepthFirst():
                         self.stack.append((self.current_state, depth))
 
                     # reset the current state as parent state for next child
-                    self.current_state = copy.deepcopy(parent_state)
+                    self.current_state = copy.copy(parent_state)
+
 
     def append_move_to_DataFrame_reversed(self, moves_df, move):
         """
@@ -151,7 +155,7 @@ class DepthFirst():
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
 
         # create key to search back in dictionary
-        child_hash = hash(tuple(chain.from_iterable(child.occupation)))
+        child_hash = hash(tuple(chain.from_iterable(child)))
 
         # search back in dict to find all the moves made to get to winning state
         while self.children_parent_dict[child_hash][0] != None:

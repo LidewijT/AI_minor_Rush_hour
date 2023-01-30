@@ -10,7 +10,7 @@ from prompt_toolkit.completion import WordCompleter
 
 from code.classes import board, game
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, move_cars_in_way, \
-    depth_first, breath_first, randomise_move_more_squares
+    depth_first, breath_first, randomise_move_more_squares, priority_children
 
 
 if __name__ == "__main__":
