@@ -15,7 +15,7 @@ class DepthFirst():
         """
         Initializes the class by setting the start state, exit tile, red car
         name, and maximum depth, and runs the algorithm. Afterwards, it puts all
-        moves of the optimal solution ordered into a dataframe.
+        moves of the solution ordered into a dataframe.
         """
         # keep track of time
         start_time = time.time()
@@ -26,7 +26,7 @@ class DepthFirst():
         self.red_car = self.start_state.red_car
 
         # set maximum depth the algorithm can go
-        self.max_depth = 2000
+        self.max_depth = 10000
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent, depth)
@@ -56,6 +56,8 @@ class DepthFirst():
         while self.stack != []:
             # get next state
             self.current_state, depth = self.get_next_state()
+            # print(f"New pop:{self.current_state.priority}")
+            # print(self.current_state.occupation)
 
             # go to next state if we are deeper than current minimal solution
             if depth >= self.max_depth:
@@ -78,7 +80,8 @@ class DepthFirst():
         """
         Get all the children of the input state and add them the dictionary.
         Creation of children are done by moving one car, checked for their
-        uniqueness and depth, and adds them to the stack.
+        uniqueness and depth, and adds them to the stack. Also checks if red car
+        is at winning position.
         """
         # save parent state
         parent_state = copy.deepcopy(self.current_state)
@@ -110,9 +113,6 @@ class DepthFirst():
                         or self.children_parent_dict[current_occupation_hash] \
                             [2] > depth:
 
-                        # add child to list
-                        self.stack.append((self.current_state, depth))
-
                         # save child in dictionary with (move, parent, depth)
                         self.children_parent_dict[current_occupation_hash] = \
                             ((vehicle.car, direction), parent_occupation_hash, \
@@ -122,6 +122,9 @@ class DepthFirst():
                         if self.current_state.occupation[self.exit_tile] == \
                             self.red_car:
                             return True
+
+                        # add child to list
+                        self.stack.append((self.current_state, depth))
 
                     # reset the current state as parent state for next child
                     self.current_state = copy.deepcopy(parent_state)
@@ -158,3 +161,4 @@ class DepthFirst():
 
             # put move into df
             self.moves_df = self.append_move_to_DataFrame_reversed(self.moves_df, move)
+

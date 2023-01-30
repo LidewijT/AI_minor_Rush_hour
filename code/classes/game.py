@@ -1,7 +1,6 @@
 """
 Solves rush hour with the given algorithm
 """
-
 import pandas as pd
 import matplotlib.pyplot as plt
 import time

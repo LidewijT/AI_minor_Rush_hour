@@ -14,9 +14,21 @@ from .vehicle import Vehicles
 class Board():
     def __init__(self, input_file):
         self.vehicle_dict = {}
+        self.priority = None
+        self.squares_to_exit = None
+
 
         self.load_vehicles(input_file)
         self.create_board(input_file)
+
+    def __lt__(self, other):
+        if self.priority != other.priority:
+            return self.priority < other.priority
+        else:
+            return self.squares_to_exit < other.squares_to_exit
+
+
+        
 
     def load_vehicles(self, input_file):
         """
