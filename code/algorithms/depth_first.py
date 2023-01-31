@@ -13,20 +13,18 @@ class Depth_First_Search():
     moves into a dataframe.
 
     """
-    def __init__(self, start_state):
+    def __init__(self, start_state, max_depth=None):
         """
         Initializes the class by setting the start state, exit tile, red car
         name, and runs the algorithm. Afterwards, it puts all moves of the
         solution ordered into a dataframe.
         """
-        # keep track of time
-        start_time = time.time()
-
         # attributes
         self.board = start_state
-        self.start_state = copy.copy(start_state.occupation)
+        self.start_state = copy.copy(start_state.board)
         self.exit_tile = start_state.exit_tile
         self.red_car = start_state.red_car
+        self.max_depth = max_depth
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent)
@@ -37,12 +35,13 @@ class Depth_First_Search():
         self.run()
 
         # moves to dataframe
-        print("Export moves to dataframe...")
-        self.moves_to_df(self.current_state)
+        if self.won == True:
+            print("Export moves to dataframe...")
+            self.moves_to_df(self.current_state)
+            print(f"number states: {len(self.children_parent_dict)}")
 
-        print(f"Time to get a solution {time.time() - start_time}")
-        print(f"number states: {len(self.children_parent_dict)}")
-        print(f"number moves: {len(self.moves_df)}")
+        else:
+            print("dubbel sipjes")
 
     def run(self):
         """
@@ -57,11 +56,14 @@ class Depth_First_Search():
             self.current_state = self.get_next_state()
 
             # get all the children states of the current state
-            won = self.build_children()
+            self.won = self.build_children()
 
             # stop if a solution was created
-            if won == True:
+            if self.won == True:
                 return
+
+        # no solution found if the stack is empty
+        self.won = False
 
     def get_next_state(self):
         """
@@ -147,10 +149,11 @@ class Depth_First_Search():
 
         # search back in dict to find all the moves made to get to winning state
         while self.children_parent_dict[child_hash][0] != None:
-
-            move, parent = self.children_parent_dict[child_hash]
-            child_hash = parent
+            values = self.children_parent_dict[child_hash]
 
             # put move into df
-            self.moves_df = self.append_move_to_DataFrame_reversed(self.moves_df, move)
+            self.moves_df = self.append_move_to_DataFrame_reversed(self.moves_df, values[0])
+
+            # parent is the child for next move
+            child_hash = values[1]
 

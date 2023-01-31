@@ -1,11 +1,10 @@
 class Vehicles():
-    def __init__(self, car, orientation, col, row, length, color, number):
+    def __init__(self, car, orientation, col, row, length, number):
         # get attributes
         self.car = car
         self.orientation = orientation
         self.positions = []
         self.length = length
-        self.color = color
         self.number = number
 
         # keep track of last move direction (ahead or back)

@@ -2,6 +2,7 @@ from .depth_first import Depth_First_Search
 from ..classes.board import Board
 import copy
 from itertools import chain
+import pandas as pd
 
 class Depth_Limited_Search(Depth_First_Search):
     """
@@ -10,13 +11,6 @@ class Depth_Limited_Search(Depth_First_Search):
     also runs the algorithm. The run method creates new children states if the
     maximum depth is not reached and until the board is in a winnig position.
     """
-
-    def __init__(self, max_depth):
-        """
-        Initialised the max depth the algorithm can go.
-        """
-        # set maximum depth the algorithm can go
-        self.max_depth = max_depth
 
     def run(self, start_depth=0):
         """
@@ -38,11 +32,15 @@ class Depth_Limited_Search(Depth_First_Search):
                 continue
 
             # get all the children states of the current state
-            won = self.build_children(depth + 1)
+            self.won = self.build_children(depth + 1)
 
             # stop if a solution was created
-            if won == True:
+            if self.won == True:
+                print("YAY")
                 return
+
+        self.won = False
+        print("sipjes")
 
     def build_children(self, depth):
         """
@@ -91,6 +89,7 @@ class Depth_Limited_Search(Depth_First_Search):
                         # solution if the red car is at the exit
                         if self.current_state[self.exit_tile] == \
                             self.red_car:
+                            print("WIN")
                             return True
 
                         # add child to list

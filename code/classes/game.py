@@ -10,7 +10,7 @@ from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_fi
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False):
+            False, max_depth = None):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -20,8 +20,9 @@ class Game:
         # attributes
         self.output_file = output_file
         self.test_board = test_board
-        self.occupation_board = test_board.occupation
+        self.occupation_board = test_board.board
         self.algorithm = algorithm
+        self.max_depth = max_depth
 
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -56,8 +57,6 @@ class Game:
             # make a move
             self.append_move_to_DataFrame(vehicle, direction)
 
-            # update the board with the new vehicle movement
-            # self.test_board.update_board()
 
     def run_first_search(self):
         """
@@ -71,34 +70,43 @@ class Game:
 
         print("Start algorithm...")
 
-        # get the move dataframe created by the algorithm
-        self.moves_df = self.algorithm(self.test_board).moves_df
+        result = self.algorithm(self.test_board, max_depth=self.max_depth)
 
         # stop timer
         end_time = time.time()
-        elapsed_time = end_time - start_time
+        self.elapsed_time = end_time - start_time
 
-        print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves\n")
-        print(f"finished in: {elapsed_time} seconds")
+        self.win = result.won
+        if self.win == True:
 
-        # finalize into output
-        self.output_maker()
+            self.moves_df = result.moves_df
+            self.nr_states = len(result.children_parent_dict)
+
+            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
+            print(f"finished in: {self.elapsed_time} seconds")
+
+            # finalize into output
+            self.output_maker()
+
+        else:
+            print("No solution found")
+            print(f"finished in: {self.elapsed_time} seconds")
 
     def run(self):
+        """
+        Runs the algorithm until the board is at winning position, while saving
+        each move into a dataframe. In the end, the dataframe is exported to a
+        csv file.
+        """
         while self.win_check() == False:
             self.move_counter += 1
 
             # make a move
-            # print("\nstart move")
             self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
-            # print(f"move made\n")
 
             # save move
             self.append_move_to_DataFrame(vehicle, direction)
 
-            # update the board with the new vehicle move
-            # self.test_board.update_board()
-            # plt.pause(0.4)
 
     def win_check(self):
         """
@@ -110,7 +118,7 @@ class Game:
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            # self.output_maker()
+            self.output_maker()
 
             return True
 
@@ -130,6 +138,7 @@ class Game:
         If one vehicle was moved multiple times in a row,
         compress them to one move of multiple tiles
         """
+        pass
 
     def output_maker(self):
         """
