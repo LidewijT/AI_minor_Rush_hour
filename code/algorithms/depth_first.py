@@ -28,8 +28,10 @@ class Depth_First_Search():
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent)
-        self.children_parent_dict = {hash(tuple(chain.from_iterable( \
-            self.start_state))): (None, None, 0)}
+        self.children_parent_dict = {
+            hash(tuple(chain.from_iterable(self.start_state))):
+            (None, None, 0)
+        }
 
         # run the algorithm
         self.run()
@@ -38,16 +40,15 @@ class Depth_First_Search():
         if self.won == True:
             print("Export moves to dataframe...")
             self.moves_to_df(self.current_state)
-            print(f"number states: {len(self.children_parent_dict)}")
+        # print(f"number states: {len(self.children_parent_dict)}")
 
-        else:
-            print("dubbel sipjes")
 
     def run(self):
         """
         Starts running the algorithm until the board is in a winning position:
         the red car is at the exit tile.
         """
+        print("HELLO")
         # initialize the stack with the starting state
         self.stack = [self.start_state]
 
@@ -85,7 +86,10 @@ class Depth_First_Search():
         parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state)))
 
         # get lists for free squares and their surrounding directions
-        free_row, free_col = Board.get_free_squares(self.board, self.current_state)
+        free_row, free_col = Board.get_free_squares(
+            self.board,
+            self.current_state
+        )
         direction_list = ["left", "right", "up", "down"]
 
         # systematically go through the free squares to create children
@@ -96,13 +100,20 @@ class Depth_First_Search():
             # systematically go through all sides of the empty square
             for direction in direction_list:
                 # make movement with the given surrounding square
-                vehicle, self.current_state = Board.car_move(self.board, self.current_state, direction, r, c)
+                vehicle, self.current_state = Board.car_move(
+                    self.board,
+                    self.current_state,
+                    direction,
+                    r,
+                    c
+                )
 
                 # check if a vehicle was found on the surrounding square
                 if vehicle != False:
                     # convert nparray to hashed flattened tuple
-                    current_occupation_hash = hash(tuple(chain.from_iterable( \
-                        self.current_state)))
+                    current_occupation_hash = hash(tuple(
+                        chain.from_iterable(self.current_state))
+                    )
 
                     # check if state is unique
                     if current_occupation_hash not in self.children_parent_dict:
@@ -112,8 +123,7 @@ class Depth_First_Search():
                             ((vehicle.car, direction), parent_occupation_hash)
 
                         # solution if the red car is at the exit
-                        if self.current_state[self.exit_tile] == \
-                            self.red_car:
+                        if self.current_state[self.exit_tile] == self.red_car:
                             return True
 
                         # add child to list
@@ -130,8 +140,9 @@ class Depth_First_Search():
         """
         # append move to DataFrame in reverse order since you start at the
         # winning state
-        move_df = pd.DataFrame([[move[0], move[1]]], columns=['car name', \
-            'move'])
+        move_df = pd.DataFrame([[move[0], move[1]]],
+            columns=['car name', 'move']
+        )
 
         return pd.concat([move_df, moves_df])
 
@@ -152,8 +163,10 @@ class Depth_First_Search():
             values = self.children_parent_dict[child_hash]
 
             # put move into df
-            self.moves_df = self.append_move_to_DataFrame_reversed(self.moves_df, values[0])
+            self.moves_df = self.append_move_to_DataFrame_reversed(
+                self.moves_df,
+                values[0]
+            )
 
             # parent is the child for next move
             child_hash = values[1]
-

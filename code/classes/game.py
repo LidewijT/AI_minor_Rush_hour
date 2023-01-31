@@ -8,9 +8,13 @@ import time
 from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breadth_first
 
 class Game:
-    def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, max_depth = None):
+    """
+    Solves the Rush hour board with the input algorithm.
+    """
+
+    def __init__(self, output_file, test_board, algorithm,
+        branch_and_bound = False, nr_moves_to_solve = None,
+        first_search = False, max_depth = None):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -41,9 +45,9 @@ class Game:
 
     def run_branch_and_bound(self):
         """
-        This function is used when the branch_and_bound parameter is set to true.
-        It uses the algorithm passed in to make moves on the board until the red
-        car reaches the exit or the move counter reaches the value of
+        This function is used when the branch_and_bound parameter is set to
+        true. It uses the algorithm passed in to make moves on the board until
+        the red car reaches the exit or the move counter reaches the value of
         nr_moves_to_solve. Furtermore, it keeps track of all moves made in a
         DataFrame.
         """
@@ -52,7 +56,10 @@ class Game:
             self.move_counter < self.nr_moves_to_solve:
             self.move_counter += 1
 
-            self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
+            self.occupation_board, vehicle, direction = self.algorithm(
+                self.test_board,
+                self.occupation_board
+            )
 
             # make a move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -68,8 +75,7 @@ class Game:
         # start timer
         start_time = time.time()
 
-        print("Start algorithm...")
-
+        # run algorithm
         result = self.algorithm(self.test_board, max_depth=self.max_depth)
 
         # stop timer
@@ -77,10 +83,10 @@ class Game:
         self.elapsed_time = end_time - start_time
 
         self.win = result.won
-        if self.win == True:
+        self.nr_states = len(result.children_parent_dict)
 
+        if self.win == True:
             self.moves_df = result.moves_df
-            self.nr_states = len(result.children_parent_dict)
 
             print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
             print(f"finished in: {self.elapsed_time} seconds")
@@ -91,6 +97,9 @@ class Game:
         else:
             print("No solution found")
             print(f"finished in: {self.elapsed_time} seconds")
+            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
+
+
 
     def run(self):
         """
@@ -102,7 +111,10 @@ class Game:
             self.move_counter += 1
 
             # make a move
-            self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
+            self.occupation_board, vehicle, direction = self.algorithm(
+                self.test_board,
+                self.occupation_board
+            )
 
             # save move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -115,7 +127,8 @@ class Game:
         solve, create a csv file of the move dataframe and return True.
         Otherwise, return False.
         """
-        if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
+        if self.test_board.occupation[self.test_board.exit_tile] == \
+            self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
             self.output_maker()
@@ -130,7 +143,9 @@ class Game:
         Saves the move in a dataframe.
         """
         # append move to DataFrame
-        move_df = pd.DataFrame([[vehicle.car, direction]], columns=['car name', 'move'])
+        move_df = pd.DataFrame([[vehicle.car, direction]],
+            columns=['car name', 'move']
+        )
         self.moves_df = pd.concat([self.moves_df, move_df])
 
     def compress_DataFrame(self):

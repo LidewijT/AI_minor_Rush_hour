@@ -36,11 +36,9 @@ class Depth_Limited_Search(Depth_First_Search):
 
             # stop if a solution was created
             if self.won == True:
-                print("YAY")
                 return
 
         self.won = False
-        print("sipjes")
 
     def build_children(self, depth):
         """
@@ -57,7 +55,10 @@ class Depth_Limited_Search(Depth_First_Search):
 
 
         # get lists for free squares and their surrounding directions
-        free_row, free_col = Board.get_free_squares(self.board, self.current_state)
+        free_row, free_col = Board.get_free_squares(
+            self.board,
+            self.current_state
+        )
         direction_list = ["left", "right", "up", "down"]
 
         # systematically go through the free squares to create children
@@ -68,13 +69,20 @@ class Depth_Limited_Search(Depth_First_Search):
             # systematically go through all sides of the empty square
             for direction in direction_list:
                 # make movement with the given surrounding square
-                vehicle, self.current_state = Board.car_move(self.board, self.current_state, direction, r, c)
+                vehicle, self.current_state = Board.car_move(
+                    self.board,
+                    self.current_state,
+                    direction,
+                    r,
+                    c
+                )
 
                 # check if a vehicle was found on the surrounding square
                 if vehicle != False:
                     # convert nparray to hashed flattened tuple
-                    current_occupation_hash = hash(tuple(chain.from_iterable( \
-                        self.current_state)))
+                    current_occupation_hash = hash(tuple(
+                        chain.from_iterable(self.current_state))
+                    )
 
                     # check if state is unique or is better (lower depth)
                     if current_occupation_hash not in self.children_parent_dict\
@@ -82,14 +90,14 @@ class Depth_Limited_Search(Depth_First_Search):
                             [2] > depth:
 
                         # save child in dictionary with (move, parent, depth)
-                        self.children_parent_dict[current_occupation_hash] = \
-                            ((vehicle.car, direction), parent_occupation_hash, \
-                                 depth)
+                        self.children_parent_dict[current_occupation_hash] = (
+                            (vehicle.car, direction),
+                            parent_occupation_hash,
+                            depth
+                        )
 
                         # solution if the red car is at the exit
-                        if self.current_state[self.exit_tile] == \
-                            self.red_car:
-                            print("WIN")
+                        if self.current_state[self.exit_tile] == self.red_car:
                             return True
 
                         # add child to list

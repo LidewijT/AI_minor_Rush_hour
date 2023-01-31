@@ -56,7 +56,7 @@ class Board():
 
     def create_board(self, input_file):
         """
-        Creates an empty board with the determine grid size, sets the exit tile, 
+        Creates an empty board with the determine grid size, sets the exit tile,
         and calls the create_initial_board method to place vehicles onto the
         empty board for its initial state.
         """

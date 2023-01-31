@@ -15,12 +15,13 @@ from code.algorithms import dfs_hill_climber, randomise, priority_red_car, move_
 
 
 if __name__ == "__main__":
-    df_data_dls = []
+    data_dls = []
 
-    for board_nr in ["6x6_3", "9x9_4"]:
+    # for board_nr in ["6x6_3", "9x9_4"]:
+    for board_nr in ["6x6_1", "6x6_2","6x6_3"]:
         test_board = board.Board(f"data/gameboards/" + f"Rushhour{board_nr}.csv")
 
-        for max_depth in range(200, 4100, 100):
+        for max_depth in range(0, 1100, 20):
             print()
             print(f"Depth-limited Search, {board_nr}, with max-depth: {max_depth}")
 
@@ -28,7 +29,7 @@ if __name__ == "__main__":
                 test_board, depth_limited.Depth_Limited_Search, first_search=True, max_depth=max_depth)
 
             if test_game.win == True:
-                df_data_dls.append({
+                data_dls.append({
                     "board": board_nr,
                     "max_depth": max_depth,
                     "number_of_states": test_game.nr_states,
@@ -36,14 +37,15 @@ if __name__ == "__main__":
                 })
 
             else:
-                df_data_dls.append({
+                data_dls.append({
                     "board": board_nr,
                     "max_depth": max_depth,
                     "number_of_states": test_game.nr_states,
                     "number_of_moves": 0
                 })
 
-    df_data_dls.to_csv("data/gameboards_different_max_depth_DLS.csv", index=False)
+    df_data_dls = pd.DataFrame(data_dls)
+    df_data_dls.to_csv("data/gameboards_different_max_depth_DLS2.csv", index=False)
 
     df_data_dls.plot(x='number_of_states', y='number_of_moves', kind='scatter')
     plt.xlabel('Number of States')
@@ -51,21 +53,6 @@ if __name__ == "__main__":
     plt.show()
     plt.savefig('plot1.png')
 
-    colormap = plt.cm.get_cmap('rainbow')
-
-    df_data_dls['board_marker'] = df_data_dls['board'].map({1: 'o', 2: 's', 3: '^', 4: 'v'})
-    df_data_dls['max_depth_color'] = colormap(np.linspace(0, 1, 40))
-
-    grouped = df_data_dls.groupby(['board_marker'])
-
-    for marker, group in grouped:
-        for i, row in group.iterrows():
-            plt.scatter(row['number_of_states'], row['number_of_moves'], marker=marker, color=row['max_depth_color'])
-
-    plt.xlabel('Number of States')
-    plt.ylabel('Number of Moves')
-    plt.show()
-    plt.savefig('plo2.png')
 
 
 
@@ -337,7 +324,3 @@ if __name__ == "__main__":
     # test_board = board.Board(f"data/gameboards/" + args.input_file)
     # test_game = game.Game(f"data/solutions/" + args.output_file, \
     #     test_board, priority_children.PriorityChildren, first_search=True)
-
-
-
-
