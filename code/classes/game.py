@@ -14,7 +14,7 @@ class Game:
 
     def __init__(self, output_file, test_board, algorithm,
         branch_and_bound = False, nr_moves_to_solve = None,
-        first_search = False, max_depth = None):
+        first_search = False, max_depth = None, create_csv = True):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -27,6 +27,7 @@ class Game:
         self.occupation_board = test_board.board
         self.algorithm = algorithm
         self.max_depth = max_depth
+        self.create_csv = create_csv
 
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -91,8 +92,9 @@ class Game:
             print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
             print(f"finished in: {self.elapsed_time} seconds")
 
-            # finalize into output
-            self.output_maker()
+            if self.create_csv == True:
+                # finalize into output
+                self.output_maker()
 
         else:
             print("No solution found")
@@ -131,7 +133,8 @@ class Game:
             self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            self.output_maker()
+            if self.create_csv == True:
+                self.output_maker()
 
             return True
 

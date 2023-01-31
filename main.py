@@ -1,10 +1,5 @@
 import math
 from tqdm import tqdm
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
-from prompt_toolkit import prompt
-from prompt_toolkit.completion import WordCompleter
 
 from code.classes import board, game
 import code.helpers.prompt_helper as ph
@@ -31,7 +26,7 @@ if __name__ == "__main__":
 
     # if so, ask what input file of moves they want to use
     if visualisation_bool in {"yes", "y"}:
-        moves_input = moves_input_prompt()
+        moves_input = ph.moves_input_prompt()
 
     else:
         # ask what algorithm they want to run

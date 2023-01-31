@@ -3,9 +3,10 @@ Runs the breadth-first search for each board, saves the results and export to a
 csv-file.
 """
 import pandas as pd
+import sys
 
-from .algorithms import breadth_first
-from .classes import board, game
+from ..algorithms import breadth_first
+from ..classes import board, game
 
 data_dfs = []
 
@@ -30,4 +31,4 @@ for board_nr in boards :
 # to dataframe
 df_data_dfs = pd.DataFrame(data_dfs)
 # export to csv file
-df_data_dfs.to_csv("data/BFS_each_board.csv", index=False)
+df_data_dfs.to_csv("data/experiments/BFS_each_board.csv", index=False)

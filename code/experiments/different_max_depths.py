@@ -25,7 +25,8 @@ for board_nr in ["6x6_1", "6x6_2","6x6_3"]:
             test_board,
             depth_limited.Depth_Limited_Search,
             first_search=True,
-            max_depth=max_depth
+            max_depth=max_depth,
+            create_csv=False
         )
 
         # save results
