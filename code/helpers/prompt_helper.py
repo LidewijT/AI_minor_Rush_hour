@@ -1,12 +1,13 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
-# initiate list of algorithms
+# ------------------------ initiate list of algorithms -------------------------
 algorithm_list = ["randomise.random_car_move", \
 "priority_red_car.move_priority_red_car", "breath_first.Breath_first_search"\
 , "depth_first.DepthFirst", "depth_limited.Depth_Limited_Search"]
 
-# initiate word completers
+
+# ------------------------- initiate word completers ---------------------------
 board_completer = WordCompleter(["Rushhour6x6_1", "Rushhour6x6_2", \
 "Rushhour6x6_3", "Rushhour9x9_4", "Rushhour9x9_5", "Rushhour9x9_6", \
 "Rushhour12x12_7"])
@@ -15,7 +16,8 @@ algorithm_completer = WordCompleter(algorithm_list)
 
 yes_no_completer = WordCompleter(["yes", "no"])
 
-# initiate prompts
+
+# ------------------------- initiate prompt functions --------------------------
 def get_yes_or_no(input):
     """
     Ensures an anwer can only be yes or no

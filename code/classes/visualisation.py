@@ -1,8 +1,7 @@
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
-from colors import cnames
+from ..helpers.colors  import cnames
 
 class Visualisation():
     def __init__(self, board_csv, moves_csv):

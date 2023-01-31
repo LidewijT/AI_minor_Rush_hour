@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mlc
 import tkinter as tk
 
-from ..colors import cnames
+from ..helpers.colors import cnames
 from .vehicle import Vehicles
 
 
