@@ -30,6 +30,9 @@ def get_yes_or_no(input):
 
     return answer
 
+def experiment_bool_prompt():
+    return get_yes_or_no("Do you want to run an experiment? (yes/no): ")
+
 def visualisation_bool_prompt():
     return get_yes_or_no("Would you like to visualise a csv of moves? (yes/no): ")
 
