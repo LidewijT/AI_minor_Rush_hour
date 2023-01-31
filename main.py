@@ -1,8 +1,10 @@
 import math
 from tqdm import tqdm
 
-from code.classes import board, game
 import code.helpers.prompt_helper as ph
+import code.experiments.random_and_priority_algorithms as exp
+
+from code.classes import board, game
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
 move_cars_in_way, depth_first, breath_first, randomise_move_more_squares, \
 depth_limited
@@ -18,45 +20,52 @@ if __name__ == "__main__":
     runs = 1
 
     # ------------------- ask user for input on what to run --------------------
-    # ask user what board to run
-    board_name = ph.board_prompt()
+    # ask user if they want to run an experiment
+    experiment_bool = ph.experiment_bool_prompt()
 
-    # ask user if they want to run a visualisation
-    visualisation_bool = ph.visualisation_bool_prompt()
-
-    # if so, ask what input file of moves they want to use
-    if visualisation_bool in {"yes", "y"}:
-        moves_input = moves_input_prompt()
+    if experiment_bool in {"yes", "y"}:
+        exp.run()
 
     else:
-        # ask what algorithm they want to run
-        algorithm = ph.algorithm_prompt()
+        # ask user what board to run
+        board_name = ph.board_prompt()
 
-        if algorithm in {"randomise.random_car_move", \
-        "priority_red_car.move_priority_red_car"}:
+        # ask user if they want to run a visualisation
+        visualisation_bool = ph.visualisation_bool_prompt()
 
-            # ask user if they want to add the branch and bound heuristic
-            branch = ph.branch_prompt()
+        # if so, ask what input file of moves they want to use
+        if visualisation_bool in {"yes", "y"}:
+            moves_input = moves_input_prompt()
 
-            # if branch and bound is wanted, set variables
-            if branch in {"yes", "y"}:
-                branch_and_bound_bool = True
-                nr_moves_to_solve_nbr = math.inf
+        else:
+            # ask what algorithm they want to run
+            algorithm = ph.algorithm_prompt()
 
-            # ask how many runs the user wants to run the algorithm for
-            runs = ph.runs_prompt()
+            if algorithm in {"randomise.random_car_move", \
+            "priority_red_car.move_priority_red_car"}:
 
-        # check if an first search algorithm is used
-        elif algorithm in {"depth_first.DepthFirst_search", \
-        "breath_first.Breath_first_search", "depth_limited.Depth_Limited_Search"}:
-            first_search_bool = True
+                # ask user if they want to add the branch and bound heuristic
+                branch = ph.branch_prompt()
 
-            if algorithm == "depth_limited.Depth_Limited_Search":
-                # ask for the max depth the user wants to apply
-                max_depth = ph.max_depth_prompt()
+                # if branch and bound is wanted, set variables
+                if branch in {"yes", "y"}:
+                    branch_and_bound_bool = True
+                    nr_moves_to_solve_nbr = math.inf
 
-        # ask what file the user wants to save the output to
-        csv_output = ph.csv_output_prompt()
+                # ask how many runs the user wants to run the algorithm for
+                runs = ph.runs_prompt()
+
+            # check if an first search algorithm is used
+            elif algorithm in {"depth_first.DepthFirst_search", \
+            "breath_first.Breath_first_search", "depth_limited.Depth_Limited_Search"}:
+                first_search_bool = True
+
+                if algorithm == "depth_limited.Depth_Limited_Search":
+                    # ask for the max depth the user wants to apply
+                    max_depth = ph.max_depth_prompt()
+
+            # ask what file the user wants to save the output to
+            csv_output = ph.csv_output_prompt()
 
 
     # ----------------- Run the game with the given arguments ------------------

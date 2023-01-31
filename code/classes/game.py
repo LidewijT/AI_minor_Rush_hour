@@ -10,7 +10,7 @@ from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_fi
 class Game:
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False):
+            False, percentage = None):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -36,6 +36,7 @@ class Game:
             self.run_first_search()
 
         else:
+            self.percentage = percentage
             self.run()
 
     def run_branch_and_bound(self):
@@ -90,11 +91,12 @@ class Game:
 
             # make a move
             # print("\nstart move")
-            self.occupation_board, vehicle, direction = self.algorithm(self.test_board, self.occupation_board)
+            self.occupation_board, vehicle, direction = self.algorithm(\
+            self.test_board, self.occupation_board, self.percentage)
             # print(f"move made\n")
 
             # save move
-            self.append_move_to_DataFrame(vehicle, direction)
+            # self.append_move_to_DataFrame(vehicle, direction)
 
             # update the board with the new vehicle move
             # self.test_board.update_board()

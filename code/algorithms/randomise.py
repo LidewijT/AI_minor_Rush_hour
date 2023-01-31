@@ -6,7 +6,7 @@ import random
 import numpy as np
 from ..classes.board import Board
 
-def random_car_move(test_board, occupation_board):
+def random_car_move(test_board, occupation_board, _):
     """
     Picks a random vehicle to move.
     """
