@@ -1,14 +1,17 @@
 from prompt_toolkit import prompt
 from prompt_toolkit.completion import WordCompleter
 
+# initiate list of algorithms
+algorithm_list = ["randomise.random_car_move", \
+"priority_red_car.move_priority_red_car", "breath_first.Breath_first_search"\
+, "depth_first.DepthFirst", "depth_limited.Depth_Limited_Search"]
+
 # initiate word completers
 board_completer = WordCompleter(["Rushhour6x6_1", "Rushhour6x6_2", \
 "Rushhour6x6_3", "Rushhour9x9_4", "Rushhour9x9_5", "Rushhour9x9_6", \
 "Rushhour12x12_7"])
 
-algorithm_completer = WordCompleter(["randomise.random_car_move", \
-"priority_red_car.move_priority_red_car", "breath_first.Breath_first_search"\
-, "depth_first.DepthFirst"])
+algorithm_completer = WordCompleter(algorithm_list)
 
 yes_no_completer = WordCompleter(["yes", "no"])
 
@@ -36,6 +39,21 @@ def moves_input_prompt():
     return prompt("What csv file would you like to visualise?: ") + ".csv"
 
 def algorithm_prompt():
+    answer = prompt("What algorithm would you like to run? \
+choose from: \nrandom, priority random, breath first, depth first or a \
+depth limited search: "\
+    , completer = algorithm_completer)
+
+    # check if it is a valid algorithm
+    while answer not in set(algorithm_list):
+        print("please choose one of the autocomplete options")
+        answer = prompt("What algorithm would you like to run? \
+choose from: \nrandom, priority random, breath first or depth first: "\
+        , completer = algorithm_completer)
+
+    return answer
+
+
     return prompt("What algorithm would you like to run? \
 choose from: \nrandom, priority random, breath first or depth first: "\
     , completer = algorithm_completer)
@@ -49,14 +67,23 @@ def runs_prompt():
         try:
             answer = int(input("how many iterations do you want to run?: "))
             break
+
         except ValueError:
             print("Invalid input. Please enter an integer.")
 
     return answer
 
 def max_depth_prompt():
-    return int(input("Give a max depth you'd like to run the \
+    while True:
+        try:
+            answer = int(input("Give a max depth you'd like to run the \
 algorithm to: "))
+            break
+
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
+
+    return answer
 
 def graph_bool_prompt():
     return get_yes_or_no("Would you like to test...: (yes/no)")

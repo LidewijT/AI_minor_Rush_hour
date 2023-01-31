@@ -110,7 +110,7 @@ class Game:
         if self.test_board.occupation[self.test_board.exit_tile] == self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 
-            # self.output_maker()
+            self.output_maker()
 
             return True
 
