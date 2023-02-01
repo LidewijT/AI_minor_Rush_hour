@@ -1,9 +1,8 @@
 """
-Runs the breadth-first search for each board, saves the results and export to a
+Runs the breadth-first search for each board, saves the results and exports to a
 csv-file.
 """
 import pandas as pd
-import sys
 
 from ..algorithms import breadth_first
 from ..classes import board, game

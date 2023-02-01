@@ -1,22 +1,23 @@
-"""
-Solves rush hour with the given algorithm
-"""
 import pandas as pd
-import matplotlib.pyplot as plt
 import time
 
-from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breadth_first
+from ..algorithms import breadth_first, depth_first, depth_limited, \
+    dfs_hill_climber, priority_children, priority_red_car, randomise
 
 class Game:
     """
-    Solves the Rush hour board with the input algorithm.
+    This class is designed to solve the Rush Hour gameboard using the input
+    algorithm. The class has different methods for running the algorithm,
+    depending on the parameters passed in. A dataframe is used to store all
+    moves to get to the winning state, which is exported to a CSV file when the
+    game is won.
     """
 
     def __init__(self, output_file, test_board, algorithm,
         branch_and_bound = False, nr_moves_to_solve = None,
         first_search = False, max_depth = None, create_csv = True):
         """
-        It initializes the attributes for the class including the output file,
+        Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
         parameters such as branch_and_bound which is a heuristic, and
         first_search which is used for a specific type of algorithm.
@@ -46,7 +47,7 @@ class Game:
 
     def run_branch_and_bound(self):
         """
-        This function is used when the branch_and_bound parameter is set to
+        This method is used when the branch_and_bound parameter is set to
         true. It uses the algorithm passed in to make moves on the board until
         the red car reaches the exit or the move counter reaches the value of
         nr_moves_to_solve. Furtermore, it keeps track of all moves made in a
@@ -55,20 +56,22 @@ class Game:
         # keep moving cars until red car is at exit
         while self.win_check() == False and \
             self.move_counter < self.nr_moves_to_solve:
+
             self.move_counter += 1
 
+            # make a move
             self.occupation_board, vehicle, direction = self.algorithm(
                 self.test_board,
                 self.occupation_board
             )
 
-            # make a move
+            # save the move
             self.append_move_to_DataFrame(vehicle, direction)
 
 
     def run_first_search(self):
         """
-        This function is used when the first_search parameter is set to true.
+        This method is used when the first_search parameter is set to true.
         It uses the algorithm passed in to make moves on the board.
         It gets the move dataframe created by the algorithm and export it to a
         csv file.
@@ -81,33 +84,31 @@ class Game:
 
         # stop timer
         end_time = time.time()
-        self.elapsed_time = end_time - start_time
 
+        # get results
+        self.elapsed_time = end_time - start_time
         self.win = result.won
         self.nr_states = len(result.children_parent_dict)
 
         if self.win == True:
             self.moves_df = result.moves_df
 
+            print(f"Number of states {self.nr_states}")
             print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
             print(f"finished in: {self.elapsed_time} seconds")
 
             if self.create_csv == True:
-                # finalize into output
+                # finalize into csv file
                 self.output_maker()
 
         else:
             print("No solution found")
-            print(f"finished in: {self.elapsed_time} seconds")
-            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
-
-
 
     def run(self):
         """
-        Runs the algorithm until the board is at winning position, while saving
-        each move into a dataframe. In the end, the dataframe is exported to a
-        csv file.
+        This method runs the algorithm until the board is at winning position,
+        while saving each move into a dataframe. In the end, the dataframe is
+        exported to a csv file if set to True.
         """
         while self.win_check() == False:
             self.move_counter += 1
@@ -125,20 +126,22 @@ class Game:
     def win_check(self):
         """
         Checks whether the red car is positioned at the exit tile (=winning
-        position). If so, end the game, print the number of moves needed to
-        solve, create a csv file of the move dataframe and return True.
-        Otherwise, return False.
+        position). If so, it creates a csv file of the move dataframe if set to
+        True and return True. Otherwise, it returns False.
         """
-        if self.test_board.occupation[self.test_board.exit_tile] == \
+        if self.occupation_board[self.test_board.exit_tile] == \
             self.test_board.red_car:
+            # board is in a winning position
             self.nr_moves_to_solve = self.move_counter
 
             if self.create_csv == True:
+                # create csv file of the moves made
                 self.output_maker()
 
             return True
 
         else:
+            # board is not in a winning position
             return False
 
     def append_move_to_DataFrame(self, vehicle, direction):

@@ -48,7 +48,6 @@ class Depth_First_Search():
         Starts running the algorithm until the board is in a winning position:
         the red car is at the exit tile.
         """
-        print("HELLO")
         # initialize the stack with the starting state
         self.stack = [self.start_state]
 

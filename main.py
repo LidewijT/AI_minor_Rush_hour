@@ -1,11 +1,12 @@
 import math
 from tqdm import tqdm
+import pandas as pd
 
 from code.classes import board, game
 import code.helpers.prompt_helper as ph
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
-move_cars_in_way, depth_first, breath_first, randomise_move_more_squares, \
-depth_limited
+    depth_first, depth_limited, breadth_first
+
 
 
 if __name__ == "__main__":
@@ -74,9 +75,10 @@ if __name__ == "__main__":
 
     # the user wants to use an algorithm to solve a rushhour board
     else:
-        print("Now solving rush hour: \n")
+        print("\nNow solving rush hour: \n")
 
         for i in tqdm(range(runs), desc="Solving boards…", ascii=False, ncols=75):
+
             test_game = game.Game(f"data/solutions/" + csv_output, \
                 test_board, eval(algorithm), first_search = first_search_bool, \
                 branch_and_bound = branch_and_bound_bool, \

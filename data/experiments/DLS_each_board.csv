@@ -1,0 +1,4 @@
+board,max_depth,number_of_states,number_of_moves
+6x6_1,800,462,145
+6x6_2,800,820,176
+6x6_3,800,8465,799

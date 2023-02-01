@@ -1,5 +1,16 @@
 class Vehicles():
+    """
+    This class represents the individual vehicles in the game Rush Hour, which
+    includes several attributes and are initialised in the 'init' method. These
+    define the behaviour of the vehicle within the game.
+    """
+
     def __init__(self, car, orientation, col, row, length, number):
+        """
+        Initializes all attributes of the class with its parameters. It uses its
+        starting position (row, col) and length to determine all squares
+        occupied by the vehicle based on its orientation.
+        """
         # get attributes
         self.car = car
         self.orientation = orientation
@@ -7,23 +18,12 @@ class Vehicles():
         self.length = length
         self.number = number
 
-        # keep track of last move direction (ahead or back)
-        self.movement = None
-        # keep track of the vehicle(s) that the this vehicle is blocking and their direction
-        self.blocking_veh = None
-        # keep track of status of vehicle: it can move or it is being blocked
-        self.status = "move"
-        # keep track of future moves if one way (ahead/back) does not work
-        self.future_move = None
-        # keep track of the vehicle(s) that blocks this vehicle
-        self.blocked_by = []
-
-        # create a list of positions the vehicle occupies
+        # create a list of tuples to store the positions the vehicle occupies
         if orientation == "H":
             # positions for horizontal orientated vehicles
             for tile in range(length):
                 self.positions.append((row, col + tile))
         else:
-            # positions for vertical orietated vehicles
+            # positions for vertical orientated vehicles
             for tile in range(length):
                 self.positions.append((row + tile, col))
