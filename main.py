@@ -14,6 +14,7 @@ if __name__ == "__main__":
     branch_and_bound_bool = False
     first_search_bool = False
     max_depth_value = None
+    given_percentage = None
     runs = 1
 
     # ------------------- ask user for input on what to run --------------------
