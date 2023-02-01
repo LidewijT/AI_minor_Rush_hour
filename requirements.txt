@@ -5,3 +5,7 @@ tqdm == 4.64.1
 os-sys == 2.1.4
 python-math == 0.0.1
 pycopy-copy == 3.3.3.post7
+more-itertools == 9.0.0
+heapq_max == 0.21
+random2 == 1.0.1
+prompt-toolkit == 3.0.36
