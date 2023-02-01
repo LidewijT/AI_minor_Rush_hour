@@ -16,11 +16,11 @@ class PriorityChildren(Depth_First_Search):
     ensures that the most promising child is exploren first.
     """
 
-    def build_children(self, depth):
+    def build_children(self):
         """
         Get all the children of the input state and add them the dictionary.
         Creation of children are done by moving one car, checked for their
-        uniqueness and depth, and adds them to the stack in a prioritized order.
+        uniqueness, and adds them to the stack in a prioritized order.
         Also checks if red car is at winning position.
         """
         children_list = []
@@ -61,16 +61,13 @@ class PriorityChildren(Depth_First_Search):
                         chain.from_iterable(self.current_state))
                     )
 
-                    # check if state is unique or is better (lower depth)
-                    if current_occupation_hash not in self.children_parent_dict\
-                        or self.children_parent_dict[current_occupation_hash] \
-                            [2] > depth:
+                    # check if state is unique
+                    if current_occupation_hash not in self.children_parent_dict:
 
-                        # save child in dictionary with (move, parent, depth)
+                        # save child in dictionary with (move, parent)
                         self.children_parent_dict[current_occupation_hash] = (
                             (vehicle.car, direction),
                             parent_occupation_hash,
-                            depth
                             )
 
                         # solution if the red car is at the exit
@@ -84,14 +81,13 @@ class PriorityChildren(Depth_First_Search):
                     self.current_state = copy.copy(parent_state)
 
         # sort by heuristic
-        self.sort_children_states(children_list, depth)
+        self.sort_children_states(children_list)
 
-    def sort_children_states(self, children_states, depth):
+    def sort_children_states(self, children_states):
         """
         This functions sorts the input children states (list) with a priority
         queue based on the priority values blocking cars (primary) and squares
-        to exit (secondary). It appends each sorted child state, along with its
-        depth, to the stack.
+        to exit (secondary). It appends each sorted child state to the stack.
         """
         pq = []
         # put all childs in priority queue
@@ -101,9 +97,9 @@ class PriorityChildren(Depth_First_Search):
             heapq.heappush(pq, (blocking_cars, squares_to_exit, child.tolist()))
 
         while pq:
-            # append each child to the stack with its depth
+            # append each child to the stack
             child = np.array(heapq.heappop(pq)[2])
-            self.stack.append((child, depth))
+            self.stack.append(child)
 
     def get_priority_values(self, state):
         """
