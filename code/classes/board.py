@@ -1,3 +1,6 @@
+"""
+Creates the board and allows it to update it.
+"""
 import numpy as np
 import pandas as pd
 
@@ -151,11 +154,6 @@ class Board():
             # get mathematical sign for updating occupation board
             math_sign = "+"
 
-            # get vehicle and update occupation board
-            # self.get_vehicle(occupation_board, r, c + 1)
-            # occupation_board = self.update_occupation_board(occupation_board, \
-            #     r, c, '+')
-
         # move vehicle right to free square
         elif c - 1 >= 0 and \
             occupation_board[r][c - 1] >= 1 and direction == "right" and \
@@ -164,11 +162,6 @@ class Board():
             pos_veh = (r, c - 1)
             # get mathematical sign for updating occupation board
             math_sign = "-"
-
-            # get vehicle and update occupation board
-            # self.get_vehicle(occupation_board, r, c - 1)
-            # occupation_board = self.update_occupation_board(occupation_board, \
-            #     r, c, '-')
 
         # move vehicle up to free square
         elif r + 1 < self.grid_size \
@@ -179,11 +172,6 @@ class Board():
             # get mathematical sign for updating occupation board
             math_sign = "+"
 
-            # get vehicle and update occupation board
-            # self.get_vehicle(occupation_board, r + 1, c)
-            # occupation_board = self.update_occupation_board(occupation_board, \
-            #     r, c, '+')
-
         # move vehicle down respectively from free square
         elif r - 1 >= 0 and \
             occupation_board[r - 1][c] >= 1 and direction == "down" and \
@@ -192,11 +180,6 @@ class Board():
             pos_veh = (r - 1, c)
             # get mathematical sign for updating occupation board
             math_sign = "-"
-
-            # # get vehicle and update occupation board
-            # self.get_vehicle(occupation_board, r - 1, c)
-            # occupation_board = self.update_occupation_board(occupation_board, \
-            #     r, c, '-')
 
         # no vehicles able to move to the free square
         else:

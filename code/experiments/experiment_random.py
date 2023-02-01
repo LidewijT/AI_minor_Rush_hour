@@ -1,3 +1,9 @@
+"""
+Experiments on all boards what percentage of priority movement to the red car
+is the most efficient from 5 to 60 percent in steps of 5. Saves output of
+total moves made as csv and a plot to pgn
+"""
+
 import math
 import copy
 from tqdm import tqdm
@@ -5,23 +11,18 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from code.classes import board, game
-from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
+from ..classes import board, game
+from ..algorithms import dfs_hill_climber, randomise, priority_red_car, \
 move_cars_in_way, depth_first, breath_first, randomise_move_more_squares, \
 depth_limited
+from ..helpers import prompt_helper as ph
 
 # --------------------------- set variables for run ----------------------------
-# board_name = "Rushhour6x6_2"
-# output_file = "test"
-# output_png = "test"
 runs = 100
-
-board_list = ["Rushhour6x6_3"]#["Rushhour6x6_1", "Rushhour6x6_2", "Rushhour6x6_3", "Rushhour9x9_4", \
-# "Rushhour9x9_5", "Rushhour9x9_6", "Rushhour12x12_7"]
 
 # ---------- Test random algorithm to random with priority algorithm -----------
 for given_percentage in range(5, 61, 5):
-    for board_name in board_list:
+    for board_name in ph.board_list:
         print(f"running {board_name}, {given_percentage}%")
 
         output_file = f"{given_percentage}_percent_{board_name}_{runs}_its"
@@ -29,9 +30,6 @@ for given_percentage in range(5, 61, 5):
 
         random_moves_list = []
         priority_moves_list = []
-
-        # create a board for the data
-        # test_board = board.Board(f"data/gameboards/" + board_name + ".csv")
 
         for i in tqdm(range(int(runs)), desc="Solving boards…", ascii=False, ncols=75):
             # create a board for the data
@@ -68,7 +66,7 @@ for given_percentage in range(5, 61, 5):
         # plot data to histplot with kernal density estimate
         sns.histplot(moves_to_solve_df, kde=True, stat = "percent")
         plt.xlabel('Total number of moves to reach winning state')
-        plt.xlim(0, 350000)
+        plt.xlim(0, 220000)
         plt.ylim(0, 25)
         plt.title(f'Number of moves needed to solve\
  {board_name}\n with a priority percentage of {given_percentage}, run {runs} times')
@@ -76,5 +74,3 @@ for given_percentage in range(5, 61, 5):
         plt.clf()
 
         print()
-
-plt.show()

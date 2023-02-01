@@ -1,8 +1,7 @@
 import pandas as pd
-import time
 
 from ..algorithms import breadth_first, depth_first, depth_limited, \
-    dfs_hill_climber, priority_children, priority_red_car, randomise
+depth_hill_climber, depth_priority_children, priority_red_car, randomise
 
 class Game:
     """
@@ -13,8 +12,9 @@ class Game:
     game is won.
     """
     def __init__(self, output_file, test_board, algorithm,
-        branch_and_bound = False, nr_moves_to_solve = None, first_search =
-        False, percentage = None, create_csv = True, max_depth = None):
+        branch_and_bound = False, nr_moves_to_solve = None,
+        first_search = False, percentage = None,
+        create_csv = True, max_depth = None):
         """
         Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -69,7 +69,6 @@ class Game:
             # save the move
             self.append_move_to_DataFrame(vehicle, direction)
 
-
     def run_first_search(self):
         """
         This method is used when the first_search parameter is set to true.
@@ -77,33 +76,19 @@ class Game:
         It gets the move dataframe created by the algorithm and export it to a
         csv file.
         """
-        # start timer
-        start_time = time.time()
-
         # run algorithm
         result = self.algorithm(self.test_board, max_depth=self.max_depth)
 
-        # stop timer
-        end_time = time.time()
-
         # get results
-        self.elapsed_time = end_time - start_time
         self.win = result.won
         self.nr_states = len(result.children_parent_dict)
 
         if self.win == True:
             self.moves_df = result.moves_df
 
-            print(f"Number of states {self.nr_states}")
-            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
-            print(f"finished in: {self.elapsed_time} seconds")
-
             if self.create_csv == True:
                 # finalize into csv file
                 self.output_maker()
-
-        else:
-            print("No solution found")
 
     def run(self):
         """
@@ -116,9 +101,9 @@ class Game:
 
             # make a move
             self.occupation_board, vehicle, direction = self.algorithm(
-                self.test_board,
-                self.occupation_board
-            )
+            self.test_board,
+            self.occupation_board,
+            self.percentage)
 
             # save move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -134,6 +119,7 @@ class Game:
             self.test_board.red_car:
             # board is in a winning position
             self.nr_moves_to_solve = self.move_counter
+            self.win = True
 
             if self.create_csv == True:
                 # create csv file of the moves made
@@ -151,16 +137,8 @@ class Game:
         """
         # append move to DataFrame
         move_df = pd.DataFrame([[vehicle.car, direction]],
-            columns=['car name', 'move']
-        )
+            columns=['car name', 'move'])
         self.moves_df = pd.concat([self.moves_df, move_df])
-
-    def compress_DataFrame(self):
-        """
-        If one vehicle was moved multiple times in a row,
-        compress them to one move of multiple tiles
-        """
-        pass
 
     def output_maker(self):
         """
