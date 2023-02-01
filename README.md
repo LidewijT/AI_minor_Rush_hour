@@ -42,7 +42,7 @@ Here, you can find a list with the most important folders and files of this proj
     - **/code/algorithms**: folder which includes all of the code for algorithms
     - **/code/classes**: folder which includes all classes
     - **/code/experiments**: folder which includes the code for all experiments
-    - **/code/helpers**: folder which includes a file to prompt the user.
+    - **/code/helpers**: folder which includes a file to prompt the user and one to store color lists.
     - **/code/visualisation**: folder which includes the code for the visualisation
 - **/data**: folder which contains all input and output files
     - **/data/experiments**: folder which contains the output of the experiments
