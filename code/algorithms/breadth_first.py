@@ -1,8 +1,4 @@
-# from ..classes import game
-# from ..classes import board
-
 from .depth_first import Depth_First_Search
-
 
 class Breadth_First_Search(Depth_First_Search):
     """
