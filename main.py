@@ -87,6 +87,7 @@ if __name__ == "__main__":
                 branch_and_bound = branch_and_bound_bool, \
                 nr_moves_to_solve = nr_moves_to_solve_nbr)
 
+            # update number of moves to solve for branch and bound
             nr_moves_to_solve_nbr = test_game.move_counter
 
         print()

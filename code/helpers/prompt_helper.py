@@ -50,7 +50,8 @@ def board_prompt():
     completer = board_completer) + ".csv"
 
 def moves_input_prompt():
-    return prompt("What csv file would you like to visualise?: ") + ".csv"
+    return prompt("What csv file would you like to visualise? choose one from\
+data/solutions (only the name is needed): ") + ".csv"
 
 def algorithm_prompt():
     question = "What algorithm would you like to run? \

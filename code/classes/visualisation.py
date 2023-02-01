@@ -63,7 +63,6 @@ class Visualisation():
             return ord(letter) - ord('A') + 2
 
     def pick_random_color(self):
-
         return random.choice(self.big_color_list)
 
 
