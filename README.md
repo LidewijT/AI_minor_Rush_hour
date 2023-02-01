@@ -23,17 +23,17 @@ This will guarantee all packages will be installed with the right version.
 ## Usage
 To solve a gameboard or visualise a solution, the program can be runned by the following command in the terminal:
 
-'''
+```
 python main.py
-'''
+```
 
 Then, the terminal will ask you for the input what board the user desires to solve. Subsequently, the user will be guided through different choices on how to solve the input gameboard, including which algorithms, their corresponding parameters and a name for the output file.
 
 If running an experiment is desired, the following command can be runned in the terminal:
 
-'''
+```
 python m code.experiments.name_experiment
-'''
+```
 
 ## Structure
 Here, you can find a list with the most important folders and files of this projects, including its locations.
