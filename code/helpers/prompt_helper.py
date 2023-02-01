@@ -56,7 +56,7 @@ data/solutions (only the name is needed): ") + ".csv"
 def algorithm_prompt():
     question = "What algorithm would you like to run? \
 choose from: \nrandom, priority random, breath first search, depth first search\
-depth limited search, depth hill climber or depth priority children: "
+, depth limited search, depth hill climber or depth priority children: "
 
     answer = prompt(question, completer = algorithm_completer)
 

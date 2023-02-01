@@ -25,6 +25,7 @@ class Depth_First_Search():
         self.exit_tile = start_state.exit_tile
         self.red_car = start_state.red_car
         self.max_depth = max_depth
+        self.won = False
 
         # create dictionary to keep track of all states. Key values are children
         # and the corresponding value is a tuple of (move, parent)
@@ -116,7 +117,7 @@ class Depth_First_Search():
 
                         # solution if the red car is at the exit
                         if self.current_state[self.exit_tile] == self.red_car:
-                            return
+                            return True
 
                         # add child to list
                         self.stack.append(self.current_state)

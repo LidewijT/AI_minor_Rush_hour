@@ -13,7 +13,7 @@ if __name__ == "__main__":
     # during the prompts
     branch_and_bound_bool = False
     first_search_bool = False
-    max_depth = None
+    max_depth_value = None
     runs = 1
 
     # ------------------- ask user for input on what to run --------------------
@@ -50,7 +50,7 @@ if __name__ == "__main__":
 
             if algorithm == "depth_limited.Depth_Limited_Search":
                 # ask for the max depth the user wants to apply
-                max_depth = ph.max_depth_prompt()
+                max_depth_value = ph.max_depth_prompt()
 
         # ask what file the user wants to save the output to
         csv_output = ph.csv_output_prompt()
@@ -64,7 +64,7 @@ if __name__ == "__main__":
     # ----------------- Run the game with the given arguments ------------------
     # the user wants to see a visualisation of moves
     if visualisation_bool in {"yes", "y"}:
-        print("Initiating visualisation: \n")
+        print("Initiating visualisation")
 
         visualisation.Visualisation("data/gameboards/" + board_name, \
         "data/solutions/" + moves_input)
@@ -83,9 +83,10 @@ if __name__ == "__main__":
 
             # run the game
             test_game = game.Game(f"data/solutions/" + csv_output, \
-                test_board, eval(algorithm), first_search = first_search_bool, \
-                branch_and_bound = branch_and_bound_bool, \
-                nr_moves_to_solve = nr_moves_to_solve_nbr)
+                test_board, eval(algorithm), first_search = first_search_bool,
+                branch_and_bound = branch_and_bound_bool,
+                nr_moves_to_solve = nr_moves_to_solve_nbr,
+                max_depth = max_depth_value)
 
             # update number of moves to solve for branch and bound
             nr_moves_to_solve_nbr = test_game.move_counter
@@ -97,7 +98,8 @@ if __name__ == "__main__":
 
             # if the algorith was one of the first search ones
             if first_search_bool == True:
-                print(f"Number of visited states to find a solution: {self.nr_states}")
+                print(f"Number of visited states to find a solution: \
+{test_game.nr_states}")
 
             print(f"Rush Hour was solved in {test_game.moves_df.shape[0]} moves")
 
