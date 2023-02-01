@@ -8,19 +8,12 @@ import time
 from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breadth_first
 
 class Game:
-<<<<<<< HEAD
     """
     Solves the Rush hour board with the input algorithm.
     """
-
-    def __init__(self, output_file, test_board, algorithm,
-        branch_and_bound = False, nr_moves_to_solve = None,
-        first_search = False, max_depth = None, create_csv = True):
-=======
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, percentage = None):
->>>>>>> lidewij
+            False, percentage = None, create_csv = True):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
