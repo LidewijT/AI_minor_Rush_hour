@@ -16,7 +16,7 @@ depth_limited
 # output_png = "test"
 runs = 100
 
-board_list = ["Rushhour6x6_1"]#["Rushhour6x6_1", "Rushhour6x6_2", "Rushhour6x6_3", "Rushhour9x9_4", \
+board_list = ["Rushhour6x6_3"]#["Rushhour6x6_1", "Rushhour6x6_2", "Rushhour6x6_3", "Rushhour9x9_4", \
 # "Rushhour9x9_5", "Rushhour9x9_6", "Rushhour12x12_7"]
 
 # ---------- Test random algorithm to random with priority algorithm -----------
@@ -68,7 +68,7 @@ for given_percentage in range(5, 61, 5):
         # plot data to histplot with kernal density estimate
         sns.histplot(moves_to_solve_df, kde=True, stat = "percent")
         plt.xlabel('Total number of moves to reach winning state')
-        plt.xlim(0, 220000)
+        plt.xlim(0, 350000)
         plt.ylim(0, 25)
         plt.title(f'Number of moves needed to solve\
  {board_name}\n with a priority percentage of {given_percentage}, run {runs} times')
