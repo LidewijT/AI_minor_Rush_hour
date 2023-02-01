@@ -25,7 +25,7 @@ class DFS_Hill_Climber(Depth_Limited_Search):
         self.start_state = copy.copy(start_state.board)
         self.exit_tile = start_state.exit_tile
         self.red_car = start_state.red_car
-        self.max_depth = max_depth
+        self.max_depth = math.inf
 
         self.solution_found = False
         self.won = False
