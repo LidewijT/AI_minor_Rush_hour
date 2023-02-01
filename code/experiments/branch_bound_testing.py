@@ -9,16 +9,12 @@ from tqdm import tqdm
 import copy
 
 import code.helpers.prompt_helper as ph
-import code.experiments.random_and_priority_algorithms as exp
 
+from ..algorithms import priority_red_car, randomise
 from ..classes import board, game
-from ..algorithms import dfs_hill_climber, randomise, priority_red_car, \
-move_cars_in_way, depth_first, breadth_first, randomise_move_more_squares, \
-depth_limited
-from ..helpers import prompt_helper as ph
 
 # --------------------------- set variables for run ----------------------------
-runs = 500
+runs = 300
 given_percentage = 0.15
 algorithm_list = ["randomise.random_car_move", "priority_red_car.move_priority_red_car"]
 
