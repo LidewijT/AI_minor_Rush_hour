@@ -91,6 +91,10 @@ def branch_prompt():
     return get_yes_or_no("Would you like to add a branch and bound heuristic \
 to your algorithm? (yes/no): ")
 
+def given_percentage_prompt():
+    return integer_checker("What percentage would you like \
+to apply to this algorith?: ")
+
 def runs_prompt():
     return integer_checker("how many iterations do you want to run?: ")
 
