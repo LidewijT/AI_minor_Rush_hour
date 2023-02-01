@@ -7,8 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from ..code.algorithms import depth_limited
-from ..code.classes import board, game
+from ..algorithms import depth_limited
+from ..classes import board, game
 
 data_dls = []
 

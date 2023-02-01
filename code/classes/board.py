@@ -1,3 +1,6 @@
+"""
+Creates the board and allows it to update it.
+"""
 import numpy as np
 import pandas as pd
 
