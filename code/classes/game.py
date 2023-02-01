@@ -2,11 +2,7 @@ import pandas as pd
 import time
 
 from ..algorithms import breadth_first, depth_first, depth_limited, \
-<<<<<<< HEAD
-    dfs_hill_climber, priority_children, priority_red_car, randomise
-=======
 depth_hill_climber, depth_priority_children, priority_red_car, randomise
->>>>>>> lidewij
 
 class Game:
     """
@@ -17,14 +13,9 @@ class Game:
     game is won.
     """
     def __init__(self, output_file, test_board, algorithm,
-<<<<<<< HEAD
-        branch_and_bound = False, nr_moves_to_solve = None, first_search =
-        False, percentage = None, create_csv = True, max_depth = None):
-=======
         branch_and_bound = False, nr_moves_to_solve = None,
         first_search = False, percentage = None,
         create_csv = True, max_depth = None):
->>>>>>> lidewij
         """
         Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -103,23 +94,10 @@ class Game:
         if self.win == True:
             self.moves_df = result.moves_df
 
-<<<<<<< HEAD
-            print(f"Number of states {self.nr_states}")
-            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
-            print(f"finished in: {self.elapsed_time} seconds")
-
-=======
->>>>>>> lidewij
             if self.create_csv == True:
                 # finalize into csv file
                 self.output_maker()
 
-<<<<<<< HEAD
-        else:
-            print("No solution found")
-
-=======
->>>>>>> lidewij
     def run(self):
         """
         This method runs the algorithm until the board is at winning position,
@@ -131,15 +109,9 @@ class Game:
 
             # make a move
             self.occupation_board, vehicle, direction = self.algorithm(
-<<<<<<< HEAD
-                self.test_board,
-                self.occupation_board
-            )
-=======
             self.test_board,
             self.occupation_board,
             self.percentage)
->>>>>>> lidewij
 
             # save move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -175,13 +147,6 @@ class Game:
         move_df = pd.DataFrame([[vehicle.car, direction]],
             columns=['car name', 'move'])
         self.moves_df = pd.concat([self.moves_df, move_df])
-
-    def compress_DataFrame(self):
-        """
-        If one vehicle was moved multiple times in a row,
-        compress them to one move of multiple tiles
-        """
-        pass
 
     def output_maker(self):
         """
