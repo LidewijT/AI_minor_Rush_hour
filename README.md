@@ -32,7 +32,7 @@ Then, the terminal will ask you for the input what board the user desires to sol
 If running an experiment is desired, the following command can be runned in the terminal:
 
 ```
-python m code.experiments.name_experiment
+python -m code.experiments.name_experiment
 ```
 
 ## Structure
