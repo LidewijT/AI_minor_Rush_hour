@@ -2,9 +2,7 @@ import math
 from tqdm import tqdm
 import os
 
-from code.classes import board, game
 import code.helpers.prompt_helper as ph
-
 from code.classes import board, game, visualisation
 from code.algorithms import breadth_first, depth_first, depth_limited, \
 depth_hill_climber, depth_priority_children, priority_red_car, randomise
