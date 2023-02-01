@@ -78,6 +78,7 @@ if __name__ == "__main__":
     else:
         print("\nNow solving rush hour: \n")
 
+        # print a process bar for the amount of runs wanted
         for i in tqdm(range(runs), desc="Solving boards…", ascii=False, ncols=75):
             # in case branch and bound is run
             nr_moves_to_solve_nbr = math.inf
@@ -85,7 +86,7 @@ if __name__ == "__main__":
             # create a board for the data
             test_board = board.Board(f"data/gameboards/" + board_name)
 
-            # run
+            # run the game
             test_game = game.Game(f"data/solutions/" + csv_output, \
                 test_board, eval(algorithm), first_search = first_search_bool, \
                 branch_and_bound = branch_and_bound_bool, \
@@ -95,9 +96,11 @@ if __name__ == "__main__":
 
         print()
 
+        # if the game has reached a winning condition
         if test_game.win == True:
-            if algorithm not in {"randomise.random_car_move",
-            "priority_red_car.move_priority_red_car"}:
+
+            # if the algorith was one of the first search ones
+            if first_search_bool == True:
                 print(f"Number of visited states to find a solution: {self.nr_states}")
 
             print(f"Rush Hour was solved in {test_game.moves_df.shape[0]} moves")
@@ -105,4 +108,5 @@ if __name__ == "__main__":
         else:
             print("No solution found")
 
+    # signify the program has ended
     print("-" * width)
