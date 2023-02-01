@@ -106,7 +106,7 @@ class Game:
             self.percentage)
 
             # save move
-            self.append_move_to_DataFrame(vehicle, direction)
+            # self.append_move_to_DataFrame(vehicle, direction)
 
 
     def win_check(self):
