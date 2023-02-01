@@ -1,11 +1,10 @@
 import math
 from tqdm import tqdm
-import pandas as pd
 
 from code.classes import board, game
 import code.helpers.prompt_helper as ph
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
-    depth_first, depth_limited, breadth_first
+    depth_first, depdth_limited, breadth_first
 
 
 
@@ -19,6 +18,13 @@ if __name__ == "__main__":
     runs = 1
 
     # ------------------- ask user for input on what to run --------------------
+    # # ask user if they want to run an experiment
+    # experiment_bool = ph.experiment_bool_prompt()
+    #
+    # if experiment_bool in {"yes", "y"}:
+    #     exp.run()
+    #
+    # else:
     # ask user what board to run
     board_name = ph.board_prompt()
 
@@ -32,6 +38,7 @@ if __name__ == "__main__":
     else:
         # ask what algorithm they want to run
         algorithm = ph.algorithm_prompt()
+        print(algorithm)
 
         if algorithm in {"randomise.random_car_move", \
         "priority_red_car.move_priority_red_car"}:
@@ -48,8 +55,8 @@ if __name__ == "__main__":
             runs = ph.runs_prompt()
 
         # check if an first search algorithm is used
-        elif algorithm in {"depth_first.DepthFirst_search", \
-        "breath_first.Breath_first_search", "depth_limited.Depth_Limited_Search"}:
+        elif algorithm in {"breadth_first.Breadth_First_Search"\
+        , "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"}:
             first_search_bool = True
 
             if algorithm == "depth_limited.Depth_Limited_Search":

@@ -7,7 +7,7 @@ Assumes that red car is horizontally oriented.
 """
 
 
-def move_priority_red_car(test_board, occupation_board):
+def move_priority_red_car(test_board, occupation_board, percentage):
     # get information red car
     red_car = test_board.red_car
     # get exit site
@@ -19,8 +19,8 @@ def move_priority_red_car(test_board, occupation_board):
         if occupation_board[exit_row][col] == red_car:
             red_car_position = (exit_row, col)
 
-    # move red car to the exit (right) if not blocked with a 70% chance
-    if occupation_board[red_car_position[0], red_car_position[1] + 1] == 0 and random.random() > 0.4:
+    # move red car to the exit (right) if not blocked with a given chance
+    if occupation_board[red_car_position[0], red_car_position[1] + 1] == 0 and random.random() <= percentage:
         # red car is not blocked, move it towards the exit
         vehicle_obj, occupation_board = test_board.car_move(occupation_board, "right", red_car_position[0], red_car_position[1] + 1)
 
@@ -28,7 +28,7 @@ def move_priority_red_car(test_board, occupation_board):
 
     else:
         # red car is blocked, so move random car
-        return randomise.random_car_move(test_board, occupation_board)
+        return randomise.random_car_move(test_board, occupation_board, None)
 
 # def move_cars(self):
 #         copied_current_sp = copy.deepcopy(self.occupation)

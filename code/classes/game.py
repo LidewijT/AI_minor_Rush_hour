@@ -12,10 +12,9 @@ class Game:
     moves to get to the winning state, which is exported to a CSV file when the
     game is won.
     """
-
-    def __init__(self, output_file, test_board, algorithm,
-        branch_and_bound = False, nr_moves_to_solve = None,
-        first_search = False, max_depth = None, create_csv = True):
+    def __init__(self, output_file, test_board, algorithm, \
+        branch_and_bound = False, nr_moves_to_solve = None, first_search =
+            False, percentage = None, create_csv = True):
         """
         Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -43,6 +42,7 @@ class Game:
             self.run_first_search()
 
         else:
+            self.percentage = percentage
             self.run()
 
     def run_branch_and_bound(self):
@@ -114,13 +114,20 @@ class Game:
             self.move_counter += 1
 
             # make a move
+<<<<<<< HEAD
             self.occupation_board, vehicle, direction = self.algorithm(
                 self.test_board,
                 self.occupation_board
             )
+=======
+            # print("\nstart move")
+            self.occupation_board, vehicle, direction = self.algorithm(\
+            self.test_board, self.occupation_board, self.percentage)
+            # print(f"move made\n")
+>>>>>>> lidewij
 
             # save move
-            self.append_move_to_DataFrame(vehicle, direction)
+            # self.append_move_to_DataFrame(vehicle, direction)
 
 
     def win_check(self):
