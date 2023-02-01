@@ -27,15 +27,30 @@ algorithm_completer = WordCompleter(algorithm_list)
 yes_no_completer = WordCompleter(["yes", "no"])
 
 # ------------------------- initiate prompt functions --------------------------
-def get_yes_or_no(input):
+def get_yes_or_no(question):
     """
-    Ensures an anwer can only be yes or no
+    Ensures the anwer can only be yes or no
     """
-    answer = prompt(input, completer = yes_no_completer).lower()
+    answer = prompt(question, completer = yes_no_completer).lower()
 
     # failsave to ensure answer is yes or no
     while answer not in {"yes", "y", "no", "n"}:
         answer = prompt("Please respond with yes/no: ", completer = yes_no_completer)
+
+    return answer
+
+def integer_checker(question):
+    """
+    Ensures the answer can only be a value
+    """
+    while True:
+        try:
+            answer = int(input(question))
+            break
+
+        # if something other than an value is given
+        except ValueError:
+            print("Invalid input. Please enter an integer.")
 
     return answer
 
@@ -54,50 +69,34 @@ def moves_input_prompt():
 data/solutions (only the name is needed): ") + ".csv"
 
 def algorithm_prompt():
+    """
+    Asks user for an algorithm to use, this algorithm must be one of the
+    algorithms from the algorithm list
+    """
+    # the question which displays the options of algorithms to choose from
     question = "What algorithm would you like to run? \
 choose from: \nrandom, priority random, breath first search, depth first search\
 , depth limited search, depth hill climber or depth priority children: "
 
     answer = prompt(question, completer = algorithm_completer)
 
-    # check if it is a valid algorithm
+    # check if answer is a valid algorithm
     while answer not in set(algorithm_list):
         print("please choose one of the autocomplete options")
         answer = prompt(question, completer = algorithm_completer)
 
     return answer
 
-
-    return prompt("What algorithm would you like to run? \
-choose from: \nrandom, priority random, breath first or depth first: "\
-    , completer = algorithm_completer)
-
 def branch_prompt():
     return get_yes_or_no("Would you like to add a branch and bound heuristic \
 to your algorithm? (yes/no): ")
 
 def runs_prompt():
-    while True:
-        try:
-            answer = int(input("how many iterations do you want to run?: "))
-            break
-
-        except ValueError:
-            print("Invalid input. Please enter an integer.")
-
-    return answer
+    return integer_checker("how many iterations do you want to run?: ")
 
 def max_depth_prompt():
-    while True:
-        try:
-            answer = int(input("Give a max depth you'd like to run the \
-algorithm to: "))
-            break
-
-        except ValueError:
-            print("Invalid input. Please enter an integer.")
-
-    return answer
+    return integer_checker("Give a max depth you'd like to run the \
+algorithm to: ")
 
 def graph_bool_prompt():
     return get_yes_or_no("Would you like to test...: (yes/no)")

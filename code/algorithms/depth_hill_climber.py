@@ -1,5 +1,6 @@
 import copy
 from itertools import chain
+import math
 
 from .depth_limited import Depth_Limited_Search
 from ..classes.board import Board
@@ -13,7 +14,7 @@ class DFS_Hill_Climber(Depth_Limited_Search):
     start backtracking the moves into a dataframe.
     """
 
-    def __init__(self, start_state, max_depth):
+    def __init__(self, start_state, max_depth=math.inf):
         """
         Initializes the class by setting the start state, exit tile, red car
         name, and runs the algorithm. Afterwards, it puts all moves of the

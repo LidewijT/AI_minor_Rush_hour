@@ -1,5 +1,4 @@
 import pandas as pd
-import time
 
 from ..algorithms import breadth_first, depth_first, depth_limited, \
 depth_hill_climber, depth_priority_children, priority_red_car, randomise
@@ -77,17 +76,10 @@ class Game:
         It gets the move dataframe created by the algorithm and export it to a
         csv file.
         """
-        # start timer
-        start_time = time.time()
-
         # run algorithm
         result = self.algorithm(self.test_board, max_depth=self.max_depth)
 
-        # stop timer
-        end_time = time.time()
-
         # get results
-        self.elapsed_time = end_time - start_time
         self.win = result.won
         self.nr_states = len(result.children_parent_dict)
 
