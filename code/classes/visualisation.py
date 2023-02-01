@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import pandas as pd
 import numpy as np
-import argparse
 import random
 from ..helpers.colors import color_list, big_color_list
 from matplotlib.colors import ListedColormap
