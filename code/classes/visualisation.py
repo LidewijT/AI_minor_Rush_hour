@@ -1,88 +1,149 @@
 import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 import pandas as pd
 import numpy as np
-from ..helpers.colors  import cnames
+import argparse
+import random
+from ..helpers.colors import color_list, big_color_list
+from matplotlib.colors import ListedColormap
 
 class Visualisation():
     def __init__(self, board_csv, moves_csv):
-
+        # store the file paths for the board and moves csv files
         self.board_csv = board_csv
         self.moves_csv = moves_csv
+        # initiate move counter
+        self.move_counter = 0
+        #import color_lists
+        self.own_colors = ListedColormap(color_list)
+        self.big_color_list = big_color_list
+        # call the run method to start the visualization
         self.run()
 
     def run(self):
+        # read in the board and moves data from the csv files
         self.read_csvs()
+        # get the grid size based on the board csv file name
         self.get_gridsize()
+        # change the positions
+        self.change_positions()
+        # create the initial grid and display it
         self.create_grid()
+        # animate the moves
         self.move_cars()
 
+    def change_positions(self):
+        self.df_board['col'] += 1
+        self.df_board['row'] += 1
+
     def read_csvs(self):
+        # read in the board and moves csv files using pandas
         self.df_board = pd.read_csv(self.board_csv)
         self.df_moves = pd.read_csv(self.moves_csv)
 
     def get_gridsize(self):
         """
-        Returns the gridsize of the input file by using its file name
+        Returns the grid size of the input file by using its file name
         """
+        # split the board csv file name to get the grid size
         name_split = self.board_csv.split("Rushhour")[-1]
         self.grid_size = int(name_split.split("x")[0])
 
-    def create_grid(self):
+    def letter_to_number(self, letter):
+        """
+        Converts a letter to a unique number so that every car always has the
+        same number to be used in the color list.
+        """
 
-        # Create an empty 6x6 grid
-        grid = np.zeros((self.grid_size, self.grid_size))
+        if letter == 'X':
+            return 1
+        elif letter == 'grey':
+            return 5
+        else:
+            return ord(letter) - ord('A') + 2
 
-        # Populate the grid with the cars and their orientations
-        for _, row in self.df_board.iterrows():
+    def pick_random_color(self):
+
+        return random.choice(self.big_color_list)
+
+
+    def create_grid(self, break_time = 0.2):
+        # create an empty numpy array to represent the grid
+        self.grid = np.zeros((self.grid_size+2, self.grid_size+2))
+
+        # populate the grid with the cars and their orientations
+        for i,(_, row) in enumerate(self.df_board.iterrows()):
             car, orientation, col, row, length = row
+
+            # place the car horizontally
             if orientation == 'H':
-                for i in range(length):
-                    grid[row-1][col-1+i] = ord(car)
+                for j in range(length):
+                    # assign the numerical value of the car (determined by
+                    # letter_to_number function) to each grid cell occupied by the car
+                    self.grid[row-1][col-1+j] = self.letter_to_number(car)
+
+            # place the car vertically
             else:
-                for i in range(length):
-                    grid[row-1+i][col-1] = ord(car)
+                for j in range(length):
+                    # assign the numerical value of the car (determined by
+                    # letter_to_number function) to each grid cell occupied by the car
+                    self.grid[row-1+j][col-1] = self.letter_to_number(car)
 
-        # get unique characters
-        car_types = np.unique(grid)
+        # clear the previous plot
+        plt.clf()
 
-        # Plot the grid using matplotlib
-        fig, ax = plt.subplots()
+        # plot the grid using the specified colormap (self.own_colors) and with the specified color range (0-max value in the grid)
+        plt.imshow(self.grid, cmap= self.own_colors,
+        vmin = 0, vmax = self.grid.max())
 
-        # use the unique characters as the values for the colormap
-        cmap = plt.get_cmap('prism')
-        cmap.set_under(color='white')
-        cmap.set_bad(color='white')
-        cmap.set_over(color='white')
-
-        ax.imshow(grid, cmap=cmap, origin='lower', extent=[0, self.grid_size, \
-        0, self.grid_size], vmin=0, vmax=car_types.max())
-        plt.pause(0.1)
-        plt.show()
+        # change background color
+        plt.gcf().set_facecolor('pink')
+        # add a title to the plot, indicating the name of the board and the current move number
+        plt.title(f'Visualisation of {self.board_csv} - Move: {self.move_counter}')
+        # turn off the X and Y axis
+        plt.axis("off")
+        # show the plot but do not block execution of the code
+        plt.show(block = False)
+        # pause execution for the specified amount of time (break_time)
+        plt.pause(break_time)
 
     def move_cars(self):
+        """
+        The method loops through each row in the "df_moves" dataframe and updates the car's position
+        based on the direction specified.
+        """
         for _,row in self.df_moves.iterrows():
+            # unpacking the car and direction from the current row
             car, direction = row
+            # finding the row in "df_board" dataframe for the specified car
             vehicle_row = self.df_board.loc[self.df_board['car'] == car]
 
-            # Move the car based on the direction
+            # moving the car based on the direction
             if direction == "left":
-                vehicle_row['col'] -= 1
-                self.df_board.loc[self.df_board['car'] == car, 'col'] = vehicle_row['col']
-                self.create_grid()
-            elif direction == "right":
-                vehicle_row['col'] += 1
-                self.df_board.loc[self.df_board['car'] == car, 'col'] = vehicle_row['col']
-                self.create_grid()
-            elif direction == "up":
-                vehicle_row['row'] -= 1
-                self.df_board.loc[self.df_board['car'] == car, 'row'] = vehicle_row['row']
-                self.create_grid()
-            elif direction == "down":
-                vehicle_row['row'] += 1
-                self.df_board.loc[self.df_board['car'] == car, 'row'] = vehicle_row['row']
-                self.create_grid()
+                self.move_counter += 1
+                self.update_board(car, 'col', -1)
 
-if __name__ == '__main__':
-    board_csv = input('Enter the name of the board csv file: ')
-    moves_csv = input('Enter the name of the moves csv file: ')
-    Visualisation(board_csv, moves_csv)
+            elif direction == "right":
+                self.move_counter += 1
+                self.update_board(car, 'col', 1)
+
+            elif direction == "up":
+                self.move_counter += 1
+                self.update_board(car, 'row', -1)
+
+            else:
+                self.move_counter += 1
+                self.update_board(car, 'row', 1)
+
+    def update_board(self, car, axis, plus_or_minus):
+        # selecting the row in the "df_board" dataframe that corresponds to the
+        # specified car
+        vehicle_row = self.df_board.loc[self.df_board['car'] == car]
+        # updating the value of the specified axis (row or col) by the
+        # specified amount (plus_or_minus)
+        vehicle_row[axis] += plus_or_minus
+
+        # updating the "df_board" dataframe with the new row position
+        self.df_board.loc[self.df_board['car'] == car, axis] = vehicle_row[axis]
+        # regenerating the grid with the updated car position
+        self.create_grid()

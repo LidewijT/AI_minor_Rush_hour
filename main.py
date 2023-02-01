@@ -64,9 +64,6 @@ if __name__ == "__main__":
     # ----------------- Run the game with the given arguments ------------------
     # the user wants to see a visualisation of moves
     if visualisation_bool in {"yes", "y"}:
-        # create a board for the data
-        test_board = board.Board(f"data/gameboards/" + board_name)
-
         print("Initiating visualisation: \n")
 
         visualisation.Visualisation("data/gameboards/" + board_name, \
