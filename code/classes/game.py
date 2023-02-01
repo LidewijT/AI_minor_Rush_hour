@@ -12,9 +12,9 @@ class Game:
     moves to get to the winning state, which is exported to a CSV file when the
     game is won.
     """
-    def __init__(self, output_file, test_board, algorithm, \
+    def __init__(self, output_file, test_board, algorithm,
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, percentage = None, create_csv = True, max_depth = None):
+        False, percentage = None, create_csv = True, max_depth = None):
         """
         Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -28,6 +28,7 @@ class Game:
         self.algorithm = algorithm
         self.max_depth = max_depth
         self.create_csv = create_csv
+        self.percentage = percentage
 
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -61,9 +62,9 @@ class Game:
 
             # make a move
             self.occupation_board, vehicle, direction = self.algorithm(
-                self.test_board,
-                self.occupation_board
-            )
+            self.test_board,
+            self.occupation_board,
+            self.percentage)
 
             # save the move
             self.append_move_to_DataFrame(vehicle, direction)

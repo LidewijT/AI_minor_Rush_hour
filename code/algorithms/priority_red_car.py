@@ -2,6 +2,10 @@ import random
 
 from ..algorithms import randomise
 
+""""
+Assumes that red car is horizontally oriented.
+"""
+
 def move_priority_red_car(test_board, occupation_board, percentage):
     """
     This function is a heuristic of the randomise algorithm. First, it finds the
