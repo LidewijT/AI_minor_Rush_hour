@@ -12,6 +12,7 @@ def random_car_move(test_board, occupation_board, _):
     """
     # get all free squares
     free_row, free_col = Board.get_free_squares(test_board, occupation_board)
+    
     # pick random free square until vehicle moves
     pick_free_square = True
 

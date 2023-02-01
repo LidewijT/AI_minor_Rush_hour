@@ -91,7 +91,7 @@ if __name__ == "__main__":
                 branch_and_bound = branch_and_bound_bool,
                 nr_moves_to_solve = nr_moves_to_solve_nbr,
                 max_depth = max_depth_value,
-                percentage = given_percentage)
+                percentage = given_percentage / 100)
 
             # update number of moves to solve for branch and bound
             nr_moves_to_solve_nbr = test_game.move_counter
