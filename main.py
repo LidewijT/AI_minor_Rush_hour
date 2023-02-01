@@ -4,7 +4,7 @@ from tqdm import tqdm
 from code.classes import board, game
 import code.helpers.prompt_helper as ph
 from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
-    depth_first, depdth_limited, breadth_first
+    depth_first, depth_limited, breadth_first
 
 
 

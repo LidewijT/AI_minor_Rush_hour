@@ -1,14 +1,14 @@
-"""
-Picks one random car movement of the given board and returns this movement.
-"""
-
 import random
 import numpy as np
+
 from ..classes.board import Board
 
 def random_car_move(test_board, occupation_board, _):
     """
-    Picks a random vehicle to move.
+    This function picks a random free square to move a vehicle from one of its
+    surrounding squares. It continues this process until it succesfully moves a
+    vehicle. Then, it returns the updated occuation board, the moved vehicle
+    objects and the direction of the movement.
     """
     # get all free squares
     free_row, free_col = Board.get_free_squares(test_board, occupation_board)

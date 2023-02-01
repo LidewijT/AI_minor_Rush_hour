@@ -3,11 +3,7 @@ from prompt_toolkit.completion import WordCompleter
 
 # ------------------------ initiate list of algorithms -------------------------
 algorithm_list = ["randomise.random_car_move", \
-<<<<<<< HEAD
-"priority_red_car.move_priority_red_car", "breath_first.Breath_First_Search"\
-=======
 "priority_red_car.move_priority_red_car", "breadth_first.Breadth_First_Search"\
->>>>>>> main
 , "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"]
 
 

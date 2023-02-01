@@ -1,6 +1,6 @@
 import pandas as pd
 import copy
-import time
+
 from itertools import chain
 from ..classes.board import Board
 
@@ -11,8 +11,8 @@ class Depth_First_Search():
     possible along each branch before backtracking. This exploration does not go
     deeper when it reached a winning state, then it will start backtracking the
     moves into a dataframe.
-
     """
+
     def __init__(self, start_state, max_depth=None):
         """
         Initializes the class by setting the start state, exit tile, red car
@@ -38,10 +38,7 @@ class Depth_First_Search():
 
         # moves to dataframe
         if self.won == True:
-            print("Export moves to dataframe...")
             self.moves_to_df(self.current_state)
-        # print(f"number states: {len(self.children_parent_dict)}")
-
 
     def run(self):
         """
@@ -62,9 +59,6 @@ class Depth_First_Search():
             if self.won == True:
                 return
 
-        # no solution found if the stack is empty
-        self.won = False
-
     def get_next_state(self):
         """
         Returns the last element of de stack while removing it at the same time.
@@ -81,7 +75,7 @@ class Depth_First_Search():
         # save parent state
         parent_state = copy.copy(self.current_state)
 
-        # parent_occupation_hash = hash(parent_state)
+        # convert nparray to hashed flattened tuple for dictionary
         parent_occupation_hash = hash(tuple(chain.from_iterable(parent_state)))
 
         # get lists for free squares and their surrounding directions
@@ -92,11 +86,10 @@ class Depth_First_Search():
         direction_list = ["left", "right", "up", "down"]
 
         # systematically go through the free squares to create children
-        for free_tile_nbr in range(len(free_row)):
+        for free_tile_nr in range(len(free_row)):
+            r, c = free_row[free_tile_nr], free_col[free_tile_nr]
 
-            r, c = free_row[free_tile_nbr], free_col[free_tile_nbr]
-
-            # systematically go through all sides of the empty square
+            # systematically go through all sides of the free square
             for direction in direction_list:
                 # make movement with the given surrounding square
                 vehicle, self.current_state = Board.car_move(
@@ -123,7 +116,7 @@ class Depth_First_Search():
 
                         # solution if the red car is at the exit
                         if self.current_state[self.exit_tile] == self.red_car:
-                            return True
+                            return
 
                         # add child to list
                         self.stack.append(self.current_state)
@@ -139,7 +132,8 @@ class Depth_First_Search():
         """
         # append move to DataFrame in reverse order since you start at the
         # winning state
-        move_df = pd.DataFrame([[move[0], move[1]]],
+        move_df = pd.DataFrame(
+            [[move[0], move[1]]],
             columns=['car name', 'move']
         )
 

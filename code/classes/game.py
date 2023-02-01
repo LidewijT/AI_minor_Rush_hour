@@ -14,7 +14,7 @@ class Game:
     """
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, percentage = None, create_csv = True):
+            False, percentage = None, create_csv = True, max_depth = None):
         """
         Initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -114,20 +114,13 @@ class Game:
             self.move_counter += 1
 
             # make a move
-<<<<<<< HEAD
             self.occupation_board, vehicle, direction = self.algorithm(
                 self.test_board,
                 self.occupation_board
             )
-=======
-            # print("\nstart move")
-            self.occupation_board, vehicle, direction = self.algorithm(\
-            self.test_board, self.occupation_board, self.percentage)
-            # print(f"move made\n")
->>>>>>> lidewij
 
             # save move
-            # self.append_move_to_DataFrame(vehicle, direction)
+            self.append_move_to_DataFrame(vehicle, direction)
 
 
     def win_check(self):
