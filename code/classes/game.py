@@ -13,7 +13,7 @@ class Game:
     """
     def __init__(self, output_file, test_board, algorithm, \
         branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, percentage = None, create_csv = True):
+            False, percentage = None, create_csv = True, max_depth = None):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -27,6 +27,7 @@ class Game:
         self.algorithm = algorithm
         self.max_depth = max_depth
         self.create_csv = create_csv
+        self.percentage = percentage
 
         # keep track of all moves
         self.moves_df = pd.DataFrame(columns=['car name', 'move'])
@@ -58,9 +59,9 @@ class Game:
             self.move_counter += 1
 
             self.occupation_board, vehicle, direction = self.algorithm(
-                self.test_board,
-                self.occupation_board
-            )
+            self.test_board,
+            self.occupation_board,
+            self.percentage)
 
             # make a move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -113,20 +114,15 @@ class Game:
             self.move_counter += 1
 
             # make a move
-<<<<<<< HEAD
-            self.occupation_board, vehicle, direction = self.algorithm(
-                self.test_board,
-                self.occupation_board
-            )
-=======
             # print("\nstart move")
-            self.occupation_board, vehicle, direction = self.algorithm(\
-            self.test_board, self.occupation_board, self.percentage)
+            self.occupation_board, vehicle, direction = self.algorithm(
+            self.test_board,
+            self.occupation_board,
+            self.percentage)
             # print(f"move made\n")
->>>>>>> lidewij
 
             # save move
-            # self.append_move_to_DataFrame(vehicle, direction)
+            self.append_move_to_DataFrame(vehicle, direction)
 
 
     def win_check(self):
@@ -136,7 +132,7 @@ class Game:
         solve, create a csv file of the move dataframe and return True.
         Otherwise, return False.
         """
-        if self.test_board.occupation[self.test_board.exit_tile] == \
+        if self.occupation_board[self.test_board.exit_tile] == \
             self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
 

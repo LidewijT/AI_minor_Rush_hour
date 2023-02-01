@@ -57,8 +57,8 @@ if __name__ == "__main__":
             runs = ph.runs_prompt()
 
         # check if an first search algorithm is used
-        elif algorithm in {"breadth_first.Breadth_First_Search"\
-        , "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"}:
+        elif algorithm in {"breadth_first.Breadth_First_Search", \
+        "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"}:
             first_search_bool = True
 
             if algorithm == "depth_limited.Depth_Limited_Search":
