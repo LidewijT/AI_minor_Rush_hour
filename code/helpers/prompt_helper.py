@@ -3,8 +3,8 @@ from prompt_toolkit.completion import WordCompleter
 
 # ------------------------ initiate list of algorithms -------------------------
 algorithm_list = ["randomise.random_car_move", \
-"priority_red_car.move_priority_red_car", "breath_first.Breath_first_search"\
-, "depth_first.DepthFirst", "depth_limited.Depth_Limited_Search"]
+"priority_red_car.move_priority_red_car", "breadth_first.Breadth_First_Search"\
+, "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"]
 
 
 # ------------------------- initiate word completers ---------------------------
@@ -37,7 +37,7 @@ def visualisation_bool_prompt():
     return get_yes_or_no("Would you like to visualise a csv of moves? (yes/no): ")
 
 def board_prompt():
-    return prompt("What board do you want to run?: ", \
+    return prompt("What board do you want to run?\n(Hint: type an 'R'): ", \
     completer = board_completer) + ".csv"
 
 def moves_input_prompt():
