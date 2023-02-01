@@ -45,6 +45,9 @@ if __name__ == "__main__":
             # ask how many runs the user wants to run the algorithm for
             runs = ph.runs_prompt()
 
+            if algorith == "priority_red_car.move_priority_red_car":
+                given_percentage = ph.given_percentage_prompt()
+
         else:
             first_search_bool = True
 
@@ -86,7 +89,8 @@ if __name__ == "__main__":
                 test_board, eval(algorithm), first_search = first_search_bool,
                 branch_and_bound = branch_and_bound_bool,
                 nr_moves_to_solve = nr_moves_to_solve_nbr,
-                max_depth = max_depth_value)
+                max_depth = max_depth_value
+                percentage = given_percentage)
 
             # update number of moves to solve for branch and bound
             nr_moves_to_solve_nbr = test_game.move_counter
