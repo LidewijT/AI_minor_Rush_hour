@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 from .vehicle import Vehicles
 
-
 class Board():
     """
     This class is used to create and steer the gameboard of the Rush Hour game
@@ -48,11 +47,13 @@ class Board():
                 # store the number of the red car
                 self.red_car = vehicle[0] + 1
 
-
             # create Vehicle() and add to dictionary
-            self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'], \
-                vehicle[1]['orientation'], vehicle[1]['col'] - 1, vehicle[1]['row'] - 1, \
-                vehicle[1]['length'], vehicle[0] + 1))
+            self.vehicle_dict[vehicle[0] + 1] = (Vehicles(vehicle[1]['car'],
+                vehicle[1]['orientation'],
+                vehicle[1]['col'] - 1, vehicle[1]
+                ['row'] - 1,
+                vehicle[1]['length'],
+                vehicle[0] + 1))
 
     def create_board(self, input_file):
         """
@@ -145,7 +146,7 @@ class Board():
         self.vehicle_dict[occupation_board[r][c + 1]].orientation == "H":
             # get vehicle and update occupation board
             self.get_vehicle(occupation_board, r, c + 1)
-            occupation_board = self.update_occupation_board(occupation_board, \
+            occupation_board = self.update_occupation_board(occupation_board,
                 r, c, '+')
 
         # move vehicle right to free square
@@ -154,7 +155,7 @@ class Board():
         self.vehicle_dict[occupation_board[r][c - 1]].orientation == "H":
             # get vehicle and update occupation board
             self.get_vehicle(occupation_board, r, c - 1)
-            occupation_board = self.update_occupation_board(occupation_board, \
+            occupation_board = self.update_occupation_board(occupation_board,
                 r, c, '-')
 
         # move vehicle up to free square

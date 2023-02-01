@@ -1,48 +1,39 @@
 import math
 from tqdm import tqdm
+import os
 
 import code.helpers.prompt_helper as ph
-import code.experiments.random_and_priority_algorithms as exp
 
-from code.classes import board, game
-from code.algorithms import dfs_hill_climber, randomise, priority_red_car, \
-move_cars_in_way, depth_first, breadth_first, randomise_move_more_squares, \
-depth_limited
-
+from code.classes import board, game, visualisation
+from code.algorithms import breadth_first, depth_first, depth_limited, \
+depth_hill_climber, depth_priority_children, priority_red_car, randomise
 
 if __name__ == "__main__":
     # ---------------------- initiate starting variables -----------------------
+    # these are standart variables to run the program and can be changed
+    # during the prompts
     branch_and_bound_bool = False
     first_search_bool = False
-    nr_moves_to_solve_nbr = None
-    graph_bool = False
     max_depth = None
     runs = 1
 
     # ------------------- ask user for input on what to run --------------------
-    # # ask user if they want to run an experiment
-    # experiment_bool = ph.experiment_bool_prompt()
-    #
-    # if experiment_bool in {"yes", "y"}:
-    #     exp.run()
-    #
-    # else:
     # ask user what board to run
     board_name = ph.board_prompt()
 
     # ask user if they want to run a visualisation
     visualisation_bool = ph.visualisation_bool_prompt()
 
-        # if so, ask what input file of moves they want to use
-        if visualisation_bool in {"yes", "y"}:
-            moves_input = ph.moves_input_prompt()
+    # if so, ask what input file of moves they want to use
+    if visualisation_bool in {"yes", "y"}:
+        moves_input = ph.moves_input_prompt()
 
     else:
         # ask what algorithm they want to run
         algorithm = ph.algorithm_prompt()
-        print(algorithm)
 
-        if algorithm in {"randomise.random_car_move", \
+        # check if the algorith is a random based algorith
+        if algorithm in {"randomise.random_car_move",
         "priority_red_car.move_priority_red_car"}:
 
             # ask user if they want to add the branch and bound heuristic
@@ -51,14 +42,11 @@ if __name__ == "__main__":
             # if branch and bound is wanted, set variables
             if branch in {"yes", "y"}:
                 branch_and_bound_bool = True
-                nr_moves_to_solve_nbr = math.inf
 
             # ask how many runs the user wants to run the algorithm for
             runs = ph.runs_prompt()
 
-        # check if an first search algorithm is used
-        elif algorithm in {"breadth_first.Breadth_First_Search", \
-        "depth_first.Depth_First_Search", "depth_limited.Depth_Limited_Search"}:
+        else:
             first_search_bool = True
 
             if algorithm == "depth_limited.Depth_Limited_Search":
@@ -68,26 +56,52 @@ if __name__ == "__main__":
         # ask what file the user wants to save the output to
         csv_output = ph.csv_output_prompt()
 
+    # prints a line in terminal to signify the switch from setup to running
+    width = os.get_terminal_size().columns
+    print()
+    print("-" * width)
+    print("Thank you for your input")
 
     # ----------------- Run the game with the given arguments ------------------
-    print("\nThank you for your input")
-
-    # create a board for the data
-    test_board = board.Board(f"data/gameboards/" + board_name)
-
     # the user wants to see a visualisation of moves
     if visualisation_bool in {"yes", "y"}:
+        # create a board for the data
+        test_board = board.Board(f"data/gameboards/" + board_name)
+
         print("Initiating visualisation: \n")
 
-        Visualisation("data/gameboards/" + board_name, \
-        "data/solutions/" + csv_output)
+        visualisation.Visualisation("data/gameboards/" + board_name, \
+        "data/solutions/" + moves_input)
 
     # the user wants to use an algorithm to solve a rushhour board
     else:
         print("Now solving rush hour: \n")
 
         for i in tqdm(range(runs), desc="Solving boards…", ascii=False, ncols=75):
+            # in case branch and bound is run
+            nr_moves_to_solve_nbr = math.inf
+
+            # create a board for the data
+            test_board = board.Board(f"data/gameboards/" + board_name)
+
+            # run
             test_game = game.Game(f"data/solutions/" + csv_output, \
                 test_board, eval(algorithm), first_search = first_search_bool, \
                 branch_and_bound = branch_and_bound_bool, \
                 nr_moves_to_solve = nr_moves_to_solve_nbr)
+
+            nr_moves_to_solve_nbr = test_game.move_counter
+
+        print()
+
+        if test_game.win == True:
+            if algorithm not in {"randomise.random_car_move",
+            "priority_red_car.move_priority_red_car"}:
+                print(f"Number of visited states to find a solution: {self.nr_states}")
+
+            print(f"Rush Hour was solved in {test_game.moves_df.shape[0]} moves")
+
+        else:
+            print("No solution found")
+
+    print("-" * width)

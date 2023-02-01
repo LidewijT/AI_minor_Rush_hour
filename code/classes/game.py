@@ -2,18 +2,19 @@
 Solves rush hour with the given algorithm
 """
 import pandas as pd
-import matplotlib.pyplot as plt
 import time
 
-from ..algorithms import randomise, priority_red_car, move_cars_in_way, depth_first, breadth_first
+from ..algorithms import breadth_first, depth_first, depth_limited, \
+depth_hill_climber, depth_priority_children, priority_red_car, randomise
 
 class Game:
     """
     Solves the Rush hour board with the input algorithm.
     """
-    def __init__(self, output_file, test_board, algorithm, \
-        branch_and_bound = False, nr_moves_to_solve = None, first_search =
-            False, percentage = None, create_csv = True, max_depth = None):
+    def __init__(self, output_file, test_board, algorithm,
+        branch_and_bound = False, nr_moves_to_solve = None,
+        first_search = False, percentage = None,
+        create_csv = True, max_depth = None):
         """
         It initializes the attributes for the class including the output file,
         the test board, and the algorithm to be used. It also has additional
@@ -66,7 +67,6 @@ class Game:
             # make a move
             self.append_move_to_DataFrame(vehicle, direction)
 
-
     def run_first_search(self):
         """
         This function is used when the first_search parameter is set to true.
@@ -90,19 +90,9 @@ class Game:
         if self.win == True:
             self.moves_df = result.moves_df
 
-            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
-            print(f"finished in: {self.elapsed_time} seconds")
-
             if self.create_csv == True:
                 # finalize into output
                 self.output_maker()
-
-        else:
-            print("No solution found")
-            print(f"finished in: {self.elapsed_time} seconds")
-            print(f"Rush Hour was solved in {self.moves_df.shape[0]} moves")
-
-
 
     def run(self):
         """
@@ -114,12 +104,10 @@ class Game:
             self.move_counter += 1
 
             # make a move
-            # print("\nstart move")
             self.occupation_board, vehicle, direction = self.algorithm(
             self.test_board,
             self.occupation_board,
             self.percentage)
-            # print(f"move made\n")
 
             # save move
             self.append_move_to_DataFrame(vehicle, direction)
@@ -135,6 +123,7 @@ class Game:
         if self.occupation_board[self.test_board.exit_tile] == \
             self.test_board.red_car:
             self.nr_moves_to_solve = self.move_counter
+            self.win = True
 
             if self.create_csv == True:
                 self.output_maker()
@@ -150,8 +139,7 @@ class Game:
         """
         # append move to DataFrame
         move_df = pd.DataFrame([[vehicle.car, direction]],
-            columns=['car name', 'move']
-        )
+            columns=['car name', 'move'])
         self.moves_df = pd.concat([self.moves_df, move_df])
 
     def compress_DataFrame(self):
