@@ -29,10 +29,33 @@ python main.py
 
 Then, the terminal will ask you for the input what board the user desires to solve. Subsequently, the user will be guided through different choices on how to solve the input gameboard, including which algorithms, their corresponding parameters and a name for the output file.
 
+**Example:**
+```
+What board do you want to run?
+(Hint: type an 'R'): *input user*
+Would you like to visualise a csv of moves? (yes/no): *no*
+What algorithm would you like to run? choose from:
+random, priority random, breath first search, depth first search, depth limited, depth hill climber or depth priority children: *input user*
+Give a file name to save the made moves to: *input user*
+```
+
 If running an experiment is desired, the following command can be runned in the terminal:
 
 ```
 python -m code.experiments.name_experiment
+```
+
+## Output
+When the desired gameboard is run with the corresponding algorithm, the output will be shown in the terminal. For example, the gameboard Rushhour6x6_1 with a breadth-first search the output will be as followed:
+
+```
+---------------------------------------------------------------------------------------
+Thank you for your input
+Now solving rush hour:
+Solving boards...: 100%|                   | 1/1 [00:00<00:00, 7,13 it/s}
+Number of visited states to find a solution: 524
+Rush Hour was solved in 35 moves
+---------------------------------------------------------------------------------------
 ```
 
 ## Structure
