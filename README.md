@@ -49,13 +49,13 @@ python -m code.experiments.name_experiment
 When the desired gameboard is run with the corresponding algorithm, the output will be shown in the terminal. For example, the gameboard Rushhour6x6_1 with a breadth-first search the output will be as followed:
 
 ```
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
 Thank you for your input
 Now solving rush hour:
 Solving boards...: 100%|                   | 1/1 [00:00<00:00, 7,13 it/s}
 Number of visited states to find a solution: 524
 Rush Hour was solved in 35 moves
----------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------------------
 ```
 
 ## Structure
