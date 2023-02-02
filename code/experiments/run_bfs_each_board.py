@@ -9,7 +9,7 @@ from ..classes import board, game
 
 data_dfs = []
 
-boards = ["6x6_1", "6x6_2","6x6_3"]#, "9x9_4", "9x9_5", "9x9_6", "12x12_7"]
+boards = ["6x6_1", "6x6_2","6x6_3", "9x9_4", "9x9_5", "9x9_6", "12x12_7"]
 for board_nr in boards :
     # create initial board
     test_board = board.Board(f"data/gameboards/" + f"Rushhour{board_nr}.csv")
