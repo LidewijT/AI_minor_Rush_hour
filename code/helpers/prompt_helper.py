@@ -93,7 +93,7 @@ to your algorithm? (yes/no): ")
 
 def given_percentage_prompt():
     return integer_checker("What percentage would you like \
-to apply to this algorith?: ")
+to apply to this algorithm?: ")
 
 def runs_prompt():
     return integer_checker("how many iterations do you want to run?: ")
