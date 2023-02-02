@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import random
 from ..helpers.colors import color_list, big_color_list
+
 from matplotlib.colors import ListedColormap
 
 class Visualisation():
@@ -53,8 +54,6 @@ class Visualisation():
         """
         if letter == 'X':
             return 1
-        elif letter == 'grey':
-            return 5
         else:
             return ord(letter) - ord('A') + 2
 
@@ -92,9 +91,11 @@ class Visualisation():
         plt.imshow(self.grid, cmap= self.own_colors,
         vmin = 0, vmax = self.grid.max())
         # change background color
-        plt.gcf().set_facecolor('grey')
+        plt.gcf().set_facecolor('#808080')
+        # select board name from csv
+        board_name = self.board_csv.split("/")[-1].split(".")[0]
         # add a title to the plot, indicating the name of the board and the current move number
-        plt.title(f'Visualisation of {self.board_csv} - Move: {self.move_counter}')
+        plt.title(f'Visualisation of {board_name} - Move: {self.move_counter}')
         # turn off the X and Y axis
         plt.axis("off")
         # show the plot but do not block execution of the code
@@ -107,6 +108,9 @@ class Visualisation():
         The method loops through each row in the "df_moves" dataframe and updates the car's position
         based on the direction specified.
         """
+        # include a pause
+        plt.pause(2)
+
         for _,row in self.df_moves.iterrows():
             # unpacking the car and direction from the current row
             car, direction = row
@@ -128,6 +132,9 @@ class Visualisation():
 
             else:
                 self.update_board(car, 'row', 1)
+
+        # include a pause
+        plt.pause(3)
 
     def update_board(self, car, axis, plus_or_minus):
         # update the position of the car on the dataframe
