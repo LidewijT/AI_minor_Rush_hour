@@ -47,7 +47,7 @@ if __name__ == "__main__":
             runs = ph.runs_prompt()
 
             if algorithm == "priority_red_car.move_priority_red_car":
-                given_percentage = ph.given_percentage_prompt()
+                given_percentage = ph.given_percentage_prompt() / 100
 
         else:
             first_search_bool = True
@@ -91,7 +91,7 @@ if __name__ == "__main__":
                 branch_and_bound = branch_and_bound_bool,
                 nr_moves_to_solve = nr_moves_to_solve_nbr,
                 max_depth = max_depth_value,
-                percentage = given_percentage / 100)
+                percentage = given_percentage)
 
             # update number of moves to solve for branch and bound
             nr_moves_to_solve_nbr = test_game.move_counter
